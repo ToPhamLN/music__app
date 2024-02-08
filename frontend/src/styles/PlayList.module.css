@@ -1,0 +1,122 @@
+.playlist {
+    height: 100%;
+    line-height: 1.5;
+    display: flex;
+    flex-flow: row;
+}
+
+
+.header__playlist {
+    flex: 0 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    gap: 2rem;
+    width: 30rem;
+    height: 100%;
+    border-radius: 0.3rem;
+    border: 0.1rem solid var(--stripe-color);
+    box-shadow: var(--box-shadow);
+
+    h1,
+    h2,
+    h3,
+    h6,
+    span {
+        font-size: 1.4rem;
+    }
+
+    .user__name {
+        white-space: nowrap;
+    }
+}
+
+.img__playlist {
+    position: relative;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 2rem;
+
+    &>img {
+        border-radius: 2rem;
+    }
+}
+
+.info__playlist {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info__user {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.img__user {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+
+    img {
+        border-radius: 50%;
+    }
+}
+
+@media only screen and (max-width:600px) {
+    .header__playlist {
+        padding: 1rem 1rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        flex-flow: row nowrap;
+        gap: 2rem;
+        width: 100%;
+        height: auto;
+    }
+
+    .info__playlist {
+        align-items: flex-start;
+    }
+
+    .img__playlist {
+        flex: 0 0 auto;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 2rem;
+
+        &>img {
+            border-radius: 2rem;
+        }
+    }
+
+    .info__user,
+    .more__info {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+.list {
+    flex: 1;
+    background-color: aqua;
+    position: relative;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 0.3rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--main-color);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) transparent;
+}
