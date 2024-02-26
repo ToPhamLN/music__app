@@ -61,7 +61,6 @@
     display: none;
 }
 
-.track__like:hover::before,
-{
-display: block;
+.track__like:hover::before {
+    display: block;
 }

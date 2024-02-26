@@ -1,12 +1,13 @@
-.footer {
+.player {
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 10rem;
+    height: 8rem;
     width: 100%;
     background-color: var(--navbar);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 1rem 2rem;
     border-top: 1px solid var(--stripe-color);
     z-index: 9999;
@@ -18,15 +19,10 @@
     bottom: -100px;
 }
 
-.track__info {
-    gap: 1rem;
-    padding-right: 1rem;
-}
-
 .track__img {
     flex: 0 0 auto;
-    width: 7rem;
-    height: 100%;
+    width: 6rem;
+    height: 6rem;
     background-color: aliceblue;
     border-radius: 1rem;
 
@@ -36,10 +32,21 @@
 }
 
 .track__name {
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 1.5rem;
 }
 
-.track__artist {}
+.track__artist {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
 
 .track__like {
     position: relative;
@@ -50,7 +57,7 @@
     display: flex;
     place-items: center;
     padding: 0 0;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out 0.1s;
 
     &:hover {
         transform: translateY(-0.2rem);
@@ -61,16 +68,16 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 1rem;
 
     &>button {
         position: relative;
 
         background: transparent;
-        font-size: 2.5rem;
+        font-size: 2rem;
         color: var(--text-color);
         display: flex;
-        place-items: center;
+        justify-content: center;
+        align-items: center;
         transition: transform 0.3s ease-in-out;
 
         &:hover {
@@ -99,7 +106,7 @@
     }
 
     &>.play {
-        font-size: 5rem;
+        font-size: 4rem;
     }
 }
 
@@ -122,7 +129,7 @@
 }
 
 .track__option {
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
     padding-left: 1rem;
 
@@ -140,14 +147,18 @@
         &:hover {
             transform: translateY(-0.2rem);
         }
+
+        &.watch__mode {
+            margin-left: auto;
+        }
+
     }
 
-
-
-    &>input {
-        flex: 1;
+    input.input__volume {
+        width: 7.5rem;
     }
 }
+
 
 button.choose {
     color: var(--main-color);
@@ -155,7 +166,6 @@ button.choose {
 
 .track__process {
     flex: 1;
-    height: 100%;
     display: flex;
     align-items: center;
     flex-flow: column;
@@ -165,10 +175,16 @@ button.choose {
 .track__info,
 .track__option {
     flex: 1;
-    max-width: 30vw;
+    width: 50rem;
     height: 100%;
     display: flex;
     align-items: center;
+}
+
+.track__info {
+    min-width: 30rem;
+    gap: 1rem;
+    padding-right: 1rem;
 }
 
 
@@ -196,6 +212,12 @@ button.choose {
 .track__like:hover::before,
 .track__option button:hover::before {
     display: block;
+}
+
+@media only screen and (max-width: 850px) {
+    .track__option input.input__volume {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 600px) {

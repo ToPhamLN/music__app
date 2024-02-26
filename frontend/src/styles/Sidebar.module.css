@@ -1,27 +1,51 @@
 .sidebar {
     position: relative;
-    padding: 6rem 0rem 0 0rem;
-    height: calc(100vh - 10rem);
+    padding: 1rem 0;
+    height: 100%;
     background: var(--navbar);
     width: 25rem;
-    box-shadow: var(--box-shadow);
     display: flex;
     flex-flow: column;
     border: 0.1rem solid var(--stripe-color);
-}
-
-.no__track {
-    height: 100vh;
-}
-
-.menu,
-.list {
-    display: flex;
-    flex-flow: column nowrap;
+    box-shadow: var(--box-shadow);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-sizing: border-box;
 }
 
 .menu {
-    padding: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0 2rem;
+}
+
+.hover__content {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1rem);
+    left: 2;
+    transform: translate(0, -50%);
+    font-size: 1.4rem;
+    white-space: nowrap;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    z-index: 9999;
+    display: none;
+
+}
+
+.item__hover__content {
+    position: fixed;
+    font-size: 1.4rem;
+    white-space: nowrap;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    z-index: 9999;
+    transform: translate(calc(5rem + 2rem), 20%);
+    display: none;
 }
 
 .link {
@@ -33,7 +57,8 @@
     transition: display color ease-in 0.3s;
     cursor: pointer;
     gap: 1rem;
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
 
     .icon {
         display: flex;
@@ -53,38 +78,30 @@
     }
 }
 
-.list {
+
+.my__list {
     flex: 1;
-    padding: 0;
-    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 1rem 0 2rem;
 
-    &>.my__list {
-        flex: 1;
-        display: flex;
-        flex-flow: column nowrap;
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        &::-webkit-scrollbar {
-            width: 0.3rem;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: var(--main-color);
-        }
-
-        scrollbar-width: thin;
-        scrollbar-color: var(--main-color) transparent;
+    &::-webkit-scrollbar {
+        width: 0.3rem;
     }
 
-
-    &>.link {
-        flex: 0 0 auto;
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--main-color);
     }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) transparent;
 }
 
 .item__list {
     position: relative;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     font-size: 2.5rem;
@@ -113,7 +130,8 @@
         overflow: hidden;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         color: var(--text-color);
         background-color: var(--hover-color);
     }
@@ -124,44 +142,57 @@
 
 
 
-@media only screen and (max-width: 600px) {
-
+@media only screen and (max-width: 1101px) {
     .sidebar {
         width: 7rem;
+        padding-left: 0.5rem;
+    }
 
-        .link__name,
-        .name__item {
-            display: none;
+    .menu,
+    .item__list,
+    .my__list {
+        padding: 0;
+    }
 
+    .item__list {
+        position: relative;
+        width: 5rem;
+        height: 5rem;
+
+        &:hover .hover__content {
+            display: block;
         }
+    }
 
-        .link,
-        .item__list {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+    .icon {
+        width: 100%;
+        height: 100%;
+    }
 
-            &:hover {
-                color: var(--text-color);
+    .my__list {
+        gap: 0.5rem;
+    }
 
-                .link__name,
-                .name__item {
-                    display: block;
-                    position: absolute;
-                    padding: 1rem;
-                    border-radius: 0.5rem;
-                    box-shadow: var(--box-shadow);
-                    top: 50%;
-                    left: 100%;
-                    transform: translate(1rem, -50%);
-                    background-color: var(--navbar);
-                }
-            }
-        }
+    .link__name,
+    .name__item {
+        display: none;
+    }
 
+    .link:hover .hover__content,
+    .item__list:hover .hover__content,
+    .item__hover__content {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 601px) {
+    .sidebar {
+        display: none;
+    }
+
+
+    .show {
+        display: flex;
     }
 
 }
-
-@media only screen and (min-width: 601px) and (max-width: 1024px) {}

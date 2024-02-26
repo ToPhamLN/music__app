@@ -57,4 +57,5 @@ interface GlobalSliceType {
     isView: boolean
     isRecently: boolean
   }
+  isSidebar: boolean
 }

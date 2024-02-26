@@ -19,11 +19,18 @@
     color: var(--text-color);
     display: flex;
     place-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
+}
+
+.link__logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .logo__text {
     font-weight: bold;
+    color: var(--text-color);
 }
 
 .logo__image {
@@ -99,6 +106,21 @@
     display: block;
 }
 
+.menu__sidebar {
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    border-radius: 50%;
+    color: var(--text-color);
+    transition: display background-color 0.3s ease-in-out 0.1s;
+    display: none;
+
+    &:hover {
+        background-color: var(--hover-btn);
+    }
+}
+
 
 
 @media only screen and (max-width: 320px) {
@@ -112,7 +134,18 @@
 
 }
 
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
-    .navbar {}
+@media only screen and (max-width: 601px) {
+    .navbar {
+        padding: 0 1rem;
+    }
+
+    .menu__sidebar {
+        display: block;
+    }
+
+    .logo__text,
+    .logo__image {
+        display: none;
+    }
 
 }

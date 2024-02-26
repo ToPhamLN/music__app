@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
-import { useAppSelector } from '~/hooks/redux'
-import style from '~/styles/Footer.module.css'
-import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5'
+import { useAppSelector } from '~/hooks'
+import style from '~/styles/Player.module.css'
+import {
+  IoHeartOutline,
+  IoHeartSharp
+} from 'react-icons/io5'
 
-const TrackFooter: React.FC = () => {
+const PlaylerTrack: React.FC = () => {
   const [like, setLike] = useState<boolean>(false)
-  const { track } = useAppSelector((state) => state.trackPlay)
+  const { track } = useAppSelector(
+    (state) => state.trackPlay
+  )
+
   return (
     <div className={style.track__info}>
       <div className={style.track__img}>
@@ -30,4 +36,4 @@ const TrackFooter: React.FC = () => {
   )
 }
 
-export default TrackFooter
+export default PlaylerTrack

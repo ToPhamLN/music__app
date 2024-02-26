@@ -1,0 +1,252 @@
+.home {
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.slider {
+    position: relative;
+    padding: 1rem 0;
+    width: 100%;
+    height: auto;
+    margin-bottom: 4rem;
+}
+
+.item__slider {
+    width: auto;
+    margin: 0 1rem;
+    aspect-ratio: 4 / 3;
+}
+
+.btn__prev,
+.btn__next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #144c7a21;
+    }
+}
+
+.btn__next {
+    right: 1rem;
+}
+
+.btn__prev {
+    left: 1rem;
+}
+
+.item__slider img {
+    border-radius: 5%;
+}
+
+.playlist__row {
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+    margin-bottom: 4rem;
+}
+
+.playlist__row .header {
+    width: auto;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 1rem;
+    padding-bottom: 1rem;
+}
+
+.carousel {
+    width: auto;
+    margin: 0 1rem;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.inner__carousel {
+    display: flex;
+    gap: 1.5rem;
+
+}
+
+.carousel .child {
+    padding: 1rem;
+    min-width: 18rem;
+    height: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 1rem;
+    border: 0.1rem var(--stripe-color);
+    background-color: var(--card);
+    user-select: none;
+    display: flex;
+    gap: 0.5rem;
+    flex-flow: column;
+
+}
+
+.carousel .title {
+    flex: 1;
+    position: relative;
+}
+
+.carousel .child .image {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel .child .image img {
+    border-radius: 1rem;
+}
+
+
+
+.carousel .child .playlist__name,
+.carousel .child .playlist__artist,
+.parent .playlist__name {
+    position: relative;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow-y: hidden;
+
+    & a {
+        white-space: 1.5;
+        text-decoration: none;
+        color: var(--text-color);
+        transition: text-decoration 1s ease-in;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.carousel .child .playlist__name {
+    -webkit-line-clamp: 1;
+    flex: 0 0 auto;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.carousel .child .playlist__artist {
+    height: 4rem;
+    flex: 0 0 auto;
+}
+
+.carousel .child .playlist__artist a:not(:last-child)::after {
+    content: ',  ';
+}
+
+.parent {
+    margin: 0 1rem;
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.parent .child {
+    padding: 0.5rem;
+    background-color: var(--card);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 1rem;
+    border: 0.1rem solid var(--stripe-color);
+    transition: all 0.4s ease-in 0.1s;
+}
+
+.parent .title {
+    flex: 0 0 auto;
+    position: relative;
+}
+
+.parent .image {
+    width: 7rem;
+    height: 7rem;
+}
+
+.parent .image img {
+    border-radius: 0.5rem;
+}
+
+
+.parent.info {
+    flex: 1;
+}
+
+.parent .playlist__name {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.song__animation,
+.song__play {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #3f3a3aa2;
+}
+
+.song__play button {
+    font-size: 2rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.song__play {
+    display: none;
+}
+
+.child:hover {
+    background-color: var(--hover-color);
+
+    .song__play {
+        display: flex;
+    }
+
+    .song__animation {
+        display: none;
+    }
+}
+
+.carousel .child .song__play,
+.carousel .child .song__animation {
+    border-radius: 1rem;
+}
+
+.child {
+    cursor: default;
+}
+
+
+@media only screen and (max-width:801px) {
+    .parent {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width:601px) {
+    .parent {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

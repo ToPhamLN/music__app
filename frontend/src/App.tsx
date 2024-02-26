@@ -1,6 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
-import { useAppSelector } from '~/hooks/redux'
-import { publicRoutes, privateRoutes } from '~/constants/pathUrl'
+import { useAppSelector } from '~/hooks'
+import {
+  publicRoutes,
+  privateRoutes
+} from '~/constants/pathUrl'
 import DefaultLayout from '~/layouts/DefaultLayout'
 import LoginPage from './pages/Auth/LoginPage'
 import NotFound from './pages/Error/NotFound'

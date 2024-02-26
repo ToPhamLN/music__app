@@ -1,18 +1,20 @@
 import React from 'react'
 import style from '~/styles/Viewbar.module.css'
-import { LuAlarmClock, LuMoreHorizontal } from 'react-icons/lu'
-import { useAppDispatch, useAppSelector } from '~/hooks/redux'
+import style2 from '~/styles/MoreList.module.css'
+import {
+  LuAlarmClock,
+  LuMoreHorizontal
+} from 'react-icons/lu'
+import { useAppDispatch, useAppSelector } from '~/hooks'
 import { setIsRecently } from '~/reduxStore/globalSlice'
-import ItemViewBar from '~/components/ItemViewBar'
+import { ItemViewBar } from '~/components/features'
 
 const Viewbar: React.FC = () => {
   const { view } = useAppSelector((state) => state.global)
-  const { track } = useAppSelector((state) => state.trackPlay)
+
   const dispatch = useAppDispatch()
   return (
-    <div
-      className={`${style.viewbar} ${track ? '' : style.no__track}`}
-    >
+    <div className={style.viewbar}>
       <div className={style.header}>
         <div className={style.playlist__switch}>
           <button

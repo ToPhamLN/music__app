@@ -8,7 +8,11 @@ module.exports = {
     'eslint-config-prettier',
     'prettier'
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+    'vite.config.ts'
+  ],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'prettier'],
   rules: {
@@ -37,7 +41,7 @@ module.exports = {
         useTabs: false,
         embeddedLanguageFormatting: 'auto',
         endOfLine: 'auto',
-        printWidth: 65,
+        printWidth: 60,
         jsxSingleQuote: true
       }
     ]
