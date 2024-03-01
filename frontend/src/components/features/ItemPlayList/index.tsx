@@ -2,10 +2,10 @@ import React, { useState, useRef, MouseEvent } from 'react'
 import { IoHeartOutline } from 'react-icons/io5'
 import { LuMoreHorizontal } from 'react-icons/lu'
 import { FaPlay } from 'react-icons/fa'
-import style from '~/styles/PlayList.module.css'
+import style from '~/styles/PlayListDetails.module.css'
 import { Link } from 'react-router-dom'
 import { useHover, useClickOutside } from '~/hooks'
-import TrackAnimation from '../../common/TrackAniation'
+import TrackAnimation from '../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
 
 const ItemPlayList: React.FC = () => {
@@ -153,10 +153,12 @@ const ItemPlayList: React.FC = () => {
         )}
       </div>
       <div className={style.song__day}>May 31, 2022</div>
-      <div className={style.song__control}>
+      <div className={style.song__like}>
         <button className={style.btn}>
           <IoHeartOutline />
         </button>
+      </div>
+      <div className={style.song__control}>
         <span className={style.duration}>3:26</span>
         <button
           className={style.btn}

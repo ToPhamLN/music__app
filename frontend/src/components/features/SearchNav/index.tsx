@@ -1,46 +1,63 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent } from 'react'
 import style from '~/styles/Navbar.module.css'
 import { FaSearch } from 'react-icons/fa'
 import { MdOutlineClose } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import {
+  Link,
+  useSearchParams,
+  useLocation,
+  useNavigate
+} from 'react-router-dom'
 
 const SearchNav: React.FC = () => {
-  const [valid, setValid] = useState('')
-  const handleSearch = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const q = searchParams.get('q') ?? ''
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handlerClickSearch = () => {
+    if (location.pathname !== '/search') {
+      navigate('/search')
+    }
   }
+
+  const validHandler = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const query = Object.fromEntries(searchParams.entries())
+    query.q = e.target.value
+    setSearchParams(query)
+  }
+
+  const setValidHandler = (value: string) => {
+    const query = Object.fromEntries(searchParams.entries())
+    query.q = value
+    setSearchParams(query)
+  }
+
   return (
-    <Link to={'/search'}>
-      <form className={style.search__nav}>
-        <div className={style.input__box}>
-          <button
-            className={style.icon}
-            onClick={(e) => handleSearch(e)}
-          >
-            <FaSearch />
-          </button>
-          <input
-            type='text'
-            name='search'
-            placeholder='Tìm kiếm _ _ _'
-            autoComplete='off'
-            value={valid}
-            onChange={(e) => setValid(e.target.value)}
-          />
-          {valid && (
-            <button
-              className={style.icon}
-              onClick={() => setValid('')}
-            >
-              <MdOutlineClose />
-            </button>
-          )}
-        </div>
-        <div className={style.content}></div>
-      </form>
-    </Link>
+    <div
+      className={style.input__box}
+      onClick={() => handlerClickSearch()}
+    >
+      <button className={style.icon}>
+        <FaSearch />
+      </button>
+      <input
+        type='text'
+        name='search'
+        placeholder='Tìm kiếm...'
+        autoComplete='off'
+        value={q}
+        onChange={validHandler}
+      />
+      <button
+        className={style.icon}
+        onClick={() => setValidHandler('')}
+      >
+        <MdOutlineClose />
+      </button>
+    </div>
   )
 }
 

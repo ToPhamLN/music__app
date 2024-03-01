@@ -2,11 +2,12 @@ import React from 'react'
 import style from '~/styles/Sidebar.module.css'
 import { useAppSelector } from '~/hooks'
 import { GrHomeRounded } from 'react-icons/gr'
-import { FaRankingStar } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import {
-  MdPlaylistPlay,
-  MdOutlineAdd
+  MdOutlineAdd,
+  MdOutlineCategory,
+  MdOutlineBookmarkBorder,
+  MdOutlineEmojiEvents
 } from 'react-icons/md'
 import { ItemListBar } from '~/components/features'
 const Sidebar: React.FC = () => {
@@ -27,14 +28,17 @@ const Sidebar: React.FC = () => {
             Trang chủ
           </div>
         </Link>
-        <Link to={'/'} className={style.link}>
-          <FaRankingStar className={style.icon} />
-          <span className={style.link__name}>
-            Bảng xếp hạng
-          </span>
+        <Link to={'/rank'} className={style.link}>
+          <MdOutlineEmojiEvents className={style.icon} />
+          <span className={style.link__name}>Xếp hạng</span>
           <div className={style.hover__content}>
-            Bảng xếp hạng
+            Xếp hạng
           </div>
+        </Link>
+        <Link to={'/topic'} className={style.link}>
+          <MdOutlineCategory className={style.icon} />
+          <span className={style.link__name}>Chủ đề</span>
+          <div className={style.hover__content}>Chủ đề</div>
         </Link>
         <div
           style={{
@@ -44,7 +48,7 @@ const Sidebar: React.FC = () => {
           }}
         ></div>
         <Link to={'/mylist'} className={style.link}>
-          <MdPlaylistPlay />
+          <MdOutlineBookmarkBorder />
           <span className={style.link__name}>Thư viện</span>
           <div className={style.hover__content}>
             Thư viện

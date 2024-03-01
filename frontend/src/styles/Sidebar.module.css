@@ -1,6 +1,6 @@
 .sidebar {
     position: relative;
-    padding: 1rem 0;
+    padding: 1rem 0 0 0;
     height: 100%;
     background: var(--navbar);
     width: 25rem;
@@ -15,7 +15,7 @@
 .menu {
     display: flex;
     flex-flow: column nowrap;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 .hover__content {
@@ -85,7 +85,7 @@
     flex-flow: column nowrap;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 1rem 0 2rem;
+    padding: 0 1rem 0 1rem;
 
     &::-webkit-scrollbar {
         width: 0.3rem;
@@ -109,7 +109,7 @@
     transition: display color ease-in 0.3s;
     cursor: pointer;
     gap: 1rem;
-    padding: 1rem 2rem;
+    padding: 1rem;
 
     &>.icon {
         width: 5rem;
@@ -144,8 +144,8 @@
 
 @media only screen and (max-width: 1101px) {
     .sidebar {
-        width: 7rem;
-        padding-left: 0.5rem;
+        width: 7.5rem;
+        padding: 0.5rem;
     }
 
     .menu,
@@ -193,6 +193,13 @@
 
     .show {
         display: flex;
+    }
+
+
+    .link:hover .hover__content,
+    .item__list:hover .hover__content,
+    .item__hover__content {
+        display: none;
     }
 
 }

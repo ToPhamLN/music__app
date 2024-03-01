@@ -6,6 +6,7 @@ import { SearchNav } from '~/components/features'
 import { MdMenu } from 'react-icons/md'
 import { useAppDispatch } from '~/hooks'
 import { setIsSidebar } from '~/reduxStore/globalSlice'
+import Auth from './Auth'
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -26,10 +27,10 @@ const Navbar: React.FC = () => {
           </div>
         </Link>
       </div>
-      <div className={style.nav__dev}>
+      <div className={style.nav__center}>
         <SearchNav />
       </div>
-      <div></div>
+      <Auth />
     </div>
   )
 }

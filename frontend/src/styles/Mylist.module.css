@@ -1,0 +1,12 @@
+.mylist {
+    min-height: 100vh;
+    padding: 1rem 0 0 0;
+}
+
+.map {
+    padding: 0 1rem;
+
+    h1 {
+        margin-bottom: 1rem;
+    }
+}

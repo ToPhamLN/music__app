@@ -2,9 +2,6 @@
     min-height: 100%;
     width: 100%;
     line-height: 1.5;
-    display: flex;
-    flex-flow: column;
-    gap: 1px;
     padding: 1rem;
     background: var(--navbar);
 
@@ -14,7 +11,6 @@
 .header__playlist {
     position: relative;
     flex: 0 0 auto;
-    padding: 1rem 0;
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
@@ -174,6 +170,7 @@
 
 
 .info__playlist {
+    margin: 1rem 0;
     flex: 1;
     display: flex;
     flex-flow: row;
@@ -260,15 +257,14 @@
 .column__duration,
 .song__control {
     flex: 0 0 auto;
-    width: 12rem;
+    gap: 1rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
 .column__duration {
     font-size: 2rem;
-    justify-content: center;
+    width: 6.6rem;
 }
 
 .column__name {
@@ -278,6 +274,11 @@
     width: 100%;
     display: flex;
     height: 4rem;
+}
+
+.column__like {
+    width: 3rem;
+    flex: 0 0 auto;
 }
 
 .song__image {
@@ -397,9 +398,6 @@
     transition: background-color 0.3s ease-in-out 0.1s;
 }
 
-.song__item:hover {
-    background-color: var(--hover-color);
-}
 
 .hover__content {
     position: fixed;
@@ -422,6 +420,7 @@
     transform: translate(0, 10%);
 }
 
+.song__like .btn,
 .song__control .btn {
     visibility: hidden;
 }
@@ -435,6 +434,8 @@
 }
 
 .song__item:hover {
+    background-color: var(--hover-color);
+
     .song__play {
         display: flex;
     }
@@ -482,6 +483,11 @@
     .song__day {
         display: none;
         transition: all 0.3s ease-in-out 0.1s;
+    }
+
+    .song__like .btn,
+    .song__control .btn {
+        visibility: hidden;
     }
 
     .info__playlist h1 {

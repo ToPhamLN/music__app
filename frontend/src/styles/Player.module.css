@@ -12,7 +12,7 @@
     border-top: 1px solid var(--stripe-color);
     z-index: 9999;
     box-sizing: border-box;
-    gap: 1rem
+    gap: 1rem;
 }
 
 .no__track {
@@ -68,10 +68,43 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    gap: 1rem;
 
-    &>button {
+
+    button {
         position: relative;
+        padding: 0;
+        background: transparent;
+        font-size: 2rem;
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.3s ease-in-out;
 
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    &>.play {
+        font-size: 4rem;
+    }
+
+
+}
+
+.track__control .left,
+.track__control .right {
+    flex: 1;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    gap: 1rem;
+
+    button {
+        position: relative;
+        padding: 0;
         background: transparent;
         font-size: 2rem;
         color: var(--text-color);
@@ -105,9 +138,24 @@
         transform: translateX(-50%);
     }
 
-    &>.play {
-        font-size: 4rem;
+    .like,
+    .lyrics,
+    .queue {
+        display: none;
     }
+}
+
+.track__control .left {
+    justify-content: flex-end;
+
+    &>button:first-child {
+        margin-right: auto;
+    }
+
+}
+
+.track__control .right button:nth-child(2) {
+    margin-right: auto;
 }
 
 
@@ -214,9 +262,21 @@ button.choose {
     display: block;
 }
 
+
+
 @media only screen and (max-width: 850px) {
     .track__option input.input__volume {
         display: none;
+    }
+
+    .player {
+        padding: 1rem 1rem;
+    }
+
+    .track__info {
+        min-width: unset;
+        gap: 1rem;
+        padding-right: 1rem;
     }
 }
 
@@ -230,9 +290,18 @@ button.choose {
         flex: 1;
         max-width: 35rem;
         height: 100%;
-        display: flex;
         align-items: center;
         display: none;
+    }
+
+    .track__control .left,
+    .track__control .right {
+
+        .like,
+        .lyrics,
+        .queue {
+            display: flex;
+        }
     }
 
 }

@@ -15,6 +15,7 @@ const DefaultLayout: React.FC = () => {
   const { track } = useAppSelector(
     (state) => state.trackPlay
   )
+
   return (
     <div
       className={`app ${theme ? 'dark__theme' : 'light__theme'}`}

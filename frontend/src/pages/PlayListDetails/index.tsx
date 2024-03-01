@@ -6,17 +6,18 @@ import {
 } from 'react-icons/md'
 import {
   ItemPlayList,
+  Playlist,
   RenamePlaylist
 } from '~/components/features'
 import {
   Deletion,
   TrackAnimation
 } from '~/components/common'
-import style from '~/styles/PlayList.module.css'
+import style from '~/styles/PlaylistDetails.module.css'
 import { FaPen, FaPlay, FaShare } from 'react-icons/fa'
 import { IoHeartOutline } from 'react-icons/io5'
 
-const PlayList: React.FC = () => {
+const PlaylistDetailsPage: React.FC = () => {
   const [renameCard, setRenameCard] =
     useState<boolean>(false)
   const [deleteCard, setDeleteCard] =
@@ -93,24 +94,7 @@ const PlayList: React.FC = () => {
             <span>6 hr 57 min </span>
           </div>
         </div>
-        <div className={style.playlist__songs}>
-          <div className={style.column__name}>
-            <div className={style.column__index}>#</div>
-            <div className={style.column__title}>
-              Tiêu đề
-            </div>
-            <div className={style.column__album}>Album</div>
-            <div className={style.column__day}>
-              Ngày cập nhập
-            </div>
-            <div className={style.column__duration}>
-              <MdOutlineAccessTime />
-            </div>
-          </div>
-          {Array.from({ length: 20 }, (_, i) => (
-            <ItemPlayList key={i} />
-          ))}
-        </div>
+        <Playlist />
       </div>
       {renameCard && (
         <RenamePlaylist setExit={setRenameCard} />
@@ -120,4 +104,4 @@ const PlayList: React.FC = () => {
   )
 }
 
-export default PlayList
+export default PlaylistDetailsPage

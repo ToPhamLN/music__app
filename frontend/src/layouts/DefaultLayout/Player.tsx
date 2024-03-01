@@ -4,7 +4,9 @@ import {
   IoPlayCircle,
   IoPlayBack,
   IoPlayForward,
-  IoPauseCircle
+  IoPauseCircle,
+  IoHeartSharp,
+  IoHeartOutline
 } from 'react-icons/io5'
 import {
   TbArrowsShuffle2,
@@ -234,18 +236,23 @@ const Player: React.FC = () => {
           />
         </audio>
         <div className={style.track__control}>
-          <button
-            className={`${style.suffle} ${mode.isSuffle && style.choose}`}
-            onClick={handleShuffle}
-          >
-            <TbArrowsShuffle2 />
-          </button>
-          <button
-            className={style.playback}
-            onClick={handlePlayBack}
-          >
-            <IoPlayBack />
-          </button>
+          <div className={style.left}>
+            <button className={style.like}>
+              <IoHeartOutline />
+            </button>
+            <button
+              className={`${style.suffle} ${mode.isSuffle && style.choose}`}
+              onClick={handleShuffle}
+            >
+              <TbArrowsShuffle2 />
+            </button>
+            <button
+              className={style.playback}
+              onClick={handlePlayBack}
+            >
+              <IoPlayBack />
+            </button>
+          </div>
           <button
             className={style.play}
             onClick={togglePlayPause}
@@ -256,18 +263,35 @@ const Player: React.FC = () => {
               <IoPauseCircle />
             )}
           </button>
-          <button
-            className={style.playforward}
-            onClick={handlePlayForward}
-          >
-            <IoPlayForward />
-          </button>
-          <button
-            onClick={handleLoopRePlay}
-            className={`${mode.isReplay && style.replay} ${mode.isLoop && style.loop}`}
-          >
-            <TbArrowCapsule />
-          </button>
+          <div className={style.right}>
+            <button
+              className={style.playforward}
+              onClick={handlePlayForward}
+            >
+              <IoPlayForward />
+            </button>
+            <button
+              onClick={handleLoopRePlay}
+              className={`${mode.isReplay && style.replay} ${mode.isLoop && style.loop}`}
+            >
+              <TbArrowCapsule />
+            </button>
+            <button
+              hover-content={'Lời bài hát'}
+              className={style.lyrics}
+            >
+              <MdLyrics />
+            </button>
+            <button
+              hover-content={'Danh sách chờ'}
+              onClick={() =>
+                dispatch(setIsView(!view.isView))
+              }
+              className={`${style.queue} ${view.isView ? style.choose : ''}`}
+            >
+              <RiPlayListFill />
+            </button>
+          </div>
         </div>
         <div className={style.track__range}>
           <span>{formatTime(currentTime)}</span>

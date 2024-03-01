@@ -7,6 +7,11 @@ import RenamePlaylist from './RenamePlaylist/RenamePlaylist'
 import HomeSlick from './HomeSlick'
 import SlickFramer from './SlickFramer'
 import PlaylistGrid from './PlayListGrid'
+import Playlist from './Playlist'
+import CardPlaylist from './CardPlayList'
+import CardPeople from './CardPeople'
+import SlickNoSection from './SlickNoSection'
+import SlickPeople from './SlickPeple'
 
 export {
   ItemListBar,
@@ -17,5 +22,10 @@ export {
   RenamePlaylist,
   HomeSlick,
   SlickFramer,
-  PlaylistGrid
+  PlaylistGrid,
+  Playlist,
+  CardPlaylist,
+  CardPeople,
+  SlickNoSection,
+  SlickPeople
 }
