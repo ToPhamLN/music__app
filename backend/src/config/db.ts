@@ -7,8 +7,8 @@ export const connect = async (): Promise<void> => {
       process.env.MONGOOSE_URL as string,
       {} as ConnectOptions
     )
-    console.log('Connect database successfully!!!')
+    console.log('[database]: Connect database successfully!!!')
   } catch (error) {
-    console.log('Connect database failure!!!')
+    console.log('[database]: Connect database failure!!!')
   }
 }

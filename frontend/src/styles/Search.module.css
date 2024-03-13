@@ -101,8 +101,10 @@
 
 }
 
-.map {
-    margin: 0 1rem;
+.top__result {
+    h1 {
+        margin-bottom: 1rem;
+    }
 }
 
 .search .main {

@@ -27,7 +27,7 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(bodyParser.json({ limit: '30mb' }))
 
-app.use('/api/auths', authRoutes)
+app.use('/api/v1/auths', authRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
@@ -35,5 +35,7 @@ app.use(errorHandler)
 connect()
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`)
+  console.log(
+    `[server]: Server is running at http://localhost:${port}`
+  )
 })

@@ -186,6 +186,7 @@
         background: transparent;
         font-size: 2.5rem;
         color: var(--text-color);
+        height: 100%;
         padding: 0;
         display: flex;
         place-items: center;

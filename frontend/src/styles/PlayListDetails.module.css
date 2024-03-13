@@ -71,7 +71,7 @@
 }
 
 .header__more__card {
-    padding: 1rem 0.5rem;
+    padding: 0.5rem;
     position: absolute;
     background-color: var(--navbar);
     width: 22rem;

@@ -2,7 +2,7 @@ import React from 'react'
 import {
   CardPlaylist,
   Playlist,
-  SlickNoSection,
+  SlickPlaylist,
   SlickPeople
 } from '~/components/features'
 import style from '~/styles/Search.module.css'
@@ -25,10 +25,10 @@ const All = () => {
         </div>
       </div>
       <div className={style.map}>
-        <SlickNoSection />
+        <SlickPlaylist />
       </div>
       <div className={style.map}>
-        <SlickNoSection />
+        <SlickPlaylist />
       </div>
       <div className={style.map}>
         <SlickPeople />

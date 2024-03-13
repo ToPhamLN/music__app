@@ -3,7 +3,7 @@ import { FaPlay } from 'react-icons/fa'
 import { MdAdd } from 'react-icons/md'
 import {
   Playlist,
-  SlickFramer
+  SlickPlaylist
 } from '~/components/features'
 import SlickPeople from '~/components/features/SlickPeple'
 import style from '~/styles/AristDetails.module.css'
@@ -49,7 +49,7 @@ const ArtistDetails = () => {
         </div>
       </div>
       <div className={style.map}>
-        <SlickFramer />
+        <SlickPlaylist />
       </div>
       <div className={style.popular__songs}>
         <h1>Phổ biến</h1>
@@ -62,7 +62,7 @@ const ArtistDetails = () => {
         </button>
       </div>
       <div className={style.map}>
-        <SlickFramer />
+        <SlickPlaylist />
       </div>
 
       <div className={style.artist__bio}>

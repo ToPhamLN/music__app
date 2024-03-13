@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
-import { AuthModel, UserModel, ArtistModel } from '~/models'
+import { AuthModel } from '~/models'
 import {
   generateAccessToken,
-  generateRefreshToken,
-  convertSlug
+  generateRefreshToken
 } from '~/utils/helper'
 import bcrypt from 'bcrypt'
-import { Auth } from '~/type'
+// import { Auth } from '~/type'
 
 export const postSignup = async (
   req: Request,
@@ -14,14 +13,14 @@ export const postSignup = async (
   next: NextFunction
 ): Promise<void | Response<any, Record<string, any>>> => {
   try {
-    const { email, username, password } = req.body
+    const { email, password } = req.body
     const existAuth = await AuthModel.findOne({
-      $or: [{ email: email }, { username: username }]
+      email: email
     })
 
     if (existAuth) {
       return res.status(400).json({
-        message: 'User account already exists'
+        message: 'Email này đã tồn tại'
       })
     }
 
@@ -29,22 +28,13 @@ export const postSignup = async (
     const hashed = await bcrypt.hash(password, salt)
 
     const newAuth = new AuthModel({
-      username: username,
       email: email,
       password: hashed
     })
-    const newUser = new UserModel({
-      name: username,
-      slug: convertSlug(username)
-    })
-    const newArtist = new ArtistModel({
-      name: username,
-      slug: convertSlug(username)
-    })
+
     const auth = await newAuth.save()
-    await newUser.save()
-    await newArtist.save()
-    res.status(200).json(auth)
+    const { password: omitPassword, ...authRes } = auth._doc
+    res.status(200).json(authRes)
   } catch (error) {
     next(error)
   }

@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import style from '~/styles/Home.module.css'
-import Child from '~/components/features/CardPeople'
+import style2 from '~/styles/Card.module.css'
+import CardPeople from '../CardPeople'
+import Section from './Section'
 const SlickPeople = () => {
   const [widthInner, setWithInner] = useState<number>(0)
   const casrouselRef: React.MutableRefObject<HTMLDivElement | null> =
     useRef(null)
+  const [openSection, setOpenSection] =
+    useState<boolean>(false)
 
   useEffect(() => {
     const casrousel = casrouselRef.current
@@ -19,7 +23,9 @@ const SlickPeople = () => {
     <div className={style.playlist__row}>
       <div className={style.header}>
         <h1>Dành cho bạn</h1>
-        <button>Xem tất cả</button>
+        <button onClick={() => setOpenSection(true)}>
+          Xem tất cả
+        </button>
       </div>
       <motion.div
         ref={casrouselRef}
@@ -28,21 +34,21 @@ const SlickPeople = () => {
         <motion.div
           drag='x'
           dragConstraints={{ right: 0, left: -widthInner }}
-          className={style.inner__carousel}
+          className={style2.flex__hidden}
         >
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
+          <CardPeople />
         </motion.div>
       </motion.div>
+      {openSection && <Section setExit={setOpenSection} />}
     </div>
   )
 }

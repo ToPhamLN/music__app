@@ -137,6 +137,7 @@ const Player: React.FC = () => {
     const audio = audioRef.current
     if (audio) {
       audio.load()
+      dispatch(setIsPlaying(true))
       audio.play()
     }
   }
@@ -159,12 +160,10 @@ const Player: React.FC = () => {
     dispatch(setWaitingList(newList))
   }
 
-  // Replay audio and change "waitingList" depending on random mode or not
   useEffect(() => {
     const audio = audioRef.current
-    handleReplay()
     if (audio) {
-      dispatch(setIsPlaying(true))
+      handleReplay()
     }
   }, [track])
 
@@ -178,7 +177,6 @@ const Player: React.FC = () => {
   }, [mode])
 
   useEffect(() => {
-    dispatch(setIsPlaying(false))
     const audio = audioRef.current
     if (audio) {
       const handleTimeUpdate = () => {
@@ -200,6 +198,9 @@ const Player: React.FC = () => {
       } else {
         audio.volume = volume.value
       }
+      audio.pause()
+      dispatch(setIsPlaying(false))
+
       return () => {
         audio.addEventListener(
           'timeupdate',

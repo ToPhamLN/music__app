@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md'
 import { RiLogoutBoxFill } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import Notify from './Notify'
 
 const Auth: React.FC = () => {
   const [openMore, setOpenMore] = useState<boolean>(false)
@@ -79,7 +80,7 @@ const Auth: React.FC = () => {
                 Tải khoản
               </button>
             </Link>
-            <Link to={'profile'}>
+            <Link to={'/user'}>
               <button>
                 <MdAccountBox />
                 Hồ sơ
@@ -96,10 +97,10 @@ const Auth: React.FC = () => {
           </div>
         )}
         {openNotify && (
-          <div
-            className={style.more__notify}
-            ref={notifyRef}
-          ></div>
+          <Notify
+            refItem={notifyRef}
+            setExit={() => setOpenNotify(false)}
+          />
         )}
       </div>
     </div>

@@ -16,11 +16,9 @@
   },
   "ts-node": {
     "require": [
-      "tsconfig-paths/register"
+      "tsconfig-paths/register",
     ],
-    "ts-node": {
-      "swc": true
-    }
+    "swc": true,
   },
   "files": [
     "src/type.d.ts"

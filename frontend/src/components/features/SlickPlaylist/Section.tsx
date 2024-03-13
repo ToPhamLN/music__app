@@ -1,6 +1,7 @@
 import React from 'react'
 import style from '~/styles/Home.module.css'
-import Child from './Child'
+import style2 from '~/styles/Card.module.css'
+import CardPlaylist from '../CardPlayList'
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -16,28 +17,12 @@ const Section = (props: Props) => {
           X
         </button>
         <h1>Dành cho bạn</h1>
-        <div className={style.wrapper}>
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child /> <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child /> <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child /> <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
+        <div className={`${style.wrapper} ${style2.grid}`}>
+          <CardPlaylist />
+          <CardPlaylist />
+          <CardPlaylist />
+          <CardPlaylist />
+          <CardPlaylist />
         </div>
       </div>
     </div>

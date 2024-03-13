@@ -6,6 +6,7 @@ import Player from './Player'
 import Sidebar from './Sidebar'
 import Viewbar from './Viewbar'
 import Footer from './Footer'
+import { Notification } from '~/components/features'
 
 const DefaultLayout: React.FC = () => {
   const { theme } = useAppSelector(
@@ -23,7 +24,7 @@ const DefaultLayout: React.FC = () => {
       <Navbar />
       <div
         className={
-          track ? 'container' : 'container notrack'
+          track ? 'container hastrack' : 'container'
         }
       >
         <Sidebar />
@@ -34,6 +35,7 @@ const DefaultLayout: React.FC = () => {
         {view.isView && <Viewbar />}
       </div>
       <Player />
+      <Notification />
     </div>
   )
 }

@@ -6,11 +6,9 @@ interface Image {
 }
 
 interface Auth extends Document {
-  _id: Types.ObjectId
-  username: string
   email: string
   password: string
-  isAdmin: boolean
+  role?: string
 }
 
 interface User extends Document {

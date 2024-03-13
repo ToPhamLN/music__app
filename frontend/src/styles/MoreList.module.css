@@ -5,7 +5,7 @@
     background-color: var(--navbar);
     box-shadow: var(--box-shadow);
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.5rem;
     border: 0.1rem solid var(--stripe-color);
     box-sizing: border-box;
     z-index: 9999;

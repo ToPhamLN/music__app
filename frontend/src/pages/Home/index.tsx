@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   HomeSlick,
-  SlickFramer
+  SlickPlaylist
 } from '~/components/features'
 import style from '~/styles/Home.module.css'
 import { PlaylistGrid } from '../../components/features'
@@ -15,7 +15,9 @@ const HomePage: React.FC = () => {
         </div>
         <PlaylistGrid />
       </div>
-      <SlickFramer />
+      <div className={style.map}>
+        <SlickPlaylist />
+      </div>
     </div>
   )
 }

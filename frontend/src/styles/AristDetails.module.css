@@ -1,5 +1,5 @@
 .artist__details {
-    min-height: 200vh;
+    min-height: 100vh;
     position: relative;
 }
 
@@ -7,7 +7,6 @@
     position: relative;
     width: auto;
     aspect-ratio: 4 / 1;
-    background-color: aqua;
 
     &>.image {
         height: 100%;
