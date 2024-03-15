@@ -1,20 +1,69 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
+import { useAppDispatch, useAxiosPublic } from '~/hooks'
+import { updateProfile } from '~/reduxStore/profileSlice'
+import { useNavigate } from 'react-router-dom'
 import style from '~/styles/Login.module.css'
-import { InputBox } from '~/components/common'
+import { InputBox, LoadingIcon } from '~/components/common'
 import { Link } from 'react-router-dom'
-interface LoginForm {
+import { setNotify } from '~/reduxStore/globalSlice'
+
+interface FormLogin {
   email: string
   password: string
 }
 const LoginPage: React.FC = () => {
-  const methods = useForm()
-  const onSubmit = (data: LoginForm) => {
-    console.log(data)
+  const [loading, setLoading] = useState<boolean>(false)
+  const methods = useForm<FormLogin>()
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const axiosPublic = useAxiosPublic()
+
+  const onSubmit = async (data: FormLogin) => {
+    try {
+      setLoading(true)
+      const res = await axiosPublic.post(
+        'api/v1/auths/login',
+        data
+      )
+      const { role, _id } = res.data.auth
+
+      if (role) {
+        const url = `api/v1/${role}s/login/${_id}`
+        const res2 = await axiosPublic.get(url)
+        console.log(res2.data)
+        dispatch(
+          updateProfile({
+            ...res.data.auth,
+            avatar: res2.data.avatar,
+            username: res2.data.username,
+            idRole: res2.data._id
+          })
+        )
+        navigate('/')
+      } else {
+        dispatch(updateProfile(res.data.auth))
+        navigate('/role')
+      }
+
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res.data.message
+        })
+      )
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   }
   return (
     <div className={style.login}>
-      <div className={style.container}>
+      <div
+        className={style.container}
+        style={{ opacity: loading ? '0.8' : 'unset' }}
+      >
         <h1>Đăng nhập vào Morri</h1>
         <div className={style.passport}>
           <button>
@@ -86,12 +135,12 @@ const LoginPage: React.FC = () => {
               className={style.submit__login}
               type='submit'
             >
-              Đăng nhập
+              {loading ? <LoadingIcon /> : 'Đăng nhập'}
             </button>
           </form>
         </FormProvider>
         <div className={style.forget}>
-          <Link>Quên mật khẩu?</Link>
+          <Link to={'/'}>Quên mật khẩu?</Link>
         </div>
         <div className={style.stripe}></div>
         <div className={style.reminder}>

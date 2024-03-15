@@ -4,7 +4,11 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { connect } from '~/config/db'
-import { authRoutes } from './routes'
+import {
+  authRoutes,
+  artistRoutes,
+  listTrackRoutes
+} from './routes'
 import {
   notFound,
   errorHandler
@@ -15,7 +19,7 @@ const app: express.Application = express()
 const port = process.env.PORT ?? 5000
 
 const corsOptions: cors.CorsOptions = {
-  origin: '*',
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -24,10 +28,14 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors(corsOptions))
 app.use(cookieParser())
-app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
-app.use(bodyParser.json({ limit: '30mb' }))
+app.use(
+  bodyParser.urlencoded({ limit: '50mb', extended: false })
+)
+app.use(bodyParser.json({ limit: '50mb' }))
 
 app.use('/api/v1/auths', authRoutes)
+app.use('/api/v1/artists', artistRoutes)
+app.use('/api/v1/listtrack', listTrackRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

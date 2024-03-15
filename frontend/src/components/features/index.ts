@@ -11,7 +11,6 @@ import CardPlaylist from './CardPlayList'
 import CardPeople from './CardPeople'
 import SlickPlaylist from './SlickPlaylist'
 import SlickPeople from './SlickPeple'
-import Notification from './Notification'
 import ItemNotify from './ItemNotify'
 
 export {
@@ -28,6 +27,5 @@ export {
   CardPlaylist,
   CardPeople,
   SlickPeople,
-  Notification,
   ItemNotify
 }

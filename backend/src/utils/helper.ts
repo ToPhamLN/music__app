@@ -5,7 +5,7 @@ export const generateAccessToken = (auth: Auth): string => {
   return jwt.sign(
     {
       authId: auth._id,
-      isAdmin: auth.isAdmin
+      role: auth.role
     } as JwtPayload,
     process.env.JWT_ACCESS_KEY as string,
     { expiresIn: '365d' }
@@ -16,7 +16,7 @@ export const generateRefreshToken = (auth: Auth): string => {
   return jwt.sign(
     {
       authId: auth._id,
-      isAdmin: auth.isAdmin
+      isAdmin: auth.role
     } as JwtPayload,
     process.env.JWT_REFRESH_KEY as string,
     { expiresIn: '365d' }

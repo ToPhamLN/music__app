@@ -1,5 +1,5 @@
 import { store } from './store'
-import userSlice from './userSlice'
+import profileSlice from './profileSlice'
 import settingsSlice from './settingsSlice'
 
-export { store, userSlice, settingsSlice }
+export { store, profileSlice, settingsSlice }

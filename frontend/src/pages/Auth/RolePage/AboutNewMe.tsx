@@ -4,12 +4,13 @@ import { useFormContext } from 'react-hook-form'
 
 const AboutNewMe = () => {
   const { getValues } = useFormContext()
+
   return (
     <div className={style.form__section}>
       <h1 className={style.title}>Thông tin tài khoản</h1>
       <InputFile label='Ảnh đại diện' name='avatar' />
       <InputBox
-        name='name'
+        name='username'
         label={
           getValues('role') == 'user'
             ? 'Tên người dùng'

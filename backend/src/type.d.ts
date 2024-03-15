@@ -12,21 +12,19 @@ interface Auth extends Document {
 }
 
 interface User extends Document {
-  _id: Types.ObjectId
   name?: string
   avatar?: Image
-  wishList?: Types.ObjectId[]
-  recentlyList?: Types.ObjectId[]
+  background?: Image
   auth?: Types.ObjectId
-  following: Types.ObjectId[]
   slug?: string
+  wishList?: Types.ObjectId[]
+  recentlyTrack?: Types.ObjectId[]
 }
 interface Artist extends Document {
-  _id: Types.ObjectId
-  name?: string
-  avatar?: Image
-  backGround?: Image
-  auth?: Types.ObjectId
+  username: string
+  avatar: Image
+  background?: Image
+  auth: Types.ObjectId
   slug?: string
 }
 
@@ -41,25 +39,22 @@ interface Track extends Document {
   slug?: string
 }
 
-interface Album extends Document {
-  _id: Types.ObjectId
+interface ListTrack extends Document {
+  category: string
   title: string
-  list: Types.ObjectId[]
+  photo: Image
+  background: Image
   artist: Types.ObjectId
-  listens: number
-  slug?: string
-}
-
-interface PlayList extends Document {
-  _id: Types.ObjectId
-  title: string
+  description: string
   list: Types.ObjectId[]
-  user: Types.ObjectId
+  slug: string
+  listens: number
+  likes: []
 }
 
 interface JwtPayload {
-  authId: Types.ObjectId
-  isAdmin: boolean
+  authId: string
+  role?: boolean
 }
 
 declare module 'express' {

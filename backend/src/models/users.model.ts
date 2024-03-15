@@ -3,10 +3,6 @@ import { User } from '~/type'
 
 const userSchema = new Schema<User>(
   {
-    _id: {
-      type: Schema.Types.ObjectId,
-      default: new Types.ObjectId()
-    },
     name: {
       type: String
     },
@@ -22,16 +18,16 @@ const userSchema = new Schema<User>(
       type: Schema.Types.ObjectId,
       ref: 'Auth'
     },
+    slug: {
+      type: String
+    },
     wishList: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
       default: []
     },
-    recentlyPlayed: {
+    recentlyTrack: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
       default: []
-    },
-    slug: {
-      type: String
     }
   },
   { timestamps: true }

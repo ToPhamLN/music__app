@@ -1,13 +1,9 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import { Artist } from '~/type'
 
 const artistSchema = new Schema<Artist>(
   {
-    _id: {
-      type: Schema.Types.ObjectId,
-      default: new Types.ObjectId()
-    },
-    name: {
+    username: {
       type: String
     },
     avatar: {
@@ -18,13 +14,17 @@ const artistSchema = new Schema<Artist>(
         type: String
       }
     },
-    backGround: {
+    background: {
       path: {
         type: String
       },
       fileName: {
         type: String
       }
+    },
+    auth: {
+      type: Schema.Types.ObjectId,
+      ref: 'Auth'
     },
     slug: {
       type: String

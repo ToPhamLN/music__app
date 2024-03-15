@@ -7,18 +7,34 @@ import {
 import style from '~/styles/AritstCreateAlbum.module.css'
 import { useForm, FormProvider } from 'react-hook-form'
 import { MdOutlineLibraryAddCheck } from 'react-icons/md'
+import { useAppDispatch, useAxiosPrivate } from '~/hooks'
+import { setNotify } from '~/reduxStore/globalSlice'
 
 interface FormAlbum {
   title: string
-  artwork: string
+  photo: string
   background: string
   description: string
 }
 const ArtistCreateAlbum: React.FC = () => {
   const methods = useForm<FormAlbum>()
-  const onSubmit = (data: FormAlbum) => {
-    console.log(data) //{title: 'ewqe', artword: FileList, background: FileList, description: 'qwe'}
-    console.log(data.artwork) //undefined
+  const axiosPrivate = useAxiosPrivate()
+
+  const onSubmit = async (data: FormAlbum) => {
+    try {
+      const res = await axiosPrivate.post(
+        'api/v1/listtrack/create',
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+      console.log(res.data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -36,7 +52,7 @@ const ArtistCreateAlbum: React.FC = () => {
           />
           <InputFile
             label='Ảnh tiêu đề'
-            name='artwork'
+            name='photo'
             required={true}
           />
           <InputFile

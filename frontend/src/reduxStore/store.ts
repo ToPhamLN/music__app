@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userSlice from './userSlice'
+import profileSlice from './profileSlice'
 import settingsSlice from './settingsSlice'
 import trackPlaySlice from './trackPlaySlice'
 import globalSlice from './globalSlice'
 
 export const store = configureStore({
   reducer: {
-    user: userSlice,
+    profile: profileSlice,
     settings: settingsSlice,
     trackPlay: trackPlaySlice,
     global: globalSlice

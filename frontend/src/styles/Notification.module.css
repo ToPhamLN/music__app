@@ -14,6 +14,8 @@
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 0.1rem solid var(--stripe-color);
+    box-shadow: var(--box-shadow);
+    padding: 0.5rem;
 
     display: flex;
     align-items: center;
@@ -24,12 +26,29 @@
 
 }
 
+.success__icon {
+    font-size: 4rem;
+    color: var(--color-success)
+}
+
+.warning__icon {
+    font-size: 4rem;
+    color: var(--color-warning);
+}
+
+.error__icon {
+    font-size: 4rem;
+    color: var(--color-danger);
+}
+
 .type {
     flex: 0 0 auto;
     height: 5rem;
     aspect-ratio: 1 /1;
-    background-color: rgb(26, 39, 39);
     border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .info {
@@ -72,6 +91,6 @@
 
     .notification__card {
         width: auto;
-        margin: 0 1rem;
+        margin: 0.5rem 1rem;
     }
 }

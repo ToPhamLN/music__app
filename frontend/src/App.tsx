@@ -13,7 +13,6 @@ import AuthLayout from './layouts/AuthLayout'
 import ArtistLayout from './layouts/ArtistLayout'
 
 const App: React.FC = () => {
-  const { userInfo } = useAppSelector((state) => state.user)
   return (
     <Routes>
       <Route path='/' element={<ArtistLayout />}>

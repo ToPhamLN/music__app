@@ -2,14 +2,12 @@ import AuthModel from './auths.model'
 import UserModel from './users.model'
 import ArtistModel from './artists.model'
 import TrackModel from './tracks.model'
-import AlbumModel from './albums.model'
-import PlayListModel from './playLists.model'
+import ListTrackModel from './listTracks.model'
 
 export {
-  AlbumModel,
   UserModel,
   ArtistModel,
+  ListTrackModel,
   TrackModel,
-  AuthModel,
-  PlayListModel
+  AuthModel
 }

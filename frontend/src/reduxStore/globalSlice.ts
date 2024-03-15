@@ -8,7 +8,8 @@ const initialState: GlobalSliceType = {
     isView: false,
     isRecently: false
   },
-  isSidebar: false
+  isSidebar: false,
+  notify: []
 }
 
 const globalSlice = createSlice({
@@ -26,11 +27,30 @@ const globalSlice = createSlice({
     },
     setIsSidebar: (state) => {
       state.isSidebar = !state.isSidebar
+    },
+    setNotify: (
+      state,
+      action: PayloadAction<SNotification>
+    ) => {
+      state.notify = [...state.notify, action.payload]
+    },
+    removeNotify: (
+      state,
+      action: PayloadAction<SNotification>
+    ) => {
+      state.notify = state.notify.filter(
+        (item) => item.message !== action.payload.message
+      )
     }
   }
 })
 
-export const { setIsView, setIsRecently, setIsSidebar } =
-  globalSlice.actions
+export const {
+  setIsView,
+  setIsRecently,
+  setIsSidebar,
+  setNotify,
+  removeNotify
+} = globalSlice.actions
 
 export default globalSlice.reducer

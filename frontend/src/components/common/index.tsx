@@ -6,6 +6,7 @@ import ViewInput from './ViewInput'
 import Toggle from './Toggle'
 import TextBox from './TextBox'
 import InputFile from './InputFile'
+import LoadingIcon from './LoadingIcon'
 
 export {
   Deletion,
@@ -15,5 +16,6 @@ export {
   TextBox,
   ViewInput,
   Toggle,
-  InputFile
+  InputFile,
+  LoadingIcon
 }

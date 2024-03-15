@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom'
 import { useAppSelector } from '~/hooks'
 import Navbar from './Navbar'
 import Footer from '../DefaultLayout/Footer'
-import { Notification } from '~/components/features'
 import Sidebar from './Sidebar'
+import Notification from './Notification'
 
 const ArtistLayout: React.FC = () => {
   const { theme } = useAppSelector(
@@ -23,7 +23,7 @@ const ArtistLayout: React.FC = () => {
           <Footer />
         </div>
       </div>
-      {/* <Notification /> */}
+      <Notification />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import Player from './Player'
 import Sidebar from './Sidebar'
 import Viewbar from './Viewbar'
 import Footer from './Footer'
-import { Notification } from '~/components/features'
+import { Notification } from './Notification'
 
 const DefaultLayout: React.FC = () => {
   const { theme } = useAppSelector(

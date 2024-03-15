@@ -1,10 +1,11 @@
-interface UserInfoType {
-  username: string
-  email: string
-}
-
-interface UserSliceType {
-  userInfo: UserInfoType
+interface SProfile {
+  _id?: string
+  email?: string
+  role?: string
+  accessToken?: string
+  username?: string
+  avatar?: string
+  idRole?: string
 }
 
 interface SettingsSliceType {
@@ -52,10 +53,16 @@ interface TrackPlaySliceType {
   isPlaying: boolean
 }
 
+interface SNotification {
+  type: string
+  message: string
+}
+
 interface GlobalSliceType {
   view: {
     isView: boolean
     isRecently: boolean
   }
   isSidebar: boolean
+  notify: SNotification[]
 }

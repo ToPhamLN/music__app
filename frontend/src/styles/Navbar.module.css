@@ -320,6 +320,19 @@
         padding: 6rem 1rem 0 1rem;
     }
 
+    .input__box {
+        width: 25rem;
+
+        .icon {
+            width: auto;
+            padding: 1rem;
+        }
+
+        input {
+            width: 1%;
+        }
+    }
+
 }
 
 @media only screen and (max-width: 601px) {

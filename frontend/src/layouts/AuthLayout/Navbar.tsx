@@ -3,8 +3,10 @@ import style from '~/styles/Navbar.module.css'
 import logoImage from '~/assets/favicon.ico'
 import { Link } from 'react-router-dom'
 import { SearchNav } from '~/components/features'
+import { useAppSelector } from '~/hooks'
 
 const Navbar: React.FC = () => {
+  const profile = useAppSelector((state) => state.profile)
   return (
     <div className={style.navbar}>
       <div className={style.logo}>
@@ -19,12 +21,16 @@ const Navbar: React.FC = () => {
         <SearchNav />
       </div>
       <div className={style.login__link}>
-        <Link to={'/login'}>
-          <button>Đăng nhập</button>
-        </Link>
-        <Link to={'/signup'}>
-          <button>Đăng ký</button>
-        </Link>
+        {!profile._id && (
+          <>
+            <Link to={'/login'}>
+              <button>Đăng nhập</button>
+            </Link>
+            <Link to={'/signup'}>
+              <button>Đăng ký</button>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   )

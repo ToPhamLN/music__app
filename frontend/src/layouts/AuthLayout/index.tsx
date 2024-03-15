@@ -3,6 +3,7 @@ import Navbar from './Navbar'
 import { Outlet } from 'react-router-dom'
 import Footer from '../DefaultLayout/Footer'
 import { useAppSelector } from '~/hooks'
+import Notification from './Notification'
 
 export const AuthLayout = () => {
   const { theme } = useAppSelector(
@@ -15,6 +16,7 @@ export const AuthLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      <Notification />
     </div>
   )
 }

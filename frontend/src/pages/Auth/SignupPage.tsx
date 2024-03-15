@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import style from '~/styles/Login.module.css'
-import { InputBox } from '~/components/common'
+import { InputBox, LoadingIcon } from '~/components/common'
 import { Link } from 'react-router-dom'
-import axios from '~/api/axios'
+import { useAppDispatch, useAxiosPublic } from '~/hooks'
+import { setProfile } from '~/reduxStore/profileSlice'
+import { setNotify } from '~/reduxStore/globalSlice'
 
 interface SignupForm {
   email: string
@@ -12,7 +15,11 @@ interface SignupForm {
 }
 
 const SignupPage: React.FC = () => {
-  const methods = useForm()
+  const [loading, setLoading] = useState<boolean>(false)
+  const methods = useForm<SignupForm>()
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const axiosPublic = useAxiosPublic()
 
   const onSubmit = async (data: SignupForm) => {
     if (data.password !== data.confirmPwd) {
@@ -24,13 +31,23 @@ const SignupPage: React.FC = () => {
       return
     }
     try {
-      const res = await axios.post(
+      setLoading(true)
+      const res = await axiosPublic.post(
         'api/v1/auths/signup',
         data
       )
-      console.log(res.data)
+      dispatch(setProfile(res.data.auth))
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res.data.message
+        })
+      )
+      navigate('/role')
     } catch (error) {
-      console.log(error)
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -39,6 +56,7 @@ const SignupPage: React.FC = () => {
         <form
           className={style.container}
           onSubmit={methods.handleSubmit(onSubmit)}
+          style={{ opacity: loading ? '0.8' : 'unset' }}
         >
           <h1>Đăng ký tham gia Morri</h1>
           <div className={style.stripe}></div>
@@ -60,7 +78,7 @@ const SignupPage: React.FC = () => {
             />
           </div>
           <button className={style.submit} type='submit'>
-            Đăng ký
+            {loading ? <LoadingIcon /> : 'Đăng ký'}
           </button>
 
           <div className={style.stripe}></div>
