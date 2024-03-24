@@ -5,7 +5,7 @@ import { FaPlay } from 'react-icons/fa'
 import style from '~/styles/PlayListDetails.module.css'
 import { Link } from 'react-router-dom'
 import { useHover, useClickOutside } from '~/hooks'
-import TrackAnimation from '../../common/TrackAnimation'
+import TrackAnimation from '../../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
 
 const ItemPlayList: React.FC = () => {

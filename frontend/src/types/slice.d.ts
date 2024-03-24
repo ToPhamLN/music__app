@@ -1,18 +1,20 @@
-interface SProfile {
+interface IProfile {
   _id?: string
   email?: string
-  role?: string
   accessToken?: string
-  username?: string
-  avatar?: string
-  idRole?: string
+  role?: string
+  idRole?: {
+    _id: string
+    username: string
+    avatar: DImage
+  }
 }
 
 interface SettingsSliceType {
   theme: boolean
 }
 
-interface ArtistType {
+interface IArtistType {
   name: string
 }
 

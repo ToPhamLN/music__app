@@ -16,13 +16,15 @@ import ArtistAlbum from '~/pages/ArtistAlbum'
 import ArtistBio from '~/pages/ArtistBio'
 import ArtistAlbumDetails from '~/pages/ArtistAlbumDetails'
 import ArtistCreateAlbum from '~/pages/ArtistCreateAlbum'
+import ArtistCreateTrack from '~/pages/ArtistCreateTrack'
 export const routes = {
   home: '/',
   login: '/login',
   signup: '/signup',
   search: '/search',
-  albumDetails: '/album',
+  albumDetails: '/album/:albumParam',
   albumCreate: '/album/create',
+  trackCreate: '/track/create',
   topic: '/topic',
   userDetails: '/user',
   rank: '/rank',
@@ -58,7 +60,6 @@ export const publicRoutes: {
   },
   { path: routes.topic, component: Topic },
   { path: routes.artistDetails, component: ArtistDetails },
-  { path: routes.demo, component: Demo },
   { path: routes.rank, component: Rank },
   { path: routes.userDetails, component: UserDetails }
 ]
@@ -86,5 +87,10 @@ export const artistRoutes: {
   {
     path: routes.albumDetails,
     component: ArtistAlbumDetails
-  }
+  },
+  {
+    path: routes.trackCreate,
+    component: ArtistCreateTrack
+  },
+  { path: routes.demo, component: Demo }
 ]

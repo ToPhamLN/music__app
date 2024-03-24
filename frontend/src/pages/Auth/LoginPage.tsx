@@ -4,7 +4,8 @@ import { useAppDispatch, useAxiosPublic } from '~/hooks'
 import { updateProfile } from '~/reduxStore/profileSlice'
 import { useNavigate } from 'react-router-dom'
 import style from '~/styles/Login.module.css'
-import { InputBox, LoadingIcon } from '~/components/common'
+import { InputBox } from '~/components/common'
+import { LoadingIcon } from '~/components/pure'
 import { Link } from 'react-router-dom'
 import { setNotify } from '~/reduxStore/globalSlice'
 
@@ -26,23 +27,13 @@ const LoginPage: React.FC = () => {
         'api/v1/auths/login',
         data
       )
-      const { role, _id } = res.data.auth
+      const { role } = res.data.auth
+      console.log(res.data)
 
       if (role) {
-        const url = `api/v1/${role}s/login/${_id}`
-        const res2 = await axiosPublic.get(url)
-        console.log(res2.data)
-        dispatch(
-          updateProfile({
-            ...res.data.auth,
-            avatar: res2.data.avatar,
-            username: res2.data.username,
-            idRole: res2.data._id
-          })
-        )
+        dispatch(updateProfile(res.data.auth))
         navigate('/')
       } else {
-        dispatch(updateProfile(res.data.auth))
         navigate('/role')
       }
 

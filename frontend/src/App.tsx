@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom'
-import { useAppSelector } from '~/hooks'
 import {
   publicRoutes,
   privateRoutes,
@@ -13,6 +12,7 @@ import AuthLayout from './layouts/AuthLayout'
 import ArtistLayout from './layouts/ArtistLayout'
 
 const App: React.FC = () => {
+  const userInfo = null
   return (
     <Routes>
       <Route path='/' element={<ArtistLayout />}>
@@ -27,7 +27,7 @@ const App: React.FC = () => {
           )
         })}
       </Route>
-      {/* <Route path='/' element={<DefaultLayout />}>
+      <Route path='/' element={<DefaultLayout />}>
         {publicRoutes.map((route) => {
           const Page = route.component
           return (
@@ -48,7 +48,7 @@ const App: React.FC = () => {
             ></Route>
           )
         })}
-      </Route> */}
+      </Route>
       <Route path='/' element={<AuthLayout />}>
         {authRoutes.map((route) => {
           const Page = route.component

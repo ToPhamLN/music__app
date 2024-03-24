@@ -1,9 +1,8 @@
-import { Schema, model, Types } from 'mongoose'
-import { User } from '~/type'
+import { Schema, model } from 'mongoose'
 
-const userSchema = new Schema<User>(
+const userSchema = new Schema<IUser>(
   {
-    name: {
+    username: {
       type: String
     },
     avatar: {
@@ -21,8 +20,12 @@ const userSchema = new Schema<User>(
     slug: {
       type: String
     },
-    wishList: {
+    wishTrack: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
+      default: []
+    },
+    wishList: {
+      type: [{ type: Schema.Types.ObjectId, ref: 'ListTrack' }],
       default: []
     },
     recentlyTrack: {

@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import { useFormContext } from 'react-hook-form'
 import style from '~/styles/Role.module.css'
+import { ERole } from '~/constants/enum'
 
 const Role: React.FC = () => {
   const {
@@ -26,7 +27,7 @@ const Role: React.FC = () => {
           <input
             type='radio'
             {...register('role')}
-            value='user'
+            value={ERole.USER}
             onChange={handleChooseRole}
           />
           <span className={style.role__name}>
@@ -38,7 +39,7 @@ const Role: React.FC = () => {
           <input
             type='radio'
             {...register('role')}
-            value='artist'
+            value={ERole.ARTIST}
             onChange={handleChooseRole}
           />
           <span className={style.role__name}>Nghệ sĩ</span>

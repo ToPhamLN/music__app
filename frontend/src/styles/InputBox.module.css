@@ -16,6 +16,7 @@
 }
 
 .input__box input,
+.input__box .result,
 .input__box textarea {
     width: 0%;
     flex: 1;
@@ -57,6 +58,7 @@ label {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: 1.6rem;
 
     :hover {
         transform: scale(1.1);
@@ -69,7 +71,8 @@ label {
 }
 
 .container:focus-within .input__box,
-.input__box.has__value {
+.input__box.has__value,
+.input__box.input__color {
     border: 1px solid var(--main-color);
 
 
@@ -93,7 +96,6 @@ label {
         transition: all 0.4s ease-in-out 0.1s;
     }
 }
-
 
 .error {
     margin: 0.5rem 1rem 1.5rem;
@@ -178,19 +180,37 @@ p.value {
     gap: 2rem;
     border: 0.1rem dashed var(--main-color);
 
+    .filename {
+        position: absolute;
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 1.4rem;
+    }
+
     img {
         width: 100%;
         border-radius: 1rem;
     }
 
+    .change__file {
+        width: 100%;
+        height: 100%;
+    }
+
     label {
-        display: flex;
+        display: inline-flex;
         gap: 1rem;
         flex-flow: column;
         align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+
 
         svg {
-            font-size: 2rem;
+            font-size: 4rem;
         }
 
         cursor: pointer;
@@ -205,6 +225,61 @@ p.value {
         top: 1rem;
         right: 1rem;
         font-size: 2rem;
+        color: #fff;
         cursor: pointer;
     }
+}
+
+.selector {
+    height: 2rem;
+    text-align: unset;
+    position: relative;
+    width: 100%;
+    margin-bottom: 5rem;
+
+    .input__box {
+        padding-left: 2.5rem;
+    }
+
+    &>label {
+        position: absolute;
+        top: -1rem;
+        padding-left: 0;
+        font-weight: 600;
+        left: 0;
+        transform: translate(0, -50%);
+    }
+
+    &>.wrapper {
+        position: absolute;
+        top: calc(100% + 2rem);
+        left: 0;
+        width: 100%;
+        height: 25rem;
+        overflow: auto;
+        border: 0.1rem solid var(--stripe-color);
+        background-color: var(--navbar);
+        padding: 0.5rem;
+        z-index: 1;
+    }
+
+    .item__selector {
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        padding-left: 2rem;
+        cursor: pointer;
+        border-radius: 0.5rem;
+        transition: all 0.4s;
+
+        &:hover {
+            background-color: var(--hover-color);
+        }
+    }
+
+    .result {
+        display: flex;
+        align-items: center;
+    }
+
 }

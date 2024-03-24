@@ -1,4 +1,4 @@
-import ItemPlayList from './ItemPlayList'
+// import ItemPlayList from './Playlist/ItemPlayList'
 import ItemListBar from './ItemListBar'
 import ItemViewBar from './ItemViewBar'
 import SearchNav from './SearchNav'
@@ -12,11 +12,12 @@ import CardPeople from './CardPeople'
 import SlickPlaylist from './SlickPlaylist'
 import SlickPeople from './SlickPeple'
 import ItemNotify from './ItemNotify'
+import CardListTrackArtist from './CardListTrackArtist'
 
 export {
   ItemListBar,
   ItemViewBar,
-  ItemPlayList,
+  // ItemPlayList,
   SearchNav,
   PlayerTrack,
   RenamePlaylist,
@@ -27,5 +28,6 @@ export {
   CardPlaylist,
   CardPeople,
   SlickPeople,
-  ItemNotify
+  ItemNotify,
+  CardListTrackArtist
 }

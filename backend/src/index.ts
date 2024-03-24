@@ -7,7 +7,8 @@ import { connect } from '~/config/db'
 import {
   authRoutes,
   artistRoutes,
-  listTrackRoutes
+  listTrackRoutes,
+  trackRoutes
 } from './routes'
 import {
   notFound,
@@ -28,14 +29,14 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors(corsOptions))
 app.use(cookieParser())
-app.use(
-  bodyParser.urlencoded({ limit: '50mb', extended: false })
-)
+
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(bodyParser.json({ limit: '50mb' }))
 
 app.use('/api/v1/auths', authRoutes)
 app.use('/api/v1/artists', artistRoutes)
-app.use('/api/v1/listtrack', listTrackRoutes)
+app.use('/api/v1/listtracks', listTrackRoutes)
+app.use('/api/v1/tracks', trackRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

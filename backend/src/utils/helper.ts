@@ -1,23 +1,23 @@
 import jwt from 'jsonwebtoken'
-import { Auth, JwtPayload } from '~/type'
+import { IAuth, IJwtPayload } from '~/type'
 
-export const generateAccessToken = (auth: Auth): string => {
+export const generateAccessToken = (auth: IAuth): string => {
   return jwt.sign(
     {
       authId: auth._id,
       role: auth.role
-    } as JwtPayload,
+    } as IJwtPayload,
     process.env.JWT_ACCESS_KEY as string,
     { expiresIn: '365d' }
   )
 }
 
-export const generateRefreshToken = (auth: Auth): string => {
+export const generateRefreshToken = (auth: IAuth): string => {
   return jwt.sign(
     {
       authId: auth._id,
-      isAdmin: auth.role
-    } as JwtPayload,
+      role: auth.role
+    } as IJwtPayload,
     process.env.JWT_REFRESH_KEY as string,
     { expiresIn: '365d' }
   )

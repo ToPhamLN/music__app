@@ -9,7 +9,7 @@ const useAxiosPrivate = () => {
   const dispatch = useAppDispatch()
   const profile = useAppSelector(
     (state) => state.profile
-  ) as SProfile
+  ) as IProfile
 
   useEffect(() => {
     const requestIntercept =
@@ -19,6 +19,7 @@ const useAxiosPrivate = () => {
             config.headers['token'] =
               `Bearer ${profile?.accessToken}`
           }
+
           return config
         },
         (error) => Promise.reject(error)

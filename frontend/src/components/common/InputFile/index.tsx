@@ -2,11 +2,13 @@ import style from '~/styles/InputBox.module.css'
 import { useFormContext, Controller } from 'react-hook-form'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { MdOutlineClose } from 'react-icons/md'
+import { Disc } from '~/components/pure'
 
 interface Props {
   label: string
   name: string
   width?: string
+  accept: string
   required?: boolean
 }
 
@@ -14,6 +16,7 @@ const InputFile = ({
   label,
   name,
   width,
+  accept,
   required
 }: Props) => {
   const {
@@ -32,7 +35,12 @@ const InputFile = ({
       >
         {src ? (
           <>
-            <img src={URL.createObjectURL(src)} alt='' />
+            {accept == 'image/*' ? (
+              <img src={URL.createObjectURL(src)} alt='' />
+            ) : (
+              <Disc />
+            )}
+
             <div
               className={style.delete__image}
               role='button'
@@ -40,9 +48,10 @@ const InputFile = ({
             >
               <MdOutlineClose />
             </div>
+            <h1 className={style.filename}>{src?.name}</h1>
           </>
         ) : (
-          <div className={style.change__avatar}>
+          <div className={style.change__file}>
             <label htmlFor={name}>
               <AiOutlinePlus />
               {label}
@@ -54,7 +63,7 @@ const InputFile = ({
               render={({ field }) => (
                 <input
                   type='file'
-                  accept='image/*'
+                  accept={accept}
                   id={name}
                   {...field}
                   onChange={(e) =>

@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
-import { Auth } from '~/type'
+import { ERole } from '~/types'
 
-const authSchema = new Schema<Auth>(
+const authSchema = new Schema<IAuth>(
   {
     email: {
       type: String,
@@ -14,11 +14,16 @@ const authSchema = new Schema<Auth>(
       unique: true
     },
     role: {
-      type: String
+      type: String,
+      enum: Object.values(ERole)
+    },
+    idRole: {
+      type: Schema.Types.ObjectId,
+      refPath: 'role'
     }
   },
   { timestamps: true }
 )
 
-const AuthModel = model<Auth>('Auth', authSchema)
+const AuthModel = model<IAuth>('Auth', authSchema)
 export default AuthModel

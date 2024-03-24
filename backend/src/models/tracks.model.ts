@@ -1,17 +1,21 @@
 import { Schema, model, Types } from 'mongoose'
-import { Track } from '~/type'
+import { ERole } from '~/types'
 
-const trackSchema = new Schema<Track>(
+const trackSchema = new Schema<ITrack>(
   {
-    _id: {
-      type: Schema.Types.ObjectId,
-      default: new Types.ObjectId()
-    },
     title: {
       type: String,
       required: true
     },
-    image: {
+    photo: {
+      path: {
+        type: String
+      },
+      fileName: {
+        type: String
+      }
+    },
+    source: {
       path: {
         type: String
       },
@@ -22,16 +26,35 @@ const trackSchema = new Schema<Track>(
     duration: {
       type: Number
     },
+    lyrics: {
+      type: String
+    },
     album: { type: Schema.Types.ObjectId, ref: 'Album' },
     artist: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Artist' }]
     },
+    author: {
+      type: Schema.Types.ObjectId,
+      refPath: 'authorRole'
+    },
+    authorRole: {
+      type: String,
+      enum: Object.values(ERole)
+    },
     slug: {
       type: String
+    },
+    listens: {
+      type: Number,
+      default: 0
+    },
+    likes: {
+      type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+      defaut: 0
     }
   },
   { timestamps: true }
 )
 
-const TrackModel = model<Track>('Track', trackSchema)
+const TrackModel = model<ITrack>('Track', trackSchema)
 export default TrackModel

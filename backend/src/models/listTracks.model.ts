@@ -1,9 +1,12 @@
 import { Schema, model } from 'mongoose'
-import { ListTrack } from '~/type'
+import { ECategory, ERole } from '~/types'
 
-const listTrackSchema = new Schema<ListTrack>(
+const listTrackSchema = new Schema<IListTrack>(
   {
-    category: { type: String },
+    category: {
+      type: String,
+      enum: Object.values(ECategory)
+    },
     title: {
       type: String,
       required: true,
@@ -14,19 +17,26 @@ const listTrackSchema = new Schema<ListTrack>(
       fileName: String
     },
     background: {
-      path: String,
-      fileName: String
+      type: String,
+      required: true,
+      default: '000000'
     },
     description: {
-      path: String
+      type: String,
+      required: true,
+      default: 'playlist'
     },
     list: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
       default: []
     },
-    artist: {
+    author: {
       type: Schema.Types.ObjectId,
-      ref: 'Artist'
+      refPath: 'authorRole'
+    },
+    authorRole: {
+      type: String,
+      enum: Object.values(ERole)
     },
     slug: {
       type: String
@@ -43,7 +53,7 @@ const listTrackSchema = new Schema<ListTrack>(
   { timestamps: true }
 )
 
-const ListTrackModel = model<ListTrack>(
+const ListTrackModel = model<IListTrack>(
   'ListTrack',
   listTrackSchema
 )

@@ -1,15 +1,23 @@
 import express from 'express'
 import {
+  createRole,
   postLogin,
   postSignup,
   updateAuth
 } from '~/controllers/auths.controllers'
 import { verifyToken } from '~/middlewares/auth.middlewares'
+import uploadCloud from '~/middlewares/uploader'
 
-const router: express.Router = express.Router()
+const route: express.Router = express.Router()
 
-router.post('/login', postLogin)
-router.post('/signup', postSignup)
-router.put('/update', verifyToken, updateAuth)
+route.post('/login', postLogin)
+route.post('/signup', postSignup)
+route.put('/update', verifyToken, updateAuth)
+route.post(
+  '/role',
+  uploadCloud.single('avatar'),
+  verifyToken,
+  createRole
+)
 
-export default router
+export default route

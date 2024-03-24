@@ -1,12 +1,24 @@
 import { Request, Response, NextFunction } from 'express'
 import { UserModel } from '~/models'
-import { User } from '~/type'
+import { v2 as cloudinary } from 'cloudinary'
+import { convertSlug } from '~/utils/helper'
+
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    next(error)
+  }
+}
 
 export const getUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void | Response<any, Record<string, any>>> => {
+) => {
   try {
     const { paramSlug } = req.params
     const user = await UserModel.findOne({
@@ -22,7 +34,7 @@ export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void | Response<any, Record<string, any>>> => {
+) => {
   try {
   } catch (error) {
     next(error)

@@ -23,7 +23,9 @@ export const verifyToken = async (
         }
 
         try {
-          const existed = await AuthModel.findById(auth?.authId)
+          const existed = await AuthModel.findById(
+            auth?.authId
+          ).lean()
           if (auth && !existed) {
             return res.status(401).json({
               message: 'Bạn đang giả mạo người dùng?'

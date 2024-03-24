@@ -6,7 +6,8 @@ import ViewInput from './ViewInput'
 import Toggle from './Toggle'
 import TextBox from './TextBox'
 import InputFile from './InputFile'
-import LoadingIcon from './LoadingIcon'
+import MoreListHeader from './MoreListHeader'
+import ColorPicker from './ColorPicker'
 
 export {
   Deletion,
@@ -17,5 +18,6 @@ export {
   ViewInput,
   Toggle,
   InputFile,
-  LoadingIcon
+  MoreListHeader,
+  ColorPicker
 }

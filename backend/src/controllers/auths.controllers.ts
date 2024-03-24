@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { AuthModel } from '~/models'
+import { ArtistModel, AuthModel, UserModel } from '~/models'
 import {
   generateAccessToken,
   generateRefreshToken
 } from '~/utils/helper'
 import bcrypt from 'bcrypt'
-import { Auth } from '~/type'
+import { ERole } from '~/types'
+import { v2 as cloudinary } from 'cloudinary'
 
 export const postSignup = async (
   req: Request,
@@ -26,6 +27,7 @@ export const postSignup = async (
     const hashed = await bcrypt.hash(password, salt)
 
     const newAuth = new AuthModel({ email, password: hashed })
+
     const auth = await newAuth.save()
     const { password: omitPassword, ...other } = auth.toObject()
     const accessToken = generateAccessToken(auth)
@@ -53,8 +55,10 @@ export const postLogin = async (
   next: NextFunction
 ) => {
   try {
-    const { username, password } = req.body
-    const auth = await AuthModel.findOne({ username }).lean()
+    const { email, password } = req.body
+    const auth = await AuthModel.findOne({ email })
+      .populate({ path: 'idRole', select: 'username avatar' })
+      .lean()
 
     if (!auth) {
       return res.status(404).json({
@@ -100,8 +104,9 @@ export const updateAuth = async (
   next: NextFunction
 ) => {
   try {
-    const { email, oldPassword, newPassword, role } = req.body
-    const auth: Auth = req.auth
+    const { email, oldPassword, newPassword, role, idRole } =
+      req.body
+    const auth = req.auth
 
     if (email) {
       const existedAuth = await AuthModel.findOne({
@@ -116,9 +121,10 @@ export const updateAuth = async (
       }
     }
 
-    const newAuth: Partial<Auth> = {
+    const newAuth: Partial<IAuth> = {
       email: email || auth.email,
-      role: role || auth.role
+      role: role || auth.role,
+      idRole: idRole || auth.role
     }
     if (oldPassword && newPassword) {
       const validPassword = await bcrypt.compare(
@@ -146,6 +152,67 @@ export const updateAuth = async (
       result
     })
   } catch (error) {
+    next(error)
+  }
+}
+
+export const createRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { _id: authId, idRole: authIdRole } = req.auth
+    const { username, role } = req.body
+    const avatar = req.file as Express.Multer.File
+    let idRole
+    if (authIdRole) {
+      await cloudinary.uploader.destroy(avatar?.filename)
+      return res
+        .status(400)
+        .json({ message: 'Không thể xử lý yêu cầu' })
+    }
+    if (role == ERole.ARTIST) {
+      const newArtist = new ArtistModel({
+        username,
+        avatar: {
+          path: avatar?.path,
+          fileName: avatar?.filename
+        },
+        auth: authId
+      })
+      const artist = await newArtist.save()
+      idRole = artist._id
+    } else if (role == ERole.USER) {
+      const newUser = new UserModel({
+        username,
+        avatar: {
+          path: avatar?.path,
+          fileName: avatar?.filename
+        },
+        auth: authId
+      })
+      const user = await newUser.save()
+      idRole = user._id
+    }
+
+    const auth = await AuthModel.findByIdAndUpdate(
+      authId,
+      { $set: { idRole, role } },
+      { new: true }
+    )
+      .populate({
+        path: 'idRole',
+        select: 'avatar username _id'
+      })
+      .select('-password')
+
+    return res
+      .status(200)
+      .json({ auth, message: 'Cập nhập thành công!' })
+  } catch (error) {
+    if (req.file)
+      await cloudinary.uploader.destroy(req.file.filename)
     next(error)
   }
 }

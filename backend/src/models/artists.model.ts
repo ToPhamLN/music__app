@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose'
-import { Artist } from '~/type'
 
-const artistSchema = new Schema<Artist>(
+const artistSchema = new Schema<IArtist>(
   {
     username: {
       type: String
@@ -33,6 +32,6 @@ const artistSchema = new Schema<Artist>(
   { timestamps: true }
 )
 
-const ArtistModel = model<Artist>('Artist', artistSchema)
+const ArtistModel = model<IArtist>('Artist', artistSchema)
 
 export default ArtistModel

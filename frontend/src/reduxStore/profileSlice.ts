@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createSlice,
   PayloadAction
 } from '@reduxjs/toolkit'
 
-const initialState: SProfile = localStorage.getItem(
+const initialState: IProfile = localStorage.getItem(
   'profile'
 )
   ? JSON.parse(localStorage.getItem('profile')!)
@@ -16,21 +15,25 @@ const profileSlice = createSlice({
   reducers: {
     setProfile: (
       state,
-      action: PayloadAction<SProfile>
+      action: PayloadAction<IProfile>
     ) => {
       state = action.payload
       localStorage.setItem('profile', JSON.stringify(state))
+      return action.payload
     },
     updateProfile: (
       state,
-      action: PayloadAction<SProfile>
+      action: PayloadAction<IProfile>
     ) => {
       state = { ...state, ...action.payload }
       localStorage.setItem('profile', JSON.stringify(state))
+      return { ...state, ...action.payload }
     },
     deleteProfile: (state) => {
       state = {}
+      console.log(state)
       localStorage.removeItem('profile')
+      return state
     }
   }
 })

@@ -6,9 +6,10 @@ import AboutNewMe from './AboutNewMe'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FaCheck } from 'react-icons/fa'
 import { useAxiosPrivate } from '~/hooks'
-import { LoadingIcon } from '~/components/common'
+import { LoadingIcon } from '~/components/pure'
 import { useAppDispatch } from '~/hooks'
 import { updateProfile } from '~/reduxStore/profileSlice'
+import { setNotify } from '~/reduxStore/globalSlice'
 
 interface FormData {
   role: string
@@ -20,6 +21,7 @@ const RolePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const methods = useForm<FormData>()
   const axios = useAxiosPrivate()
+
   const dispatch = useAppDispatch()
 
   const handlePrev = () => {
@@ -42,28 +44,22 @@ const RolePage: React.FC = () => {
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true)
-      const res1 = await axios.put('api/v1/auths/update', {
-        role: data.role
-      })
-      console.log(res1.data)
-      const res2 = await axios.post(
-        'api/v1/artists/create',
-        {
-          username: data.username,
-          avatar: data.avatar
-        },
+      const res = await axios.post(
+        'api/v1/auths/role',
+        data,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
       )
-      const profilePlain = {
-        avatar: res2.data.artist.avatar,
-        username: res2.data.artist.username,
-        idRole: res2.data.artist._id
-      }
-      dispatch(updateProfile(profilePlain))
+      dispatch(updateProfile(res.data.auth))
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res.data.message
+        })
+      )
     } catch (error) {
       console.log(error)
     } finally {

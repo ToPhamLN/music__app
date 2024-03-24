@@ -8,7 +8,11 @@ const AboutNewMe = () => {
   return (
     <div className={style.form__section}>
       <h1 className={style.title}>Thông tin tài khoản</h1>
-      <InputFile label='Ảnh đại diện' name='avatar' />
+      <InputFile
+        label='Ảnh đại diện'
+        name='avatar'
+        accept='image/*'
+      />
       <InputBox
         name='username'
         label={
