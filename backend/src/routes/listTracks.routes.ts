@@ -2,7 +2,7 @@ import express from 'express'
 import {
   createListTrack,
   getAlbum,
-  getAlbums
+  getListTracks
 } from '~/controllers/listTracks.controller'
 import { verifyToken } from '~/middlewares/auth.middlewares'
 import uploadCloud from '~/middlewares/uploader'
@@ -16,7 +16,7 @@ route.post(
   createListTrack
 )
 
-route.get('/albumsforartist', verifyToken, getAlbums)
-route.get('/albumforartist/:listTrackParam', getAlbum)
+route.get('/albumsforartist', getListTracks)
+route.get('/:idListTrack', getAlbum)
 
 export default route

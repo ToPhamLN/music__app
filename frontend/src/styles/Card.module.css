@@ -37,12 +37,12 @@
 .card__playlist .image {
     flex: 1;
     width: 100%;
-    height: 100%;
 }
 
 .card__playlist .image img {
     border-radius: 1rem;
     height: 100%;
+    aspect-ratio: 1 / 1;
 }
 
 .card__people .artist__name,

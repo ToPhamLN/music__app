@@ -218,7 +218,7 @@
 .song__item {
     padding: 0.5rem 1rem 0.5rem 0;
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
     border-bottom: 1px solid var(--stripe-color);
 }
@@ -228,10 +228,12 @@
 .song__index {
     display: flex;
     justify-content: center;
-    width: 4%;
+    width: 2rem;
+    padding-left: 1rem;
     height: 100%;
     flex: 0 0 auto;
     align-items: center;
+    font-weight: 600;
 }
 
 .column__title,
@@ -309,7 +311,7 @@
 
 .song__play button {
     font-size: 2rem;
-    color: var(--text-color);
+    color: #d1dae4;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -417,7 +419,7 @@
 }
 
 .song__item:last-child .song__artist .hover__content {
-    transform: translate(0, 10%);
+    transform: translate(0, -100%);
 }
 
 .song__like .btn,

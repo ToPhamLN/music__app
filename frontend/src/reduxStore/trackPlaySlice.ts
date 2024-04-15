@@ -2,6 +2,17 @@ import {
   createSlice,
   PayloadAction
 } from '@reduxjs/toolkit'
+import { DTrack } from '~/types/data'
+import {
+  ModeTrackPlay,
+  TrackPlaySliceType,
+  VolumeType
+} from '~/types/slice'
+import {
+  findTrack,
+  reverseSuffle,
+  sortPlayList
+} from '~/utils/array'
 
 const initialState: TrackPlaySliceType =
   localStorage.getItem('trackPlay')
@@ -29,7 +40,7 @@ const trackPlaySlice = createSlice({
   reducers: {
     setWaitingList: (
       state,
-      action: PayloadAction<PlayListType>
+      action: PayloadAction<DTrack[]>
     ) => {
       state.waitingList = action.payload
       localStorage.setItem(
@@ -37,17 +48,27 @@ const trackPlaySlice = createSlice({
         JSON.stringify(state)
       )
     },
-    setList: (
-      state,
-      action: PayloadAction<PlayListType>
-    ) => {
+    setList: (state, action: PayloadAction<DTrack[]>) => {
       state.list = action.payload
+      const { track, list, mode } = { ...state }
+      const indexTrack: number = findTrack(
+        track._id as string,
+        list
+      )
+      const newArr = sortPlayList(indexTrack, list)
+
+      let waitingList = [...newArr]
+
+      if (mode.isSuffle) {
+        waitingList = reverseSuffle(newArr)
+      }
+      state.waitingList = waitingList
       localStorage.setItem(
         'trackPlay',
         JSON.stringify(state)
       )
     },
-    setTrack: (state, action: PayloadAction<TrackType>) => {
+    setTrack: (state, action: PayloadAction<DTrack>) => {
       state.track = action.payload
       localStorage.setItem(
         'trackPlay',
@@ -79,6 +100,13 @@ const trackPlaySlice = createSlice({
       action: PayloadAction<ModeTrackPlay>
     ) => {
       state.mode = action.payload
+      const { list, mode } = { ...state }
+      let waitingList = list
+      if (mode.isSuffle) {
+        waitingList = reverseSuffle(list)
+      }
+      state.waitingList = waitingList
+
       localStorage.setItem(
         'trackPlay',
         JSON.stringify(state)

@@ -6,9 +6,9 @@ import globalSlice from './globalSlice'
 
 export const store = configureStore({
   reducer: {
+    trackPlay: trackPlaySlice,
     profile: profileSlice,
     settings: settingsSlice,
-    trackPlay: trackPlaySlice,
     global: globalSlice
   }
 })

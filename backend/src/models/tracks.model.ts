@@ -29,7 +29,7 @@ const trackSchema = new Schema<ITrack>(
     lyrics: {
       type: String
     },
-    album: { type: Schema.Types.ObjectId, ref: 'Album' },
+    album: { type: Schema.Types.ObjectId, ref: 'ListTrack' },
     artist: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Artist' }]
     },

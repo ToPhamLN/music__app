@@ -249,44 +249,44 @@
 //   }
 // ]
 
-import React, { useState } from 'react'
+// import React, { useState } from 'react'
 
-function MP3Downloader() {
-  const [downloading, setDownloading] = useState(false)
+// function MP3Downloader() {
+//   const [downloading, setDownloading] = useState(false)
 
-  const downloadMP3 = () => {
-    const url =
-      'https://res.cloudinary.com/dohywtebw/video/upload/v1710938851/demo/audio1_t8oxrs.mp3'
-    const filename = 'audio.mp3'
+//   const downloadMP3 = () => {
+//     const url =
+//       'https://res.cloudinary.com/dohywtebw/video/upload/v1710938851/demo/audio1_t8oxrs.mp3'
+//     const filename = 'audio.mp3'
 
-    setDownloading(true)
+//     setDownloading(true)
 
-    fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = filename
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
-        setDownloading(false)
-      })
-      .catch((error) => {
-        console.error('Lỗi khi tải file:', error)
-        setDownloading(false)
-      })
-  }
+//     fetch(url)
+//       .then((response) => response.blob())
+//       .then((blob) => {
+//         const url = window.URL.createObjectURL(blob)
+//         const a = document.createElement('a')
+//         a.href = url
+//         a.download = filename
+//         document.body.appendChild(a)
+//         a.click()
+//         document.body.removeChild(a)
+//         window.URL.revokeObjectURL(url)
+//         setDownloading(false)
+//       })
+//       .catch((error) => {
+//         console.error('Lỗi khi tải file:', error)
+//         setDownloading(false)
+//       })
+//   }
 
-  return (
-    <div>
-      <button onClick={downloadMP3} disabled={downloading}>
-        {downloading ? 'Đang tải...' : 'Tải File MP3'}
-      </button>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <button onClick={downloadMP3} disabled={downloading}>
+//         {downloading ? 'Đang tải...' : 'Tải File MP3'}
+//       </button>
+//     </div>
+//   )
+// }
 
-export default MP3Downloader
+// export default MP3Downloader

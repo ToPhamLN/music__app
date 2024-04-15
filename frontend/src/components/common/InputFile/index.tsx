@@ -9,15 +9,13 @@ interface Props {
   name: string
   width?: string
   accept: string
-  required?: boolean
 }
 
 const InputFile = ({
   label,
   name,
   width,
-  accept,
-  required
+  accept
 }: Props) => {
   const {
     formState: { errors },
@@ -27,13 +25,31 @@ const InputFile = ({
   } = useFormContext()
 
   const src = watch(name)
+  const old = watch(`${name}Old`)
   return (
     <div className={style.container}>
       <div
         className={style.input__file}
         style={{ width: width }}
       >
-        {src ? (
+        {old ? (
+          <>
+            {accept == 'image/*' ? (
+              <img src={old?.path} alt='' />
+            ) : (
+              <Disc />
+            )}
+
+            <div
+              className={style.delete__image}
+              role='button'
+              onClick={() => setValue(`${name}Old`, '')}
+            >
+              <MdOutlineClose />
+            </div>
+            <h1 className={style.filename}>{src?.name}</h1>
+          </>
+        ) : src ? (
           <>
             {accept == 'image/*' ? (
               <img src={URL.createObjectURL(src)} alt='' />
@@ -59,7 +75,6 @@ const InputFile = ({
             <Controller
               name={name}
               control={control}
-              rules={{ required: required }}
               render={({ field }) => (
                 <input
                   type='file'
@@ -79,12 +94,9 @@ const InputFile = ({
           </div>
         )}
       </div>
-      {errors[name] &&
-        errors[name]?.type === 'required' && (
-          <p className={style.error}>
-            {label} chưa được thêm
-          </p>
-        )}
+      <p className={style.error}>
+        {errors[name]?.message?.toString()}
+      </p>
     </div>
   )
 }

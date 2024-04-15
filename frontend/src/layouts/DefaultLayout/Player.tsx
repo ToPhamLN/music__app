@@ -32,7 +32,7 @@ import {
 } from '~/reduxStore/trackPlaySlice'
 import { reverseSuffle, sortPlayList } from '~/utils/array'
 import { setIsView } from '~/reduxStore/globalSlice'
-import { PlayerTrack } from '~/components/features'
+import { DTrack } from '~/types/data'
 
 const Player: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -47,18 +47,11 @@ const Player: React.FC = () => {
   } = useAppSelector((state) => state.trackPlay)
   const { view } = useAppSelector((state) => state.global)
   const [duration, setDuration] = useState<number>(0)
+  const [like, setLike] = useState<boolean>(false)
   const dispatch = useAppDispatch()
 
   const togglePlayPause = () => {
-    const audio = audioRef.current
-    if (audio) {
-      if (isPlaying) {
-        audio.pause()
-      } else {
-        audio.play()
-      }
-      dispatch(setIsPlaying(!isPlaying))
-    }
+    dispatch(setIsPlaying(!isPlaying))
   }
 
   const handleShuffle = () => {
@@ -143,19 +136,13 @@ const Player: React.FC = () => {
   }
 
   const handlePlayForward = () => {
-    const newList: PlayListType = sortPlayList(
-      1,
-      waitingList
-    )
+    const newList: DTrack[] = sortPlayList(1, waitingList)
     dispatch(setTrack(newList[0]))
     dispatch(setWaitingList(newList))
   }
 
   const handlePlayBack = () => {
-    const newList: PlayListType = sortPlayList(
-      -1,
-      waitingList
-    )
+    const newList: DTrack[] = sortPlayList(-1, waitingList)
     dispatch(setTrack(newList[0]))
     dispatch(setWaitingList(newList))
   }
@@ -213,12 +200,47 @@ const Player: React.FC = () => {
       }
     }
   }, [])
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
+      if (isPlaying) {
+        audio.play()
+      } else {
+        audio.pause()
+      }
+    }
+  }, [isPlaying])
 
   return (
     <div
       className={`${style.player} ${!track && style.no__track}`}
     >
-      <PlayerTrack />
+      <div className={style.track__info}>
+        <div className={style.track__img}>
+          <img
+            src={track?.photo?.path}
+            alt='Poster Track'
+          />
+        </div>
+        <div>
+          <h1 className={style.track__name}>
+            {track?.title}
+          </h1>
+          <p className={style.track__artist}>
+            {track?.artist?.map((artist) => (
+              <span key={artist._id}>
+                {artist.username}
+              </span>
+            ))}
+          </p>
+        </div>
+        <button
+          className={style.track__like}
+          hover-content={'Lưa vào Thư viện'}
+        >
+          {like ? <IoHeartSharp /> : <IoHeartOutline />}
+        </button>
+      </div>
       <div className={style.track__process}>
         <audio
           ref={audioRef}
@@ -227,7 +249,7 @@ const Player: React.FC = () => {
           }
         >
           <source
-            src={track?.src?.path}
+            src={track?.source?.path}
             type='audio/mpeg'
           />
           <track

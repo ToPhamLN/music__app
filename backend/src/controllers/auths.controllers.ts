@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ArtistModel, AuthModel, UserModel } from '~/models'
 import {
+  convertSlug,
   generateAccessToken,
   generateRefreshToken
 } from '~/utils/helper'
@@ -179,6 +180,7 @@ export const createRole = async (
           path: avatar?.path,
           fileName: avatar?.filename
         },
+        slug: convertSlug(username),
         auth: authId
       })
       const artist = await newArtist.save()
@@ -190,6 +192,7 @@ export const createRole = async (
           path: avatar?.path,
           fileName: avatar?.filename
         },
+        slug: convertSlug(username),
         auth: authId
       })
       const user = await newUser.save()

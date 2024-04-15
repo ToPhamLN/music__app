@@ -1,6 +1,5 @@
 .more__option {
     position: fixed;
-    transform: translate(-100%, 0);
     width: 25rem;
     background-color: var(--navbar);
     box-shadow: var(--box-shadow);
@@ -9,6 +8,7 @@
     border: 0.1rem solid var(--stripe-color);
     box-sizing: border-box;
     z-index: 9999;
+    animation: fadeInAnimation 0.1s ease-in forwards;
 
     .header {
         width: 100%;
@@ -21,8 +21,8 @@
     }
 
     .image__option {
-        width: 3rem;
-        height: 3rem;
+        width: 4rem;
+        height: 4rem;
         flex: 0 0 auto;
         gap: 1rem;
     }
@@ -63,7 +63,13 @@
         flex: 1;
         font-size: 1rem;
         display: flex;
+        align-items: center;
         gap: 1rem;
+
+        svg {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
     }
 
     .icon {
@@ -92,6 +98,10 @@
         }
     }
 
+}
+
+.more__option.header {
+    transform: unset;
 }
 
 .add__playlist {
@@ -230,4 +240,14 @@
 
 .choose__option .btn:hover .artist__list {
     display: flex;
+}
+
+@keyframes fadeInAnimation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

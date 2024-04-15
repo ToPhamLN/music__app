@@ -3,7 +3,13 @@ import style from '~/styles/Role.module.css'
 import { GrNext, GrPrevious } from 'react-icons/gr'
 import ChooseRole from './ChooseRole'
 import AboutNewMe from './AboutNewMe'
-import { FormProvider, useForm } from 'react-hook-form'
+import {
+  FormProvider,
+  Resolver,
+  useForm
+} from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { FaCheck } from 'react-icons/fa'
 import { useAxiosPrivate } from '~/hooks'
 import { LoadingIcon } from '~/components/pure'
@@ -16,10 +22,27 @@ interface FormData {
   username: string
   avatar?: File
 }
+
+const schema = yup.object().shape({
+  role: yup
+    .string()
+    .required('Vui lòng chọn vai trò trước.'),
+  username: yup
+    .string()
+    .required('Vui lòng nhập tên người dùng.'),
+  avatar: yup
+    .mixed()
+    .required('Vui lòng tải ảnh đại diện lên.')
+    .nullable()
+})
 const RolePage: React.FC = () => {
   const [step, setStep] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(false)
-  const methods = useForm<FormData>()
+  const methods = useForm<FormData>({
+    resolver: yupResolver(
+      schema
+    ) as unknown as Resolver<FormData>
+  })
   const axios = useAxiosPrivate()
 
   const dispatch = useAppDispatch()

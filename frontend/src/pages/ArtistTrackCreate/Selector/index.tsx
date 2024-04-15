@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import style from '~/styles/InputBox.module.css'
 import { DListTrack } from '~/types/data'
@@ -9,7 +9,6 @@ const Selector = () => {
   const [albums, setAlbums] = useState<DListTrack[]>([])
   const [expend, setExpend] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
-  const [selected, setSelected] = useState<string>('')
 
   const axios = useAxiosPrivate()
   const {
@@ -35,23 +34,26 @@ const Selector = () => {
     handleGetAlbums()
   }, [])
 
-  const handleChoose = (value: string, name: string) => {
-    setValue('album', value)
+  const handleChoose = (value: string, label: string) => {
+    setValue('album._id', value)
+    setValue('album.title', label)
     clearErrors('album')
-    setSelected(name)
     setExpend(false)
   }
 
   const handleClear = () => {
     setValue('album', '')
-    setSelected('')
   }
   return (
     <div className={style.container}>
       <div className={style.selector}>
-        <label htmlFor='selector'> Album</label>
-        <div className={style.input__box}>
-          <div className={style.result}>{selected}</div>
+        <div
+          className={`${style.input__box} ${watch('album') ? style.has__value : ''}`}
+        >
+          <label htmlFor='selector'> Album</label>
+          <div className={style.result}>
+            {watch('album.title')}
+          </div>
           {watch('album') && (
             <div
               className={style.icon}
@@ -69,31 +71,28 @@ const Selector = () => {
         </div>
         {expend && (
           <div className={style.wrapper}>
-            {albums.map((album) => (
-              <div
-                className={style.item__selector}
-                key={album._id}
-                onClick={() =>
-                  handleChoose(album._id, album.title)
-                }
-                role='button'
-              >
-                {album.title}
-              </div>
-            ))}
+            {!loading &&
+              albums.map((album) => (
+                <div
+                  className={style.item__selector}
+                  key={album._id}
+                  onClick={() =>
+                    handleChoose(
+                      album?._id ?? '',
+                      album?.title ?? ''
+                    )
+                  }
+                  role='button'
+                >
+                  {album.title}
+                </div>
+              ))}
           </div>
         )}
       </div>
-      {errors.album &&
-        errors.album?.type === 'required' && (
-          <p className={style.error}>Album không hợp lệ</p>
-        )}
-      {errors.artist && errors.album?.type === 'manual' && (
-        <p className={style.error}>
-          {errors.artist?.message?.toString() ||
-            'Đã xảy ra lỗi'}
-        </p>
-      )}
+      <p className={style.error}>
+        {errors?.album?.message?.toString()}
+      </p>
     </div>
   )
 }

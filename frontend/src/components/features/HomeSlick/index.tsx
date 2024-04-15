@@ -18,7 +18,6 @@ const HomeSlick: React.FC = () => {
   } as Settings
 
   const prev = () => {
-    console.log('1')
     const slick = slideRef.current
     if (slick) {
       slick.slickPrev()

@@ -1,14 +1,33 @@
-import React, { useState, useRef, MouseEvent } from 'react'
+import { useState, useRef, MouseEvent } from 'react'
 import { IoHeartOutline } from 'react-icons/io5'
 import { LuMoreHorizontal } from 'react-icons/lu'
-import { FaPlay } from 'react-icons/fa'
+import { FaPlay, FaPause } from 'react-icons/fa'
 import style from '~/styles/PlayListDetails.module.css'
 import { Link } from 'react-router-dom'
-import { useHover, useClickOutside } from '~/hooks'
+import {
+  useHover,
+  useClickOutside,
+  useAppSelector,
+  useAppDispatch
+} from '~/hooks'
 import TrackAnimation from '../../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
+import { ERole } from '~/constants/enum'
+import { DTrack } from '~/types/data'
+import { formatDay, formatTime } from '~/utils/format'
+import {
+  setIsPlaying,
+  setList,
+  setTrack
+} from '~/reduxStore/trackPlaySlice'
 
-const ItemPlayList: React.FC = () => {
+interface Props {
+  track: DTrack
+  list: DTrack[]
+  index: number
+}
+
+const ItemPlayList = ({ track, list, index }: Props) => {
   const [isMoreVisible, setIsMoreVisible] =
     useState<boolean>(false)
   const moreOptionRef = useRef<HTMLDivElement>(null)
@@ -19,6 +38,10 @@ const ItemPlayList: React.FC = () => {
     top: 0,
     left: 0
   })
+  const dispatch = useAppDispatch()
+  const { isPlaying, track: trackPlaying } = useAppSelector(
+    (state) => state.trackPlay
+  )
   // show option block
   const toggleMoreVisible = () => {
     setIsMoreVisible((prev) => !prev)
@@ -29,16 +52,12 @@ const ItemPlayList: React.FC = () => {
   const OpenMoreHandler = (
     event: MouseEvent<HTMLElement>
   ) => {
-    const { innerHeight } = window
     const { top, left } =
       event.currentTarget.getBoundingClientRect()
-    let newTop = innerHeight - 450
-    if (window.scrollY + top < innerHeight - 450) {
-      newTop = window.scrollY + top
-    }
+
     setLocation({
-      top: newTop,
-      left: window.scrollX + left
+      top: scrollY + top,
+      left: scrollX + left
     })
     toggleMoreVisible()
   }
@@ -67,23 +86,43 @@ const ItemPlayList: React.FC = () => {
     handleMouseLeave: handleAlbumMouseLeave
   } = useHover()
 
+  const { role } = useAppSelector((state) => state.profile)
+
+  const handlePlay = () => {
+    dispatch(setTrack(track))
+    dispatch(setList(list))
+    dispatch(setIsPlaying(true))
+    if (isPlaying && trackPlaying == track)
+      dispatch(setIsPlaying(false))
+  }
+
   return (
     <div className={style.song__item}>
-      <div className={style.song__index}>1</div>
+      <div className={style.song__index}>{index}</div>
       <div className={style.song__title}>
         <div className={style.song__image}>
           <img
-            src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-            alt='song Poster'
+            src={track?.photo?.path}
+            alt={track?.photo?.fileName}
           />
-          <div className={style.song__animation}>
-            <TrackAnimation />
-          </div>
-          <div className={style.song__play}>
-            <button>
-              <FaPlay />
-            </button>
-          </div>
+          {role !== ERole.ARTIST && (
+            <>
+              {isPlaying && trackPlaying == track && (
+                <div className={style.song__animation}>
+                  <TrackAnimation />
+                </div>
+              )}
+              <div className={style.song__play}>
+                <button onClick={handlePlay}>
+                  {isPlaying && trackPlaying == track ? (
+                    <FaPause />
+                  ) : (
+                    <FaPlay />
+                  )}
+                </button>
+              </div>
+            </>
+          )}
         </div>
         <div className={style.song__name__album}>
           <div
@@ -91,9 +130,10 @@ const ItemPlayList: React.FC = () => {
             onMouseEnter={handleNameMouseEnter}
             onMouseLeave={handleNameMouseLeave}
           >
-            <Link>
-              Young as the Morning old as the Sea sea sea
-              sea se
+            <Link
+              to={`/track/${track?.slug}${track?._id}.html`}
+            >
+              {track?.title}
             </Link>
             {isNameHovered && (
               <div
@@ -104,7 +144,7 @@ const ItemPlayList: React.FC = () => {
                   left: nameHoverPosition.left
                 }}
               >
-                Your hover content for name
+                {track?.title}
               </div>
             )}
           </div>
@@ -113,11 +153,14 @@ const ItemPlayList: React.FC = () => {
             onMouseEnter={handleArtistMouseEnter}
             onMouseLeave={handleArtistMouseLeave}
           >
-            <Link>Passenger</Link>
-            <Link>Passenger</Link>
-            <Link>Passenger</Link>
-            <Link>Passenger</Link>
-
+            {track.artist?.map((artist) => (
+              <Link
+                key={artist._id}
+                to={`/artist/${artist?.slug}${artist?._id}.html`}
+              >
+                {artist.username}
+              </Link>
+            ))}
             {isArtistHovered && (
               <div
                 className={style.hover__content}
@@ -127,7 +170,11 @@ const ItemPlayList: React.FC = () => {
                   left: artistHoverPosition.left
                 }}
               >
-                Your hover content for artist
+                {track.artist?.map((artist) => (
+                  <span key={artist._id}>
+                    {artist.username}
+                  </span>
+                ))}
               </div>
             )}
           </div>
@@ -138,7 +185,11 @@ const ItemPlayList: React.FC = () => {
         onMouseEnter={handleAlbumMouseEnter}
         onMouseLeave={handleAlbumMouseLeave}
       >
-        <Link>Young as the Morning old as the Sea</Link>
+        <Link
+          to={`/album/${track?.album?.slug}${track?.album?._id}.html`}
+        >
+          {track?.album?.title}
+        </Link>
         {isAlbumHovered && (
           <div
             className={style.hover__content}
@@ -148,18 +199,25 @@ const ItemPlayList: React.FC = () => {
               left: albumHoverPosition.left
             }}
           >
-            Your hover content for album
+            {track?.album?.title}
           </div>
         )}
       </div>
-      <div className={style.song__day}>May 31, 2022</div>
-      <div className={style.song__like}>
-        <button className={style.btn}>
-          <IoHeartOutline />
-        </button>
+      <div className={style.song__day}>
+        {formatDay(track?.updatedAt as string)}
       </div>
+
+      {role !== ERole.ARTIST && (
+        <div className={style.song__like}>
+          <button className={style.btn}>
+            <IoHeartOutline />
+          </button>
+        </div>
+      )}
       <div className={style.song__control}>
-        <span className={style.duration}>3:26</span>
+        <span className={style.duration}>
+          {formatTime(track?.duration as number)}
+        </span>
         <button
           className={style.btn}
           onClick={OpenMoreHandler}
@@ -171,6 +229,7 @@ const ItemPlayList: React.FC = () => {
         <MoreList
           refItem={moreOptionRef}
           location={location}
+          track={track}
         />
       )}
     </div>

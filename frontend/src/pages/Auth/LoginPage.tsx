@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
+import {
+  useForm,
+  FormProvider,
+  Resolver
+} from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import { useAppDispatch, useAxiosPublic } from '~/hooks'
 import { updateProfile } from '~/reduxStore/profileSlice'
 import { useNavigate } from 'react-router-dom'
@@ -13,9 +19,25 @@ interface FormLogin {
   email: string
   password: string
 }
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Email không hợp lệ.')
+    .required('Vui lòng nhập email.cwa'),
+  password: yup
+    .string()
+    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự.')
+    .max(16, 'Mật khẩu không được quá 16 ký tự.')
+    .required('Vui lòng nhập mật khẩu.')
+})
+
 const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const methods = useForm<FormLogin>()
+  const methods = useForm<FormLogin>({
+    resolver: yupResolver(
+      schema
+    ) as unknown as Resolver<FormLogin>
+  })
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const axiosPublic = useAxiosPublic()

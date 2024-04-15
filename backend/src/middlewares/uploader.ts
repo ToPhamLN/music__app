@@ -13,10 +13,9 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  allowedFormats: ['jpg', 'png'],
   params: {
     folder: 'morri-app',
-    transformation: [{ width: 500, height: 500, crop: 'limit' }]
+    resource_type: 'auto'
   }
 })
 

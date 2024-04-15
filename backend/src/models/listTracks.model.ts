@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { ECategory, ERole } from '~/types'
+import { ECategory, EGenre, ERole } from '~/types'
 
 const listTrackSchema = new Schema<IListTrack>(
   {
@@ -25,6 +25,10 @@ const listTrackSchema = new Schema<IListTrack>(
       type: String,
       required: true,
       default: 'playlist'
+    },
+    genre: {
+      type: String,
+      enum: Object.values(EGenre)
     },
     list: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],

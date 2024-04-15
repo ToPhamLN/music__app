@@ -1,8 +1,8 @@
 import React, {
   useState,
   useRef,
-  MouseEvent,
-  useEffect
+  useMemo,
+  MouseEvent
 } from 'react'
 import { IoMdDownload } from 'react-icons/io'
 import { IoHeartOutline } from 'react-icons/io5'
@@ -13,12 +13,19 @@ import {
 } from 'react-icons/md'
 import style from '~/styles/ArtistAlbumDetails.module.css'
 import { MoreListHeader } from '~/components/common'
-import { useAxiosPrivate, useClickOutside } from '~/hooks'
+import {
+  useAppSelector,
+  useClickOutside,
+  useFetcher
+} from '~/hooks'
 import { useParams } from 'react-router-dom'
-import { DListTrack } from '~/types/data'
+import { DListTrack, DTrack } from '~/types/data'
+import { Playlist } from '~/components/features'
+import useSWR from 'swr'
+import { formatTime } from '~/utils/format'
+import { ERole } from '~/constants/enum'
 
 const ArtistAlbumDetails: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true)
   const [isMoreVisible, setIsMoreVisible] =
     useState<boolean>(false)
   const moreOptionRef = useRef<HTMLDivElement>(null)
@@ -29,9 +36,8 @@ const ArtistAlbumDetails: React.FC = () => {
     top: 0,
     left: 0
   })
-  const [album, setAlbum] = useState<DListTrack>({})
-  const axios = useAxiosPrivate()
   const idAlbum = useParams().albumParam?.slice(-29, -5)
+  const { role } = useAppSelector((state) => state.profile)
 
   //MoreListHeader
   const toggleMoreVisible = () => {
@@ -43,62 +49,55 @@ const ArtistAlbumDetails: React.FC = () => {
   const OpenMoreHandler = (
     event: MouseEvent<HTMLElement>
   ) => {
-    const { innerHeight, innerWidth } = window
     const { top, left } =
       event.currentTarget.getBoundingClientRect()
-    let newTop = innerHeight
-    if (window.scrollY + top < innerHeight) {
-      newTop = window.scrollY + top
-    }
-    const bonusLeft = innerWidth >= 600 ? 300 : 120
     setLocation({
-      top: newTop,
-      left: window.scrollX + left + bonusLeft
+      top: scrollY + top,
+      left: scrollX + left
     })
     toggleMoreVisible()
-    console.log(innerWidth)
   }
   useClickOutside(moreOptionRef, CloseOptionHandler)
 
   //Handle Get Album
-  const handleGetAlbum = async () => {
-    try {
-      const res = await axios.get(
-        `api/v1/listtracks/albumforartist/${idAlbum}`
-      )
-      setAlbum(res.data)
-      console.log(res.data)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-  useEffect(() => {
-    handleGetAlbum()
-  }, [])
+  const apiEndPoint = `api/v1/listtracks/${idAlbum}`
+  const fetcher = useFetcher()
+  const { data: listTrack } = useSWR(
+    apiEndPoint,
+    fetcher
+  ) as { data: DListTrack }
 
+  const durationAll = useMemo(() => {
+    if (listTrack) {
+      return listTrack?.list?.reduce(
+        (accumulator, track: DTrack) =>
+          accumulator + (track?.duration ?? 0),
+        0
+      )
+    }
+    return 0
+  }, [listTrack])
   return (
     <div className={style.artist__album__details}>
       <div className={style.information}>
         <div
           className={style.background}
-          style={{ background: album.background }}
+          style={{ background: listTrack?.background }}
         ></div>
         <div className={style.container__information}>
           <div className={style.photo}>
             <img
-              src={album?.photo?.path}
-              alt={album?.photo?.fileName}
+              src={listTrack?.photo?.path}
+              alt={listTrack?.photo?.fileName}
             />
           </div>
           <h1 className={style.listtrack__title}>
-            {album.title}
+            {listTrack?.title}
           </h1>
         </div>
       </div>
       <div className={style.desc}>
-        {album?.description
+        {listTrack?.description
           ?.split('\n')
           .map((item, index) => (
             <div key={index}>{item}</div>
@@ -108,31 +107,43 @@ const ArtistAlbumDetails: React.FC = () => {
         <div className={style.info__user}>
           <div className={style.img__user}>
             <img
-              src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-              alt='Poster List'
+              src={
+                listTrack?.author?.avatar?.path
+                  ? listTrack?.author?.avatar?.path
+                  : '/src/assets/account-default.png'
+              }
+              alt={listTrack?.author?.avatar?.fileName}
             />
           </div>
-          <span className={style.user__name}>eeee</span>
+          <span className={style.user__name}>
+            {listTrack?.author?.username}
+          </span>
         </div>
         <ul className={style.statistics}>
           <li>
-            5,131,321 <IoHeartOutline />
+            {listTrack?.likes?.length.toString()}
+            <IoHeartOutline />
           </li>
           <li>
-            100 <MdAudiotrack />
+            {listTrack?.list?.length} <MdAudiotrack />
           </li>
           <li>
-            6h <MdOutlineAccessTime />
+            {formatTime(durationAll as number).toString()}
+            <MdOutlineAccessTime />
           </li>
         </ul>
       </div>
       <div className={style.control}>
-        <button className={style.like}>
-          <IoHeartOutline />
-        </button>
-        <button className={style.download}>
-          <IoMdDownload />
-        </button>
+        {role == ERole.USER && (
+          <>
+            <button className={style.like}>
+              <IoHeartOutline />
+            </button>
+            <button className={style.download}>
+              <IoMdDownload />
+            </button>
+          </>
+        )}
         <button
           className={style.more}
           onClick={OpenMoreHandler}
@@ -140,10 +151,14 @@ const ArtistAlbumDetails: React.FC = () => {
           <MdOutlineMoreVert />
         </button>
       </div>
+      <div style={{ margin: '0 1rem' }}>
+        <Playlist list={listTrack?.list as []} />
+      </div>
       {isMoreVisible && (
         <MoreListHeader
           refItem={moreOptionRef}
           location={location}
+          listTrack={listTrack}
         />
       )}
     </div>

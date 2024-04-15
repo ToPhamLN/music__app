@@ -6,12 +6,20 @@ import {
   TextBox
 } from '~/components/common'
 import { LoadingIcon } from '~/components/pure'
-import style from '~/styles/AritstCreateAlbum.module.css'
-import { useForm, FormProvider } from 'react-hook-form'
+import style from '~/styles/ArtistCreateAlbum.module.css'
+import {
+  useForm,
+  FormProvider,
+  Resolver
+} from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import { MdOutlineLibraryAddCheck } from 'react-icons/md'
 import { useAppDispatch, useAxiosPrivate } from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
 import { ECategory } from '~/constants/enum'
+import { useParams } from 'react-router-dom'
+import { DListTrack } from '~/types/data'
 
 interface FormAlbum {
   title: string
@@ -19,31 +27,47 @@ interface FormAlbum {
   background: string
   description: string
 }
-const ArtistCreateAlbum: React.FC = () => {
+
+const schema = yup.object().shape({
+  title: yup.string().required('Vui lòng nhập tiêu đề.'),
+  photo: yup
+    .mixed()
+    .required('Vui lòng tải ảnh lên.')
+    .nullable(),
+  background: yup
+    .string()
+    .required('Vui lòng nhập màu nền.'),
+  description: yup.string().required('Vui lòng nhập mô tả.')
+})
+
+const ArtistAlbumUpdate: React.FC = () => {
+  const idAlbum = useParams().albumParam?.slice(-29, -5)
   const [loading, setLoading] = useState<boolean>(false)
-  const methods = useForm<FormAlbum>()
+  const methods = useForm<FormAlbum>({
+    defaultValues: async () => {
+      try {
+        const apiEndpoint = `/api/v1/listtracks/${idAlbum}`
+        const res = await axios.get(apiEndpoint)
+        const { photo, ...other } = res.data as DListTrack
+        console.log(photo)
+        res.data as DListTrack
+        return other as DListTrack
+      } catch (error) {
+        console.log(error)
+        return {} as DListTrack
+      }
+    },
+    resolver: yupResolver(
+      schema
+    ) as unknown as Resolver<FormAlbum>
+  })
   const axios = useAxiosPrivate()
   const dispatch = useAppDispatch()
 
   const onSubmit = async (data: FormAlbum) => {
     try {
-      console.log(data)
       setLoading(true)
-      const res = await axios.post(
-        '/api/v1/listtracks/create',
-        { ...data, category: ECategory.ALBUM },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      )
-      dispatch(
-        setNotify({
-          type: 'success',
-          message: res.data.message
-        })
-      )
+      console.log(data)
     } catch (error) {
       console.log(error)
     } finally {
@@ -59,14 +83,14 @@ const ArtistCreateAlbum: React.FC = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           style={{ opacity: loading ? '0.8' : 'unset' }}
         >
-          <div className={style.title}>Tạo Album Mới</div>
+          <div className={style.title}>Sửa đổi Album</div>
           <InputBox
             label='Tiêu đề'
             name='title'
             type='text'
           />
           <InputFile
-            label='Ảnh tiêu đề'
+            label='Thay đổi Ảnh tiêu đề'
             name='photo'
             accept='image/*'
           />
@@ -92,4 +116,4 @@ const ArtistCreateAlbum: React.FC = () => {
   )
 }
 
-export default ArtistCreateAlbum
+export default ArtistAlbumUpdate

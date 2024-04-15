@@ -1,9 +1,16 @@
-import React from 'react'
 import { MdOutlineAccessTime } from 'react-icons/md'
 import style from '~/styles/PlayListDetails.module.css'
 import ItemPlayList from './ItemPlayList'
+import { DTrack } from '~/types/data'
+import { useAppSelector } from '~/hooks'
+import { ERole } from '~/constants/enum'
 
-const index = () => {
+interface Props {
+  list: DTrack[] | string[]
+}
+
+const Playlist = ({ list }: Props) => {
+  const { role } = useAppSelector((state) => state.profile)
   return (
     <div className={style.playlist__songs}>
       <div className={style.column__name}>
@@ -13,17 +20,23 @@ const index = () => {
         <div className={style.column__day}>
           Ngày cập nhập
         </div>
-        <div className={style.column__like}></div>
-
+        {role != ERole.ARTIST && (
+          <div className={style.column__like}></div>
+        )}
         <div className={style.column__duration}>
           <MdOutlineAccessTime />
         </div>
       </div>
-      {Array.from({ length: 5 }, (_, i) => (
-        <ItemPlayList key={i} />
+      {list?.map((track, index) => (
+        <ItemPlayList
+          key={index}
+          track={track as DTrack}
+          list={list as DTrack[]}
+          index={index + 1}
+        />
       ))}
     </div>
   )
 }
 
-export default index
+export default Playlist

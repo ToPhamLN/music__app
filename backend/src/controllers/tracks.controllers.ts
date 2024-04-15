@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { TrackModel } from '~/models'
+import { TrackModel, ListTrackModel } from '~/models'
 import { v2 as cloudinary } from 'cloudinary'
 import { convertSlug } from '~/utils/helper'
+
+interface IUpload {
+  photo: Express.Multer.File[] | []
+  source: Express.Multer.File[] | []
+}
 
 export const createTrack = async (
   req: Request,
@@ -16,16 +21,14 @@ export const createTrack = async (
       title,
       lyrics,
       duration,
-      artist: [idRole, ...artist],
+      artist: artist ? [idRole, ...artist] : [idRole],
       slug: convertSlug(title),
       author: idRole,
       authorRole: role
     })
-    if (req.file) {
-      const { photo, source } = req.files as {
-        photo: Express.Multer.File[] | []
-        source: Express.Multer.File[] | []
-      }
+
+    if (req.files) {
+      const { photo, source } = req.files as unknown as IUpload
       if (photo) {
         newTrack.photo = {
           path: photo[0]?.path,
@@ -33,17 +36,27 @@ export const createTrack = async (
         }
       }
       if (source) {
-        newTrack.photo = {
+        newTrack.source = {
           path: source[0]?.path,
           fileName: source[0].fieldname
         }
       }
     }
-    await newTrack.save()
+    const track = await newTrack.save()
+    await ListTrackModel.findByIdAndUpdate(album, {
+      $push: {
+        list: track._id
+      }
+    })
     res
       .status(201)
       .json({ message: 'Đã thêm bài hát thành công' })
   } catch (error) {
+    if (req.files) {
+      const { photo, source } = req.files as unknown as IUpload
+      await cloudinary.uploader.destroy(photo[0]?.filename)
+      await cloudinary.uploader.destroy(source[0]?.filename)
+    }
     next(error)
   }
 }
@@ -55,14 +68,8 @@ export const updateTrack = async (
 ) => {
   try {
     const { idTrack } = req.params
-    const {
-      album,
-      title,
-      lyrics,
-      duration,
-      artist,
-      author
-    }: ITrack = req.body
+    const { album, title, lyrics, duration, artist }: ITrack =
+      req.body
     const { idRole } = req.auth
     const existedTrack =
       await TrackModel.findById(idTrack).lean()
@@ -75,7 +82,7 @@ export const updateTrack = async (
       title: title ? title : existedTrack.title,
       lyrics: lyrics ? lyrics : existedTrack.lyrics,
       duration: duration ? duration : existedTrack.duration,
-      artist: author ? [idRole, ...artist] : existedTrack.artist
+      artist: artist ? [idRole, ...artist] : [idRole]
     }
     if (req.file) {
       const { photo, source } = req.files as {
@@ -190,7 +197,7 @@ export const deleteTrack = async (
     const existedTrack = await TrackModel.findById(idTrack)
     if (!existedTrack) {
       return res.status(404).json({
-        message: 'bạn đã xóa bài hát này rồi.'
+        message: 'Bạn đã xóa bài hát này rồi!'
       })
     }
     await TrackModel.findByIdAndDelete(idTrack)
@@ -199,6 +206,26 @@ export const deleteTrack = async (
         existedTrack?.photo?.fileName
       )
     res.status(200).json({ message: 'Xóa bài hát thành công!' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getTrack = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { idTrack } = req.params
+    const track = await TrackModel.findById(idTrack)
+      .populate({
+        path: 'album',
+        select: '_id title slug'
+      })
+      .populate({ path: 'artist', select: '_id username slug' })
+      .exec()
+    res.status(200).json(track)
   } catch (error) {
     next(error)
   }

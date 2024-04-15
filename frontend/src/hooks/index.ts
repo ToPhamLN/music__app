@@ -4,6 +4,7 @@ import useClickOutside from './clickMount'
 import useScroll from './scroll'
 import useAxiosPrivate from './useAxiosPrivate'
 import useAxiosPublic from './useAxiosPublic'
+import useFetcher from './useFetcher'
 
 export {
   useAxiosPrivate,
@@ -12,5 +13,6 @@ export {
   useHover,
   useClickOutside,
   useScroll,
-  useAxiosPublic
+  useAxiosPublic,
+  useFetcher
 }

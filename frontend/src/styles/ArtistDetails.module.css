@@ -118,6 +118,23 @@
     }
 }
 
+.artist__details .header .handler .edit {
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+    background-color: transparent;
+    color: var(--text-color);
+
+    &:hover {
+        background-color: var(--hover-btn);
+    }
+}
+
 .artist__details .popular__songs {
     margin-top: 2rem;
     padding: 0 1rem;
@@ -167,6 +184,104 @@
         border-radius: 1rem;
     }
 }
+
+.fixed__container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(14, 14, 26, 0.747);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.update__artist {
+    height: 90vh;
+    position: relative;
+    width: 70vw;
+    padding-top: 2rem;
+    border: 0.1rem solid var(--stripe-color);
+    border-radius: 1rem;
+    background-color: var(--navbar);
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 1rem;
+    box-sizing: border-box;
+
+}
+
+.form {
+    width: 100%;
+    padding-top: 4rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.1rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--main-color);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) transparent;
+}
+
+.form__container {
+    text-align: center;
+    padding: 0 5rem 1rem;
+}
+
+.submit {
+    display: inline-flex;
+    width: 100%;
+    border-radius: 10rem;
+    padding: 1rem 0;
+    font-size: 1.4rem;
+    transition: all 0.4s ease 0.1s;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 1rem;
+
+    svg {
+        font-size: 2rem;
+    }
+
+    &:hover {
+        background-color: var(--hover-btn);
+    }
+}
+
+.exit {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 1rem);
+    background-color: var(--navbar);
+    font-size: 1.5rem;
+    font-weight: 800;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    border-radius: 50%;
+    transition: all 0.3s ease 0.1s;
+
+    &:hover {
+        background-color: var(--hover-btn);
+    }
+}
+
+
+
 
 @media only screen and (max-width:801px) {
     .artist__details .header {

@@ -23,7 +23,9 @@ const artistSchema = new Schema<IArtist>(
     },
     auth: {
       type: Schema.Types.ObjectId,
-      ref: 'Auth'
+      ref: 'Auth',
+      required: true,
+      unique: true
     },
     slug: {
       type: String

@@ -8,7 +8,8 @@ import {
   authRoutes,
   artistRoutes,
   listTrackRoutes,
-  trackRoutes
+  trackRoutes,
+  biosRoutes
 } from './routes'
 import {
   notFound,
@@ -37,6 +38,7 @@ app.use('/api/v1/auths', authRoutes)
 app.use('/api/v1/artists', artistRoutes)
 app.use('/api/v1/listtracks', listTrackRoutes)
 app.use('/api/v1/tracks', trackRoutes)
+app.use('/api/v1/bios', biosRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

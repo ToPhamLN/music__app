@@ -1,9 +1,13 @@
-export const reverseSuffle = (arr: PlayListType) => {
+import { DTrack } from '~/types/data'
+
+export const reverseSuffle = (arr: DTrack[]) => {
   if (arr.length <= 1) {
     return arr
   }
   const [firstElement, ...rest] = arr
-  const shuffledArray = [...rest].sort(() => Math.random() - 0.5)
+  const shuffledArray = [...rest].sort(
+    () => Math.random() - 0.5
+  )
   shuffledArray.unshift(firstElement)
 
   return shuffledArray
@@ -11,16 +15,16 @@ export const reverseSuffle = (arr: PlayListType) => {
 
 export const sortPlayList = (
   index: number,
-  arr: PlayListType
+  arr: DTrack[]
 ) => {
-  const firstPart: PlayListType = arr.slice(0, index)
-  const lastPart: PlayListType = arr.slice(index)
+  const firstPart: DTrack[] = arr.slice(0, index)
+  const lastPart: DTrack[] = arr.slice(index)
 
-  const result: PlayListType = lastPart.concat(firstPart)
+  const result: DTrack[] = lastPart.concat(firstPart)
 
   return result
 }
 
-export const findTrack = (item: string, arr: PlayListType) => {
-  return arr.findIndex((song) => song.name === item)
+export const findTrack = (item: string, arr: DTrack[]) => {
+  return arr.findIndex((song) => song.title === item)
 }

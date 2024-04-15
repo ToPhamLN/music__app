@@ -29,31 +29,31 @@ const InputBox = ({ label, name, type }: Props) => {
         className={`${style.input__box} ${watch(name) ? style.has__value : ''} ${type == 'password' && style.type__pwd}`}
       >
         <label htmlFor={name}>{label}</label>
-        <div
-          className={style.show}
-          onClick={() =>
-            setIsPasswordVisible(!isPasswordVisible)
-          }
-        >
-          {isPasswordVisible ? (
-            <MdOutlineVisibility />
-          ) : (
-            <MdOutlineVisibilityOff />
-          )}
-        </div>
+        {type == 'password' && (
+          <div
+            className={style.show}
+            onClick={() =>
+              setIsPasswordVisible(!isPasswordVisible)
+            }
+          >
+            {isPasswordVisible ? (
+              <MdOutlineVisibility />
+            ) : (
+              <MdOutlineVisibilityOff />
+            )}
+          </div>
+        )}
         <input
           type={
-            type == 'text'
-              ? 'text'
-              : isPasswordVisible
+            type == 'password'
+              ? isPasswordVisible
                 ? 'text'
                 : 'password'
+              : type
           }
           id={name}
           autoComplete='off'
-          {...register(name, {
-            required: true
-          })}
+          {...register(name)}
         />
         {watch(name) && (
           <div
@@ -64,18 +64,9 @@ const InputBox = ({ label, name, type }: Props) => {
           </div>
         )}
       </div>
-      {errors[name] &&
-        errors[name]?.type === 'required' && (
-          <p className={style.error}>
-            {label} không hợp lệ
-          </p>
-        )}
-      {errors[name] && errors[name]?.type === 'manual' && (
-        <p className={style.error}>
-          {errors[name]?.message?.toString() ||
-            'Đã xảy ra lỗi'}
-        </p>
-      )}
+      <p className={style.error}>
+        {errors[name]?.message?.toString()}
+      </p>
     </div>
   )
 }

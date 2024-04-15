@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import useRefreshToken from './useRefreshToken'
 import { useAppSelector, useAppDispatch } from './redux'
 import { setNotify } from '~/reduxStore/globalSlice'
+import { IProfile } from '~/types/slice'
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken()
@@ -19,7 +20,6 @@ const useAxiosPrivate = () => {
             config.headers['token'] =
               `Bearer ${profile?.accessToken}`
           }
-
           return config
         },
         (error) => Promise.reject(error)

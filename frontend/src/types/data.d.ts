@@ -1,8 +1,13 @@
 import { ERole, ECategory } from '~/constants/enum'
 
 interface DImage {
+  path: string
+  fileName: string
+}
+
+interface DLink {
+  name?: string
   path?: string
-  fileName?: string
 }
 
 interface DAuthor {
@@ -22,6 +27,7 @@ interface DAuth {
 interface DArtist extends DAuthor {
   auth: string | DAuth
   slug: string
+  background: DImage
 }
 interface DUser extends DAuthor {}
 
@@ -32,10 +38,34 @@ interface DListTrack {
   description?: string
   photo?: DImage
   background?: string
-  author?: string | DAuthor
+  author?: DAuthor
   authorRole?: ERole
   slug?: string
   likes?: []
   list?: []
-  listen?: number
+  listens?: number
+}
+
+interface DTrack {
+  _id?: string
+  title?: string
+  photo?: DImage
+  source?: DImage
+  duration?: number
+  album?: DListTrack
+  artist?: DArtist[]
+  author?: string
+  authorRole?: ERole
+  lyrics?: string
+  slug?: string
+  listens?: number
+  likes?: []
+  updatedAt?: string
+}
+
+interface DBios {
+  photos: DImage[]
+  birthday?: string
+  content?: string
+  links?: DLink[]
 }

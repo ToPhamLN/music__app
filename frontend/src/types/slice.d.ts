@@ -1,3 +1,4 @@
+import { DImage, DTrack } from './data'
 interface IProfile {
   _id?: string
   email?: string
@@ -7,6 +8,7 @@ interface IProfile {
     _id: string
     username: string
     avatar: DImage
+    background: DImage
   }
 }
 
@@ -17,22 +19,6 @@ interface SettingsSliceType {
 interface IArtistType {
   name: string
 }
-
-interface TrackType {
-  name: string
-  src: {
-    path: string
-    filename: string
-  }
-  artist: ArtistType
-  // lyrics: {
-  //   time: number
-  //   text: string
-  // }
-  // duration: number
-}
-
-interface PlayListType extends Array<TrackType> {}
 
 interface VolumeType {
   isMute: boolean
@@ -46,9 +32,9 @@ interface ModeTrackPlay {
 }
 
 interface TrackPlaySliceType {
-  waitingList: PlayListType
-  list: PlayListType
-  track: TrackType
+  waitingList: DTrack[]
+  list: DTrack[]
+  track: DTrack
   volume: VolumeType
   currentTime: number
   mode: ModeTrackPlay

@@ -48,7 +48,7 @@ const Role: React.FC = () => {
       </div>
       {errors.role && (
         <p className={style.error}>
-          Bạn phải chọn vai trò của bạn trước!
+          Vui lòng chọn vai trò trước.
         </p>
       )}
     </div>

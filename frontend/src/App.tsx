@@ -10,24 +10,41 @@ import LoginPage from './pages/Auth/LoginPage'
 import NotFound from './pages/Error/NotFound'
 import AuthLayout from './layouts/AuthLayout'
 import ArtistLayout from './layouts/ArtistLayout'
+import { useAppSelector } from './hooks'
+import { ERole } from './constants/enum'
 
 const App: React.FC = () => {
-  const userInfo = null
+  const userInfo = useAppSelector(
+    (state) => state.profile.role
+  )
   return (
     <Routes>
-      <Route path='/' element={<ArtistLayout />}>
-        {artistRoutes.map((route) => {
-          const Page = route.component
-          return (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<Page />}
-            ></Route>
-          )
-        })}
-      </Route>
+      {userInfo === ERole.ARTIST && (
+        <Route path='/' element={<ArtistLayout />}>
+          {artistRoutes.map((route) => {
+            const Page = route.component
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<Page />}
+              ></Route>
+            )
+          })}
+        </Route>
+      )}
       <Route path='/' element={<DefaultLayout />}>
+        {userInfo === undefined &&
+          authRoutes.map((route) => {
+            const Page = route.component
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<Page />}
+              ></Route>
+            )
+          })}
         {publicRoutes.map((route) => {
           const Page = route.component
           return (
@@ -45,18 +62,6 @@ const App: React.FC = () => {
               key={route.path}
               path={route.path}
               element={userInfo ? <Page /> : <Page />}
-            ></Route>
-          )
-        })}
-      </Route>
-      <Route path='/' element={<AuthLayout />}>
-        {authRoutes.map((route) => {
-          const Page = route.component
-          return (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<Page />}
             ></Route>
           )
         })}

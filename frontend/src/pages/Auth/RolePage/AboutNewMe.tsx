@@ -1,6 +1,7 @@
 import style from '~/styles/Role.module.css'
 import { InputBox, InputFile } from '~/components/common'
 import { useFormContext } from 'react-hook-form'
+import { ERole } from '~/constants/enum'
 
 const AboutNewMe = () => {
   const { getValues } = useFormContext()
@@ -16,7 +17,7 @@ const AboutNewMe = () => {
       <InputBox
         name='username'
         label={
-          getValues('role') == 'user'
+          getValues('role') == ERole.USER
             ? 'Tên người dùng'
             : 'Tên nghệ sĩ'
         }

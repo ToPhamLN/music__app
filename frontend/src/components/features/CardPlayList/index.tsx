@@ -10,6 +10,7 @@ interface Props {
   listTrack: DListTrack
 }
 const CardPlaylist = ({ listTrack }: Props) => {
+  return <div>card</div>
   const { photo, title, category, slug, _id } = listTrack
   const { role } = useAppSelector((state) => state.profile)
 

@@ -10,7 +10,11 @@
         margin-bottom: 2rem;
     }
 
-    button {
+    audio {
+        margin-bottom: 4rem;
+    }
+
+    button.submit {
         display: inline-flex;
         width: 30%;
         border-radius: 10rem;

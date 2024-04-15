@@ -1,10 +1,15 @@
 import { Document, Types } from 'mongoose'
-import { ERole } from '~/types'
+import { EGenre, ERole } from '~/types'
 
 declare global {
   interface IImage {
     path?: string
     fileName?: string
+  }
+
+  interface ILinks {
+    name: string
+    path: string
   }
 
   interface IAuth extends Document {
@@ -17,7 +22,6 @@ declare global {
   interface IUser extends Document {
     username?: string
     avatar?: IImage
-    background?: IImage
     auth?: Types.ObjectId
     slug?: string
     wishTrack?: Types.ObjectId[]
@@ -27,7 +31,7 @@ declare global {
   interface IArtist extends Document {
     username: string
     avatar: IImage
-    background?: IImage
+    background: IImage
     auth: Types.ObjectId
     slug?: string
   }
@@ -59,6 +63,14 @@ declare global {
     slug: string
     listens: number
     likes: []
+    genre: EGenre
+  }
+  interface IBios extends Document {
+    artist?: Types.ObjectId
+    photos?: IImage[]
+    content?: string
+    birthday?: Date
+    links?: ILinks[]
   }
 
   interface IJwtPayload {
