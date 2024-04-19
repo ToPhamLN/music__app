@@ -2,6 +2,10 @@ import {
   createSlice,
   PayloadAction
 } from '@reduxjs/toolkit'
+import {
+  GlobalSliceType,
+  SNotification
+} from '~/types/slice'
 
 const initialState: GlobalSliceType = {
   view: {

@@ -16,8 +16,9 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  let statusCode: number =
-    res.statusCode === 200 ? 500 : res.statusCode
+  // let statusCode: number =
+  //   res.statusCode === 200 ? 500 : res.statusCode
+  let statusCode: number = (err as any).statusCode || 500
   let message: string = err.message
 
   if (

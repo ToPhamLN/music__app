@@ -54,7 +54,7 @@ interface DTrack {
   duration?: number
   album?: DListTrack
   artist?: DArtist[]
-  author?: string
+  author?: DArtist
   authorRole?: ERole
   lyrics?: string
   slug?: string

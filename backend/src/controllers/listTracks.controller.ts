@@ -1,13 +1,17 @@
 import { v2 as cloudinary } from 'cloudinary'
 import { Request, Response, NextFunction } from 'express'
-import { ArtistModel, ListTrackModel } from '~/models'
+import { ListTrackModel } from '~/models'
+import { EGenre } from '~/types'
 import { convertSlug } from '~/utils/helper'
 
-interface IUploadFile {
-  photo?: Express.Multer.File[]
-  background?: Express.Multer.File[]
+interface IReqBody {
+  photoOld: string
+  description?: string
+  title?: string
+  category?: string
+  background?: string
+  genre?: EGenre // Do not render genre
 }
-
 export const createListTrack = async (
   req: Request,
   res: Response,
@@ -15,7 +19,7 @@ export const createListTrack = async (
 ) => {
   try {
     const { title, description, category, background, genre } =
-      req.body
+      req.body as IReqBody
     const { idRole, role } = req.auth
     const photo = req.file
 
@@ -27,7 +31,7 @@ export const createListTrack = async (
       genre,
       author: idRole,
       authorRole: role,
-      slug: convertSlug(title)
+      slug: title ? convertSlug(title) : ''
     })
     if (photo) {
       newListTrack.photo = {
@@ -39,6 +43,72 @@ export const createListTrack = async (
     res
       .status(200)
       .json({ listTrack, message: 'Tạo thành công' })
+  } catch (error) {
+    if (req.file && req.file.filename)
+      await cloudinary.uploader.destroy(req.file.filename)
+    next(error)
+  }
+}
+
+export const updateListTrack = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { idListTrack } = req.params
+
+    const existListTrack =
+      await ListTrackModel.findById(idListTrack)
+    if (!existListTrack)
+      throw new Error('Danh sách nhạc này không tồn tại')
+    const {
+      title,
+      description,
+      category,
+      background,
+      genre,
+      photoOld
+    } = req.body as IReqBody
+    const photo = req.file
+    let convertPhotoOld: IImage = {}
+    if (photoOld) {
+      convertPhotoOld = JSON.parse(photoOld)
+    }
+    const newListTrack: Partial<IListTrack> = {
+      description,
+      category,
+      background,
+      title,
+      genre,
+      slug: title ? convertSlug(title) : ''
+    }
+    if (photo?.path) {
+      newListTrack.photo = {
+        path: photo.path,
+        fileName: photo.filename
+      }
+    } else {
+      newListTrack.photo = convertPhotoOld
+    }
+
+    const updateListTrack =
+      await ListTrackModel.findByIdAndUpdate(
+        idListTrack,
+        { $set: newListTrack },
+        { $new: true }
+      )
+    if (!updateListTrack) throw new Error('Không thể cập nhập')
+    if (
+      !convertPhotoOld?.fileName &&
+      existListTrack?.photo?.fileName
+    )
+      await cloudinary.uploader.destroy(
+        existListTrack?.photo?.fileName
+      )
+    res.status(201).json({
+      message: 'Cập nhập thành công.'
+    })
   } catch (error) {
     if (req.file && req.file.filename)
       await cloudinary.uploader.destroy(req.file.filename)

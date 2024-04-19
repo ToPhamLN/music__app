@@ -153,6 +153,14 @@ const ItemPlayList = ({ track, list, index }: Props) => {
             onMouseEnter={handleArtistMouseEnter}
             onMouseLeave={handleArtistMouseLeave}
           >
+            {track.author && (
+              <Link
+                key={track.author._id}
+                to={`/artist/${track.author?.slug}${track?.author?._id}.html`}
+              >
+                {track?.author?.username}
+              </Link>
+            )}
             {track.artist?.map((artist) => (
               <Link
                 key={artist._id}

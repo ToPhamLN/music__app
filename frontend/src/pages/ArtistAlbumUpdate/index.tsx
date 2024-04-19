@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   ColorPicker,
   InputBox,
@@ -15,14 +15,19 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { MdOutlineLibraryAddCheck } from 'react-icons/md'
-import { useAppDispatch, useAxiosPrivate } from '~/hooks'
+import {
+  useAppDispatch,
+  useAxiosPrivate,
+  useFetcher
+} from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
-import { ECategory } from '~/constants/enum'
 import { useParams } from 'react-router-dom'
-import { DListTrack } from '~/types/data'
+import { DImage } from '~/types/data'
+import useSWR from 'swr'
 
 interface FormAlbum {
   title: string
+  photoOld: DImage
   photo: File | string
   background: string
   description: string
@@ -30,13 +35,8 @@ interface FormAlbum {
 
 const schema = yup.object().shape({
   title: yup.string().required('Vui lòng nhập tiêu đề.'),
-  photo: yup
-    .mixed()
-    .required('Vui lòng tải ảnh lên.')
-    .nullable(),
-  background: yup
-    .string()
-    .required('Vui lòng nhập màu nền.'),
+  photo: yup.mixed().nullable(),
+  background: yup.string(),
   description: yup.string().required('Vui lòng nhập mô tả.')
 })
 
@@ -44,30 +44,48 @@ const ArtistAlbumUpdate: React.FC = () => {
   const idAlbum = useParams().albumParam?.slice(-29, -5)
   const [loading, setLoading] = useState<boolean>(false)
   const methods = useForm<FormAlbum>({
-    defaultValues: async () => {
-      try {
-        const apiEndpoint = `/api/v1/listtracks/${idAlbum}`
-        const res = await axios.get(apiEndpoint)
-        const { photo, ...other } = res.data as DListTrack
-        console.log(photo)
-        res.data as DListTrack
-        return other as DListTrack
-      } catch (error) {
-        console.log(error)
-        return {} as DListTrack
-      }
-    },
     resolver: yupResolver(
       schema
     ) as unknown as Resolver<FormAlbum>
   })
   const axios = useAxiosPrivate()
   const dispatch = useAppDispatch()
+  const fetcher = useFetcher()
+  const apiEndpoint = `/api/v1/listtracks/${idAlbum}`
+  const { data: album, isLoading } = useSWR(
+    apiEndpoint,
+    fetcher
+  )
 
   const onSubmit = async (data: FormAlbum) => {
     try {
       setLoading(true)
-      console.log(data)
+      const formData = new FormData()
+      if (data.title) formData.append('title', data.title)
+      if (data.photoOld)
+        formData.append(
+          'photoOld',
+          JSON.stringify(data.photoOld)
+        )
+      if (data.photo) formData.append('photo', data.photo)
+      if (data.background)
+        formData.append('background', data.background)
+      if (data.description)
+        formData.append('description', data.description)
+
+      const res = await axios.put(
+        `api/v1/listtracks/update/${album?._id}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }
+      )
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res?.data?.message
+        })
+      )
     } catch (error) {
       console.log(error)
     } finally {
@@ -75,43 +93,55 @@ const ArtistAlbumUpdate: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    const formAlbum = {
+      title: album?.title,
+      photoOld: album?.photo,
+      background: album?.background,
+      description: album?.description
+    } as unknown as FormAlbum
+    methods.reset(formAlbum)
+  }, [album])
+
   return (
     <div className={style.create__album}>
-      <FormProvider {...methods}>
-        <form
-          className={style.form}
-          onSubmit={methods.handleSubmit(onSubmit)}
-          style={{ opacity: loading ? '0.8' : 'unset' }}
-        >
-          <div className={style.title}>Sửa đổi Album</div>
-          <InputBox
-            label='Tiêu đề'
-            name='title'
-            type='text'
-          />
-          <InputFile
-            label='Thay đổi Ảnh tiêu đề'
-            name='photo'
-            accept='image/*'
-          />
+      {!isLoading && (
+        <FormProvider {...methods}>
+          <form
+            className={style.form}
+            onSubmit={methods.handleSubmit(onSubmit)}
+            style={{ opacity: loading ? '0.8' : 'unset' }}
+          >
+            <div className={style.title}>Sửa đổi Album</div>
+            <InputBox
+              label='Tiêu đề'
+              name='title'
+              type='text'
+            />
+            <InputFile
+              label='Thay đổi Ảnh tiêu đề'
+              name='photo'
+              accept='image/*'
+            />
 
-          <ColorPicker
-            name='background'
-            label={'Màu nền'}
-          />
-          <TextBox label='Mô tả' name='description' />
-          <button>
-            {loading ? (
-              <LoadingIcon />
-            ) : (
-              <>
-                <MdOutlineLibraryAddCheck />
-                Tạo
-              </>
-            )}
-          </button>
-        </form>
-      </FormProvider>
+            <ColorPicker
+              name='background'
+              label={'Màu nền'}
+            />
+            <TextBox label='Mô tả' name='description' />
+            <button>
+              {loading ? (
+                <LoadingIcon />
+              ) : (
+                <>
+                  <MdOutlineLibraryAddCheck />
+                  Tạo
+                </>
+              )}
+            </button>
+          </form>
+        </FormProvider>
+      )}
     </div>
   )
 }

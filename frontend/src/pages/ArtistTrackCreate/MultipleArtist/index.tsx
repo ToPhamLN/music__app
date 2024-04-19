@@ -5,7 +5,10 @@ import { useAxiosPrivate } from '~/hooks'
 import { IoIosArrowDown } from 'react-icons/io'
 import {
   useFormContext,
-  useFieldArray
+  useFieldArray,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+  FieldValues
 } from 'react-hook-form'
 
 interface IResArtist {
@@ -29,11 +32,15 @@ const MultipleArtist = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'artist'
-  })
+  }) as {
+    fields: { _id: string; username: string }[]
+    append: UseFieldArrayAppend<FieldValues, 'artist'>
+    remove: UseFieldArrayRemove
+  }
 
   const handleGetArtists = async () => {
     try {
-      const res = await axios.get('api/v1/artists')
+      const res = await axios.get('api/v1/artists/all')
       setArtists(res.data)
     } catch (error) {
       console.log(error)

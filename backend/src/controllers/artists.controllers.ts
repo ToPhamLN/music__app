@@ -1,8 +1,17 @@
-import { ArtistHome } from '~/pages/ArtistHome'
 import { Response, Request, NextFunction } from 'express'
 import { ArtistModel } from '~/models'
 import { v2 as cloudinary } from 'cloudinary'
-import { convertSlug } from '~/utils/helper'
+
+interface IReqFiles {
+  avatar?: Express.Multer.File[] | []
+  background?: Express.Multer.File[] | []
+}
+
+interface IReqBody {
+  username?: string
+  backgroundOld?: string
+  avatarOld?: string
+}
 
 export const updateArtist = async (
   req: Request,
@@ -10,29 +19,85 @@ export const updateArtist = async (
   next: NextFunction
 ) => {
   try {
-    const { _id: authId } = req.auth as { _id: string }
-    const { username, backgroundOld, avatarOld } = req.body
-    console.log(req.body, req.files)
-    throw new Error('oke')
-    const avatar = req.file as Express.Multer.File
+    const { idRole: artistId } = req.auth as { idRole: string }
+    const exstedArtist = await ArtistModel.findById(artistId)
+    if (!exstedArtist)
+      throw new Error('Không tìm thấy nghệ sĩ này')
+
+    const { username, backgroundOld, avatarOld } =
+      req.body as IReqBody
+    const { avatar, background } =
+      req.files as unknown as IReqFiles
+    let convertBackground: IImage = {}
+    let convertAvatar: IImage = {}
+    if (backgroundOld) {
+      convertBackground = JSON.parse(backgroundOld)
+    }
+    if (avatarOld) {
+      convertAvatar = JSON.parse(avatarOld)
+    }
+
     const newArtist: Partial<IArtist> = {
-      username
+      username: username
     }
-    if (avatar) {
+    if (avatar && avatar[0]?.filename) {
       newArtist.avatar = {
-        path: avatar.path,
-        fileName: avatar.filename
+        path: avatar[0]?.path,
+        fileName: avatar[0]?.filename
       }
+    } else {
+      newArtist.avatar = convertAvatar
     }
+    if (background && background[0]?.filename) {
+      newArtist.background = {
+        path: background[0]?.path,
+        fileName: background[0]?.filename
+      }
+    } else {
+      newArtist.background = convertBackground
+    }
+
     const updateArtist = await ArtistModel.findByIdAndUpdate(
-      { _id: authId },
-      { $set: newArtist }
+      artistId,
+      { $set: newArtist },
+      { new: true }
     )
-    res.status(200).json({
-      message: 'Tài khoản cập nhật thành công.',
-      updateArtist
+    if (!updateArtist) {
+      throw new Error('Không thể cập nhập.')
+    }
+    if (
+      !convertAvatar?.fileName &&
+      exstedArtist?.avatar?.fileName
+    )
+      await cloudinary.uploader.destroy(
+        exstedArtist?.avatar?.fileName
+      )
+    if (
+      !convertBackground?.fileName &&
+      exstedArtist?.background?.fileName
+    )
+      await cloudinary.uploader.destroy(
+        exstedArtist?.background?.fileName
+      )
+
+    res.status(201).json({
+      message: 'Cập nhập thành công',
+      artist: updateArtist
     })
   } catch (error) {
+    if (req.file) {
+      const { avatar, background } =
+        req.files as unknown as IReqFiles
+      if (avatar) {
+        await cloudinary.uploader.destroy(avatar[0]?.filename)
+      }
+      if (background) {
+        await cloudinary.uploader.destroy(
+          background[0]?.filename
+        )
+      }
+    }
+
     next(error)
   }
 }

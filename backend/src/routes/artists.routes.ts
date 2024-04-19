@@ -9,8 +9,8 @@ import uploadCloud from '~/middlewares/uploader'
 
 const route: express.Router = express.Router()
 
-route.get('/:idArtist', getArtist)
 route.get('/all', getArtists)
+route.get('/:idArtist', getArtist)
 route.put(
   '/update',
   verifyToken,

@@ -49,15 +49,36 @@ const ArtistCreateTrack: React.FC = () => {
   const onSubmit = async (data: FormTrack) => {
     try {
       setLoading(true)
+      const formData = new FormData()
+      if (data?.album)
+        formData.append(
+          'album',
+          JSON.stringify(data?.album)
+        )
+      if (data?.title) formData.append('title', data?.title)
+      if (data?.photo) formData.append('photo', data?.photo)
+
+      if (data?.source)
+        formData.append('source', data?.source)
+
+      if (data?.duration)
+        formData.append(
+          'duration',
+          data?.duration.toString()
+        )
+      if (data?.lyrics)
+        formData.append('lyrics', data?.lyrics)
+      if (data?.artist)
+        formData.append(
+          'artist',
+          JSON.stringify(
+            data?.artist?.map((item) => item?._id)
+          )
+        )
+
       const res = await axios.post(
         '/api/v1/tracks/create',
-        {
-          ...data,
-          album: data?.album?._id,
-          artist:
-            !!data?.artist &&
-            data?.artist?.map((item) => item?._id)
-        },
+        formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'

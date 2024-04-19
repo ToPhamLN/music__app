@@ -32,7 +32,7 @@ const InputFile = ({
         className={style.input__file}
         style={{ width: width }}
       >
-        {old ? (
+        {old?.path ? (
           <>
             {accept == 'image/*' ? (
               <img src={old?.path} alt='' />

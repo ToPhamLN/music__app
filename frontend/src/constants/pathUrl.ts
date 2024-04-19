@@ -19,6 +19,7 @@ import ArtistTrackCreate from '~/pages/ArtistTrackCreate'
 import ArtistTrackUpdate from '~/pages/ArtistTrackUpdate'
 import AlbumDetails from '~/pages/AlbumDetails'
 import ArtistHome from '~/pages/ArtistHome'
+import ArtistTrack from '~/pages/ArtistTrack'
 export const routes = {
   home: '/',
   login: '/login',
@@ -39,7 +40,8 @@ export const routes = {
   artistDetails: '/artist',
   artistBioCreate: '/mybio',
   artistPin: '/mypin',
-  artistAlbum: '/myalbum'
+  artistAlbum: '/myalbum',
+  artistTrack: '/mytrack'
 } as const
 
 export const authRoutes: {
@@ -105,5 +107,6 @@ export const artistRoutes: {
   {
     path: routes.trackUpdate,
     component: ArtistTrackUpdate
-  }
+  },
+  { path: routes.artistTrack, component: ArtistTrack }
 ]

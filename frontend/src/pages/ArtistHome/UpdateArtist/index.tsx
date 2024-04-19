@@ -28,6 +28,20 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
     const formData = new FormData()
     if (data?.username)
       formData.append('username', data?.username)
+    if (data?.avatar)
+      formData.append('avatar', data?.avatar)
+    if (data?.background)
+      formData.append('background', data?.background)
+    if (data?.avatarOld)
+      formData.append(
+        'avatarOld',
+        JSON.stringify(data?.avatarOld)
+      )
+    if (data?.backgroundOld)
+      formData.append(
+        'backgroundOld',
+        JSON.stringify(data?.backgroundOld)
+      )
 
     try {
       setLoading(true)
@@ -46,6 +60,7 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
   }
 
   useEffect(() => {
+    console.log(artist)
     const formArtist: FormArtist = {
       username: artist?.username,
       avatarOld: artist?.avatar,

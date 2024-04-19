@@ -2,7 +2,8 @@ import express from 'express'
 import {
   createTrack,
   getTrack,
-  updateTrack
+  updateTrack,
+  getTracks
 } from '~/controllers/tracks.controllers'
 import { verifyToken } from '~/middlewares/auth.middlewares'
 import uploadCloud from '~/middlewares/uploader'
@@ -28,7 +29,7 @@ route.put(
   ]),
   updateTrack
 )
-
+route.get('/all', getTracks)
 route.get('/:idTrack', getTrack)
 
 export default route

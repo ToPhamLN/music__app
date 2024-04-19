@@ -28,7 +28,7 @@ const Sidebar: React.FC = () => {
             Trang chủ
           </div>
         </Link>
-        <Link to={'/track/'} className={style.link}>
+        <Link to={'/mytrack'} className={style.link}>
           <MdMusicNote className={style.icon} />
           <span className={style.link__name}>Bài Hát</span>
           <div className={style.hover__content}>

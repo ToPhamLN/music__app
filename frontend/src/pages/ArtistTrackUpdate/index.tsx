@@ -22,7 +22,7 @@ import {
   useFetcher
 } from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
-import { DTrack } from '~/types/data'
+import { DImage } from '~/types/data'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
 
@@ -30,7 +30,9 @@ interface FormTrack {
   album?: { title: string; _id: string }
   title?: string
   photo?: string | File
+  photoOld?: DImage
   source?: File | string
+  sourceOld?: DImage
   duration?: number
   lyrics?: string
   artist?: { username: string; _id: string }[]
@@ -53,20 +55,51 @@ const ArtistTrackUpdate: React.FC = () => {
   const src = methods.watch('source') as unknown as
     | Blob
     | MediaSource
+  const srcOld = methods.watch('sourceOld') as DImage
   const dispatch = useAppDispatch()
   const onSubmit = async (data: FormTrack) => {
+    console.log('data ', data)
+    console.log('typeartist ', Array.isArray(data?.artist))
+    console.log('data ', data)
+    console.log('data ', data)
     try {
       setLoading(true)
-      console.log('data ', data)
+      const formData = new FormData()
+      if (data?.album)
+        formData.append(
+          'album',
+          JSON.stringify(data?.album)
+        )
+      if (data?.title) formData.append('title', data?.title)
+      if (data?.photo) formData.append('photo', data?.photo)
+      if (data?.photoOld)
+        formData.append(
+          'photoOld',
+          JSON.stringify(data?.photoOld)
+        )
+      if (data?.source)
+        formData.append('source', data?.source)
+      if (data?.sourceOld)
+        formData.append(
+          'sourceOld',
+          JSON.stringify(data?.sourceOld)
+        )
+      if (data?.duration)
+        formData.append(
+          'duration',
+          data?.duration?.toString()
+        )
+      if (data?.lyrics)
+        formData.append('lyrics', data?.lyrics)
+      if (data?.artist)
+        formData.append(
+          'artist',
+          JSON.stringify(data?.artist)
+        )
+
       const res = await axios.put(
         `/api/v1/tracks/${idTrack}/update`,
-        {
-          ...data,
-          album: data?.album?._id,
-          artist:
-            !!data?.artist &&
-            data?.artist?.map((item) => item?._id)
-        },
+        formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -109,7 +142,11 @@ const ArtistTrackUpdate: React.FC = () => {
     const formTrack: FormTrack = {
       title: track?.title,
       album: track?.album,
-      artist: track?.artist
+      artist: track?.artist,
+      photoOld: track?.photo,
+      sourceOld: track?.source,
+      duration: track?.duration,
+      lyrics: track?.lyrics
     }
     methods.reset(formTrack)
   }, [track])
@@ -143,21 +180,32 @@ const ArtistTrackUpdate: React.FC = () => {
             accept='audio/*'
           />
           {src && (
-            <>
-              <audio controls ref={audioRef}>
-                <source
-                  src={URL.createObjectURL(src)}
-                  type='audio/mpeg'
-                />
-                <track
-                  kind='captions'
-                  label='English'
-                  srcLang='en'
-                />
-              </audio>
-              <TextBox label='Lời bài hát' name='lyrics' />
-            </>
+            <audio controls ref={audioRef}>
+              <source
+                src={URL.createObjectURL(src)}
+                type='audio/mpeg'
+              />
+              <track
+                kind='captions'
+                label='English'
+                srcLang='en'
+              />
+            </audio>
           )}
+          {srcOld && (
+            <audio controls>
+              <source
+                src={srcOld?.path}
+                type='audio/mpeg'
+              />
+              <track
+                kind='captions'
+                label='English'
+                srcLang='en'
+              />
+            </audio>
+          )}
+          <TextBox label='Lời bài hát' name='lyrics' />
           <button className={style.submit}>
             {loading ? (
               <LoadingIcon />

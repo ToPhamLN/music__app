@@ -61,10 +61,6 @@ export const updateBios = async (
       photos = [...photoOldConvert, ...photos]
     }
 
-    console.log(' delete', deletePhotos)
-    console.log('photos', photos)
-    console.log('photosOld ', photosOld)
-
     const newBios = {
       content: content,
       birthday: birthday,
