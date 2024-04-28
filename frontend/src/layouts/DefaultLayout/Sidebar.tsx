@@ -65,9 +65,8 @@ const Sidebar: React.FC = () => {
         <ItemListBar />
         <ItemListBar />
       </div>
-
       <div className={style.menu}>
-        <div className={style.link}>
+        <Link to={'mylist/create'} className={style.link}>
           <MdOutlineAdd className={style.icon} />
           <span className={style.link__name}>
             Thêm playlist mới
@@ -75,7 +74,7 @@ const Sidebar: React.FC = () => {
           <div className={style.hover__content}>
             Thêm playlist mới
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   )

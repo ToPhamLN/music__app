@@ -223,7 +223,7 @@ export const getAlbum = async (
       .populate({
         path: 'list',
         populate: {
-          path: 'artist album',
+          path: 'artist album author',
           select: '_id username title slug avatar'
         }
       })

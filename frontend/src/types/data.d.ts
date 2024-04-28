@@ -29,7 +29,18 @@ interface DArtist extends DAuthor {
   slug: string
   background: DImage
 }
-interface DUser extends DAuthor {}
+interface DUser extends DAuthor {
+  auth: string | DAuth
+  slug: string
+  background: DImage
+}
+
+interface DInteraction {
+  user: string
+  wishTrack: string[]
+  wishList: string[]
+  recentlyTrack: string[]
+}
 
 interface DListTrack {
   _id?: string
@@ -42,7 +53,7 @@ interface DListTrack {
   authorRole?: ERole
   slug?: string
   likes?: []
-  list?: []
+  list: DTrack[]
   listens?: number
 }
 

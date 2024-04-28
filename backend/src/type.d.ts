@@ -24,10 +24,8 @@ declare global {
     avatar?: IImage
     auth?: Types.ObjectId
     slug?: string
-    wishTrack?: Types.ObjectId[]
-    wishList?: Types.ObjectId[]
-    recentlyTrack?: Types.ObjectId[]
   }
+
   interface IArtist extends Document {
     username: string
     avatar: IImage
@@ -71,6 +69,12 @@ declare global {
     content?: string
     birthday?: Date
     links?: ILinks[]
+  }
+  interface IInteraction extends Document {
+    user: Types.ObjectId
+    wishTrack?: Types.ObjectId[]
+    wishList?: Types.ObjectId[]
+    recentlyTrack?: Types.ObjectId[]
   }
 
   interface IJwtPayload {

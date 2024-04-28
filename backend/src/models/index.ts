@@ -4,6 +4,7 @@ import ArtistModel from './artists.model'
 import TrackModel from './tracks.model'
 import ListTrackModel from './listTracks.model'
 import BiosModel from './bios.models'
+import InteractionModel from './interactions.model'
 
 export {
   UserModel,
@@ -11,5 +12,6 @@ export {
   ListTrackModel,
   TrackModel,
   AuthModel,
-  BiosModel
+  BiosModel,
+  InteractionModel
 }

@@ -25,3 +25,28 @@ export const formatDay = (date: string): string => {
   const formatDay = format(newDate, 'MMM dd, yyyy')
   return formatDay
 }
+
+export const calculateDate = (date: string): string => {
+  const currentDate: Date = new Date()
+  const specificDate: Date = new Date(date)
+  const timeDiff: number =
+    currentDate.getTime() - specificDate.getTime()
+
+  const monthsDiff: number =
+    currentDate.getMonth() +
+    1 -
+    (specificDate.getMonth() + 1)
+
+  if (monthsDiff < 1) {
+    return `Mới tham gia.`
+  } else {
+    const yearsDiff: number =
+      timeDiff / (1000 * 3600 * 24 * 365.25)
+
+    if (yearsDiff < 1) {
+      return `${monthsDiff} tháng.`
+    } else {
+      return `${yearsDiff.toFixed(2)} năm.`
+    }
+  }
+}

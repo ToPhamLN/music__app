@@ -19,18 +19,6 @@ const userSchema = new Schema<IUser>(
     },
     slug: {
       type: String
-    },
-    wishTrack: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
-      default: []
-    },
-    wishList: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'ListTrack' }],
-      default: []
-    },
-    recentlyTrack: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
-      default: []
     }
   },
   { timestamps: true }

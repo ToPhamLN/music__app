@@ -10,7 +10,7 @@ const ArtistAlbum = () => {
     (state) => state.profile?.idRole
   ) as { _id: string }
   const fetcher = useFetcher()
-  const API = 'api/v1/listtracks/albumsforartist' as string
+  const API = 'api/v1/listtracks/all' as string
   const { data } = useSWR(API, () =>
     fetcher(API, {
       params: {

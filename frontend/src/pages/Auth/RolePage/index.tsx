@@ -16,6 +16,7 @@ import { LoadingIcon } from '~/components/pure'
 import { useAppDispatch } from '~/hooks'
 import { updateProfile } from '~/reduxStore/profileSlice'
 import { setNotify } from '~/reduxStore/globalSlice'
+import { useNavigate } from 'react-router-dom'
 
 interface FormData {
   role: string
@@ -44,8 +45,8 @@ const RolePage: React.FC = () => {
     ) as unknown as Resolver<FormData>
   })
   const axios = useAxiosPrivate()
-
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const handlePrev = () => {
     if (step > 1) {
@@ -83,6 +84,7 @@ const RolePage: React.FC = () => {
           message: res.data.message
         })
       )
+      navigate('/')
     } catch (error) {
       console.log(error)
     } finally {

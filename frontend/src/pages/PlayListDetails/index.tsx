@@ -1,107 +1,168 @@
-import React, { useState } from 'react'
-import { LuMoreHorizontal } from 'react-icons/lu'
-import {
-  MdDelete,
-  MdOutlineAccessTime
-} from 'react-icons/md'
-import {
-  ItemPlayList,
-  Playlist,
-  RenamePlaylist
-} from '~/components/features'
-import {
-  Deletion,
-  TrackAnimation
-} from '~/components/common'
-import style from '~/styles/PlaylistDetails.module.css'
-import { FaPen, FaPlay, FaShare } from 'react-icons/fa'
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  MouseEvent
+} from 'react'
+import { IoMdAlbums, IoMdDownload } from 'react-icons/io'
 import { IoHeartOutline } from 'react-icons/io5'
+import {
+  MdAudiotrack,
+  MdOutlineAccessTime,
+  MdOutlineMoreVert
+} from 'react-icons/md'
+import style from '~/styles/ArtistAlbumDetails.module.css'
+import { MoreListHeader } from '~/components/common'
+import {
+  useAppSelector,
+  useClickOutside,
+  useFetcher
+} from '~/hooks'
+import { useParams } from 'react-router-dom'
+import { DListTrack, DTrack } from '~/types/data'
+import { Playlist } from '~/components/features'
+import useSWR from 'swr'
+import { formatTime } from '~/utils/format'
+import { ERole } from '~/constants/enum'
 
-const PlaylistDetailsPage: React.FC = () => {
-  const [renameCard, setRenameCard] =
+const PlaylistDetails: React.FC = () => {
+  const [isMoreVisible, setIsMoreVisible] =
     useState<boolean>(false)
-  const [deleteCard, setDeleteCard] =
-    useState<boolean>(false)
+  const moreOptionRef = useRef<HTMLDivElement>(null)
+  const [location, setLocation] = useState<{
+    top: number
+    left: number
+  }>({
+    top: 0,
+    left: 0
+  })
+  const idAlbum = useParams().albumParam?.slice(-29, -5)
+  const { role } = useAppSelector((state) => state.profile)
+
+  //MoreListHeader
+  const toggleMoreVisible = () => {
+    setIsMoreVisible((prev) => !prev)
+  }
+  const CloseOptionHandler = () => {
+    toggleMoreVisible()
+  }
+  const OpenMoreHandler = (
+    event: MouseEvent<HTMLElement>
+  ) => {
+    const { top, left } =
+      event.currentTarget.getBoundingClientRect()
+    setLocation({
+      top: scrollY + top,
+      left: scrollX + left
+    })
+    toggleMoreVisible()
+  }
+  useClickOutside(moreOptionRef, CloseOptionHandler)
+
+  //Handle Get Album
+  const apiEndPoint = `api/v1/listtracks/${idAlbum}`
+  const fetcher = useFetcher()
+  const { data: listTrack } = useSWR(
+    apiEndPoint,
+    fetcher
+  ) as { data: DListTrack }
+
+  const durationAll = useMemo(() => {
+    if (listTrack) {
+      return listTrack?.list?.reduce(
+        (accumulator, track: DTrack) =>
+          accumulator + (track?.duration ?? 0),
+        0
+      )
+    }
+    return 0
+  }, [listTrack])
   return (
-    <React.Fragment>
-      <div className={style.playlist}>
-        <div className={style.header__playlist}>
-          <div className={style.header__title}>
-            <div className={style.img__playlist}>
-              <img
-                src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-                alt='Poster List'
-              />
-              <div className={style.header__animation}>
-                <TrackAnimation />
-              </div>
-              <div className={style.hover__play}>
-                <button>
-                  <FaPlay />
-                </button>
-              </div>
-            </div>
-            <button className={style.header__btn}>
+    <div className={style.artist__album__details}>
+      <div className={style.information}>
+        <div
+          className={style.background}
+          style={{ background: listTrack?.background }}
+        ></div>
+        <div className={style.container__information}>
+          <div className={style.photo}>
+            <img
+              src={listTrack?.photo?.path}
+              alt={listTrack?.photo?.fileName}
+            />
+          </div>
+          <h1 className={style.listtrack__title}>
+            {listTrack?.title}
+          </h1>
+        </div>
+      </div>
+      <div className={style.desc}>
+        {listTrack?.description
+          ?.split('\n')
+          .map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+      </div>
+      <div className={style.more__information}>
+        <div className={style.info__user}>
+          <div className={style.img__user}>
+            <img
+              src={
+                listTrack?.author?.avatar?.path
+                  ? listTrack?.author?.avatar?.path
+                  : '/src/assets/account-default.png'
+              }
+              alt={listTrack?.author?.avatar?.fileName}
+            />
+          </div>
+          <span className={style.user__name}>
+            {listTrack?.author?.username}
+          </span>
+        </div>
+        <ul className={style.statistics}>
+          <li>
+            {listTrack?.likes?.length.toString()}
+            <IoHeartOutline />
+          </li>
+          <li>
+            {listTrack?.list?.length} <MdAudiotrack />
+          </li>
+          <li>
+            {formatTime(durationAll as number).toString()}
+            <MdOutlineAccessTime />
+          </li>
+        </ul>
+      </div>
+      <div className={style.control}>
+        {role == ERole.USER && (
+          <>
+            <button className={style.like}>
               <IoHeartOutline />
             </button>
-          </div>
-          <div className={style.playlist__control}>
-            <button className={style.header__btn}>
-              <LuMoreHorizontal />
-              <div className={style.header__more__card}>
-                <button
-                  className={style.rename__playlist}
-                  onClick={() => setRenameCard((p) => !p)}
-                >
-                  <FaPen className={style.icon} />
-                  Đổi tên danh sách nhạc
-                </button>
-                <button
-                  className={style.delete__playlist}
-                  onClick={() => setDeleteCard((p) => !p)}
-                >
-                  <MdDelete className={style.icon} />
-                  Xóa danh sách nhạc
-                </button>
-                <button>
-                  <FaShare className={style.icon} />
-                  Chia sẻ
-                </button>
-              </div>
+            <button className={style.download}>
+              <IoMdDownload />
             </button>
-          </div>
-          <div className={style.info__playlist}>
-            <h1>
-              dd ddd ddddd dddd dd dd ddd ddddd dddd dd dd
-            </h1>
-          </div>
-        </div>
-        <div className={style.info__playlist}>
-          <div className={style.more__info}>
-            <div className={style.info__user}>
-              <div className={style.img__user}>
-                <img
-                  src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-                  alt='Poster List'
-                />
-              </div>
-              <span className={style.user__name}>eeee</span>
-            </div>
-          </div>
-          <div className={style.statistics}>
-            <span>5,131,321 likes · </span>
-            <span>100 songs, </span>
-            <span>6 hr 57 min </span>
-          </div>
-        </div>
-        <Playlist />
+          </>
+        )}
+        <button
+          className={style.more}
+          onClick={OpenMoreHandler}
+        >
+          <MdOutlineMoreVert />
+        </button>
       </div>
-      {renameCard && (
-        <RenamePlaylist setExit={setRenameCard} />
+      <div style={{ margin: '0 1rem' }}>
+        <Playlist list={listTrack?.list as []} />
+      </div>
+      {isMoreVisible && (
+        <MoreListHeader
+          refItem={moreOptionRef}
+          location={location}
+          listTrack={listTrack}
+        />
       )}
-      {deleteCard && <Deletion setExit={setDeleteCard} />}
-    </React.Fragment>
+    </div>
   )
 }
 
-export default PlaylistDetailsPage
+export default PlaylistDetails

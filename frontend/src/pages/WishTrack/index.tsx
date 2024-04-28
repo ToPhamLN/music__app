@@ -1,71 +1,82 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  MouseEvent
-} from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { IoMdDownload } from 'react-icons/io'
 import { IoHeartOutline } from 'react-icons/io5'
 import {
   MdAudiotrack,
-  MdOutlineAccessTime,
-  MdOutlineMoreVert
+  MdOutlineAccessTime
 } from 'react-icons/md'
 import style from '~/styles/ArtistAlbumDetails.module.css'
-import { MoreListHeader } from '~/components/common'
 import {
   useAppSelector,
-  useClickOutside,
+  useAxiosPrivate,
   useFetcher
 } from '~/hooks'
-import { useParams } from 'react-router-dom'
-import { DListTrack, DTrack } from '~/types/data'
+import {
+  DInteraction,
+  DListTrack,
+  DTrack
+} from '~/types/data'
 import { Playlist } from '~/components/features'
 import useSWR from 'swr'
 import { formatTime } from '~/utils/format'
 import { ERole } from '~/constants/enum'
 
-const ArtistAlbumDetails: React.FC = () => {
-  const [isMoreVisible, setIsMoreVisible] =
-    useState<boolean>(false)
-  const moreOptionRef = useRef<HTMLDivElement>(null)
-  const [location, setLocation] = useState<{
-    top: number
-    left: number
-  }>({
-    top: 0,
-    left: 0
-  })
-  const idAlbum = useParams().albumParam?.slice(-29, -5)
-  const { role } = useAppSelector((state) => state.profile)
-
-  //MoreListHeader
-  const toggleMoreVisible = () => {
-    setIsMoreVisible((prev) => !prev)
-  }
-  const CloseOptionHandler = () => {
-    toggleMoreVisible()
-  }
-  const OpenMoreHandler = (
-    event: MouseEvent<HTMLElement>
-  ) => {
-    const { top, left } =
-      event.currentTarget.getBoundingClientRect()
-    setLocation({
-      top: scrollY + top,
-      left: scrollX + left
-    })
-    toggleMoreVisible()
-  }
-  useClickOutside(moreOptionRef, CloseOptionHandler)
-
-  //Handle Get Album
-  const apiEndPoint = `api/v1/listtracks/${idAlbum}`
+const WishTrack: React.FC = () => {
+  const { role, idRole } = useAppSelector(
+    (state) => state.profile
+  )
+  const axios = useAxiosPrivate()
   const fetcher = useFetcher()
-  const { data: listTrack } = useSWR(
-    apiEndPoint,
+  const userID = role == ERole.USER ? idRole?._id : null
+  const { data: interaction } = useSWR(
+    userID ? `api/v1/interactions/${userID}` : null,
     fetcher
-  ) as { data: DListTrack }
+  ) as { data: DInteraction }
+
+  const [listTrack, setListTrack] = useState<DListTrack>({
+    title: 'Danh sách ưu thích',
+    description: 'Danh sách bài hát ưa thích của tôi',
+    photo: {
+      path: '/src/assets/wish.png',
+      fileName: 'wishList'
+    },
+    background: '#0F172A',
+    author: idRole,
+    list: [] // Initialize an empty list for tracks
+  })
+
+  const getTrack = async (id: string) => {
+    try {
+      const res = await axios.get(`api/v1/tracks/${id}`)
+      return res.data
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+
+  useEffect(() => {
+    if (interaction && interaction.wishTrack) {
+      const fetchTrackDetails = async () => {
+        const trackDetailsPromises =
+          interaction.wishTrack.map(async (trackId) => {
+            const trackData = await getTrack(trackId)
+            return trackData
+          })
+
+        const trackDetails = await Promise.all(
+          trackDetailsPromises
+        )
+
+        setListTrack((prevListTrack) => ({
+          ...prevListTrack,
+          list: trackDetails.filter(Boolean)
+        }))
+      }
+
+      fetchTrackDetails()
+    }
+  }, [interaction])
 
   const durationAll = useMemo(() => {
     if (listTrack) {
@@ -77,6 +88,7 @@ const ArtistAlbumDetails: React.FC = () => {
     }
     return 0
   }, [listTrack])
+
   return (
     <div className={style.artist__album__details}>
       <div className={style.information}>
@@ -124,10 +136,6 @@ const ArtistAlbumDetails: React.FC = () => {
         </div>
         <ul className={style.statistics}>
           <li>
-            {listTrack?.likes?.length.toString()}
-            <IoHeartOutline />
-          </li>
-          <li>
             {listTrack?.list?.length} <MdAudiotrack />
           </li>
           <li>
@@ -147,25 +155,12 @@ const ArtistAlbumDetails: React.FC = () => {
             </button>
           </>
         )}
-        <button
-          className={style.more}
-          onClick={OpenMoreHandler}
-        >
-          <MdOutlineMoreVert />
-        </button>
       </div>
       <div style={{ margin: '0 1rem' }}>
         <Playlist list={listTrack?.list as []} />
       </div>
-      {isMoreVisible && (
-        <MoreListHeader
-          refItem={moreOptionRef}
-          location={location}
-          listTrack={listTrack}
-        />
-      )}
     </div>
   )
 }
 
-export default ArtistAlbumDetails
+export default WishTrack

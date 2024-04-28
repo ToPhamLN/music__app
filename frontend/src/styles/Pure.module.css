@@ -8,14 +8,18 @@
 }
 
 .disc {
+    position: relative;
     width: 100%;
     height: 100%;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--main-color);
+    background-color: #303b57;
     border-radius: 1rem;
+    box-sizing: border-box;
 }
+
 
 
 .plate .black,
@@ -23,6 +27,22 @@
 .plate .center,
 .plate .border {
     border-radius: 50%;
+}
+
+.plate {
+    width: 95%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+
+    svg {
+        margin: auto;
+        font-size: 15rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: #0F172A;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .plate .black,
@@ -34,8 +54,8 @@
 }
 
 .plate .black {
-    width: 15rem;
-    height: 15rem;
+    width: 100%;
+    aspect-ratio: 1 /1;
     background-color: #675D50;
     transform: rotate(45deg);
 }
@@ -43,14 +63,14 @@
 
 
 .plate .white {
-    width: 70px;
-    height: 70px;
+    width: 50%;
+    height: 50%;
     background-color: #F3DEBA;
 }
 
 .plate .center {
-    width: 20px;
-    height: 20px;
+    width: 20%;
+    height: 20%;
     background-color: #675D50;
 }
 

@@ -3,9 +3,11 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { MdOutlineLibraryAddCheck } from 'react-icons/md'
 import { InputBox, InputFile } from '~/components/common'
 import { LoadingIcon } from '~/components/pure'
-import { useAxiosPrivate } from '~/hooks'
+import { useAppDispatch, useAxiosPrivate } from '~/hooks'
+import { setNotify } from '~/reduxStore/globalSlice'
 import style from '~/styles/ArtistDetails.module.css'
 import { DArtist, DImage } from '~/types/data'
+import { mutate } from 'swr'
 
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,6 +25,7 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const methods = useForm()
   const axios = useAxiosPrivate()
+  const dispatch = useAppDispatch()
 
   const onSubmit = async (data: FormArtist) => {
     const formData = new FormData()
@@ -51,7 +54,14 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
         formData,
         { headers: { 'Content-Type': 'multipart/form' } }
       )
-      console.log(res.data)
+      mutate(`api/v1/artists/${artist?._id}`)
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res.data.message
+        })
+      )
+      setExit((p) => !p)
     } catch (error) {
       console.log(error)
     } finally {
@@ -60,7 +70,6 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
   }
 
   useEffect(() => {
-    console.log(artist)
     const formArtist: FormArtist = {
       username: artist?.username,
       avatarOld: artist?.avatar,
@@ -108,7 +117,7 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
                 ) : (
                   <>
                     <MdOutlineLibraryAddCheck />
-                    Tạo
+                    Oke
                   </>
                 )}
               </button>

@@ -1,5 +1,5 @@
 import { useState, useRef, MouseEvent } from 'react'
-import { IoHeartOutline } from 'react-icons/io5'
+import { IoHeartOutline, IoHeart } from 'react-icons/io5'
 import { LuMoreHorizontal } from 'react-icons/lu'
 import { FaPlay, FaPause } from 'react-icons/fa'
 import style from '~/styles/PlayListDetails.module.css'
@@ -8,26 +8,34 @@ import {
   useHover,
   useClickOutside,
   useAppSelector,
-  useAppDispatch
+  useAppDispatch,
+  useAxiosPrivate
 } from '~/hooks'
 import TrackAnimation from '../../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
 import { ERole } from '~/constants/enum'
-import { DTrack } from '~/types/data'
+import { DInteraction, DTrack } from '~/types/data'
 import { formatDay, formatTime } from '~/utils/format'
 import {
   setIsPlaying,
   setList,
   setTrack
 } from '~/reduxStore/trackPlaySlice'
+import { mutate } from 'swr'
 
 interface Props {
   track: DTrack
   list: DTrack[]
   index: number
+  interaction: DInteraction
 }
 
-const ItemPlayList = ({ track, list, index }: Props) => {
+const ItemPlayList = ({
+  track,
+  list,
+  index,
+  interaction
+}: Props) => {
   const [isMoreVisible, setIsMoreVisible] =
     useState<boolean>(false)
   const moreOptionRef = useRef<HTMLDivElement>(null)
@@ -42,6 +50,11 @@ const ItemPlayList = ({ track, list, index }: Props) => {
   const { isPlaying, track: trackPlaying } = useAppSelector(
     (state) => state.trackPlay
   )
+  const { role, idRole } = useAppSelector(
+    (state) => state.profile
+  )
+  const axios = useAxiosPrivate()
+
   // show option block
   const toggleMoreVisible = () => {
     setIsMoreVisible((prev) => !prev)
@@ -85,8 +98,7 @@ const ItemPlayList = ({ track, list, index }: Props) => {
     handleMouseEnter: handleAlbumMouseEnter,
     handleMouseLeave: handleAlbumMouseLeave
   } = useHover()
-
-  const { role } = useAppSelector((state) => state.profile)
+  //
 
   const handlePlay = () => {
     dispatch(setTrack(track))
@@ -95,6 +107,21 @@ const ItemPlayList = ({ track, list, index }: Props) => {
     if (isPlaying && trackPlaying == track)
       dispatch(setIsPlaying(false))
   }
+
+  const handleLikeTrack = async () => {
+    try {
+      await axios.put(
+        `api/v1/interactions/wish/track/${track?._id}`
+      )
+      mutate(`api/v1/interactions/${idRole?._id}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const likedTrack = track?._id
+    ? interaction?.wishTrack?.includes(track?._id)
+    : false
 
   return (
     <div className={style.song__item}>
@@ -169,6 +196,7 @@ const ItemPlayList = ({ track, list, index }: Props) => {
                 {artist.username}
               </Link>
             ))}
+
             {isArtistHovered && (
               <div
                 className={style.hover__content}
@@ -178,6 +206,7 @@ const ItemPlayList = ({ track, list, index }: Props) => {
                   left: artistHoverPosition.left
                 }}
               >
+                {track?.author?.username}
                 {track.artist?.map((artist) => (
                   <span key={artist._id}>
                     {artist.username}
@@ -217,8 +246,11 @@ const ItemPlayList = ({ track, list, index }: Props) => {
 
       {role !== ERole.ARTIST && (
         <div className={style.song__like}>
-          <button className={style.btn}>
-            <IoHeartOutline />
+          <button
+            className={style.btn}
+            onClick={handleLikeTrack}
+          >
+            {likedTrack ? <IoHeart /> : <IoHeartOutline />}
           </button>
         </div>
       )}
@@ -238,6 +270,9 @@ const ItemPlayList = ({ track, list, index }: Props) => {
           refItem={moreOptionRef}
           location={location}
           track={track}
+          interaction={interaction}
+          handleLikeTrack={handleLikeTrack}
+          likedTrack={likedTrack}
         />
       )}
     </div>

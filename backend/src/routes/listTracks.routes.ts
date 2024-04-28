@@ -23,7 +23,7 @@ route.put(
   updateListTrack
 )
 
-route.get('/albumsforartist', getListTracks)
+route.get('/all', getListTracks)
 route.get('/:idListTrack', getAlbum)
 
 export default route

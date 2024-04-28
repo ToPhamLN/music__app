@@ -12,10 +12,12 @@ import { MdOutlineLibraryAddCheck } from 'react-icons/md'
 import {
   useAppSelector,
   useAxiosPrivate,
+  useAppDispatch,
   useFetcher
 } from '~/hooks'
 import useSWR from 'swr'
 import { DBios, DImage } from '~/types/data'
+import { setNotify } from '~/reduxStore/globalSlice'
 
 interface IFormBio {
   photosOld: DImage[]
@@ -37,6 +39,7 @@ export const ArtistBioCreate = () => {
   const methods = useForm<IFormBio>()
   const axios = useAxiosPrivate()
   const fetcher = useFetcher()
+  const dispatch = useAppDispatch()
   const apiEndpoint = `api/v1/bios/${idArtist}`
   const { data: bios, isLoading } = useSWR(
     apiEndpoint,
@@ -72,7 +75,12 @@ export const ArtistBioCreate = () => {
           }
         }
       )
-      console.log(res.data)
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res?.data?.message
+        })
+      )
     } catch (error) {
       console.log(error)
     } finally {

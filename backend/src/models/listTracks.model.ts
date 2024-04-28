@@ -18,12 +18,10 @@ const listTrackSchema = new Schema<IListTrack>(
     },
     background: {
       type: String,
-      required: true,
       default: '000000'
     },
     description: {
       type: String,
-      required: true,
       default: 'playlist'
     },
     genre: {

@@ -64,7 +64,10 @@ const MoreListHeader = ({
         <div className={style.header}>
           <div className={style.image__option}>
             <img
-              src={listTrack?.photo?.path}
+              src={
+                listTrack?.photo?.path ||
+                '/src/assets/disc.png'
+              }
               alt={listTrack?.photo?.fileName}
             />
           </div>

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { GrNext, GrPrevious } from 'react-icons/gr'
 import Slider, { Settings } from 'react-slick'
-import style from '~/styles/Home.module.css'
+import style from '~/styles/ArtistAlbum.module.css'
 
 const HomeSlick: React.FC = () => {
   const slideRef = useRef<Slider | null>(null)
@@ -10,7 +10,7 @@ const HomeSlick: React.FC = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -30,14 +30,13 @@ const HomeSlick: React.FC = () => {
       slick.slickNext()
     }
   }
+  const lists = [1, 2, 3, 4, 6, 7]
   return (
     <div className={style.slider}>
       <Slider ref={slideRef} {...settings}>
-        <Child />
-        <Child />
-        <Child />
-        <Child />
-        <Child />
+        {lists.map((slider) => (
+          <Child key={slider} />
+        ))}
       </Slider>
       <button
         className={style.btn__prev}

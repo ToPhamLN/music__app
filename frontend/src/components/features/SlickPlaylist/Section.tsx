@@ -2,11 +2,17 @@ import React from 'react'
 import style from '~/styles/Home.module.css'
 import style2 from '~/styles/Card.module.css'
 import CardPlaylist from '../CardPlayList'
+import { DListTrack } from '~/types/data'
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
+  listListTrack: DListTrack[]
+  nameSection: string
 }
-const Section = (props: Props) => {
-  const { setExit } = props
+const Section = ({
+  setExit,
+  listListTrack,
+  nameSection
+}: Props) => {
   return (
     <div className={style.section__playlistrow}>
       <div className={style.container}>
@@ -16,13 +22,12 @@ const Section = (props: Props) => {
         >
           X
         </button>
-        <h1>Dành cho bạn</h1>
+        <h1>{nameSection}</h1>
         <div className={`${style.wrapper} ${style2.grid}`}>
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
+          {listListTrack?.length &&
+            listListTrack.map((list, index) => (
+              <CardPlaylist key={index} listTrack={list} />
+            ))}
         </div>
       </div>
     </div>

@@ -20,7 +20,11 @@ import {
 } from 'react-icons/im'
 import { BsFilePlayFill } from 'react-icons/bs'
 import { formatTime } from '~/utils/format'
-import { useAppDispatch, useAppSelector } from '~/hooks'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useFetcher
+} from '~/hooks'
 
 import {
   setWaitingList,
@@ -33,6 +37,8 @@ import {
 import { reverseSuffle, sortPlayList } from '~/utils/array'
 import { setIsView } from '~/reduxStore/globalSlice'
 import { DTrack } from '~/types/data'
+import useSWR from 'swr'
+import { ERole } from '~/constants/enum'
 
 const Player: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -49,6 +55,10 @@ const Player: React.FC = () => {
   const [duration, setDuration] = useState<number>(0)
   const [like, setLike] = useState<boolean>(false)
   const dispatch = useAppDispatch()
+  const { role, idRole } = useAppSelector(
+    (state) => state.profile
+  )
+  const fetcher = useFetcher()
 
   const togglePlayPause = () => {
     dispatch(setIsPlaying(!isPlaying))
@@ -210,6 +220,18 @@ const Player: React.FC = () => {
       }
     }
   }, [isPlaying])
+
+  //
+
+  const userID = role == ERole.USER ? idRole?._id : null
+  const { data } = useSWR(
+    userID ? `api/v1/interactions/${userID}` : null,
+    fetcher
+  )
+
+  useEffect(() => {
+    console.log('mount:', data)
+  }, [data, userID])
 
   return (
     <div

@@ -4,10 +4,9 @@ import Login from '~/pages/Auth/LoginPage'
 import Signup from '~/pages/Auth/SignupPage'
 import PlaylistDetails from '~/pages/PlayListDetails'
 import Topic from '~/pages/Topic'
-import ArtistDetails from '~/pages/ArtistDetails'
 import Search from '~/pages/Search'
 import Rank from '~/pages/Rank'
-import Mylist from '~/pages/MyList'
+import UserMylist from '~/pages/UserMyList'
 import UserDetails from '~/pages/UserDetails'
 import Account from '~/pages/Account'
 import Role from '~/pages/Auth/RolePage'
@@ -20,6 +19,9 @@ import ArtistTrackUpdate from '~/pages/ArtistTrackUpdate'
 import AlbumDetails from '~/pages/AlbumDetails'
 import ArtistHome from '~/pages/ArtistHome'
 import ArtistTrack from '~/pages/ArtistTrack'
+import UserMyListCreate from '~/pages/UserMyListCreate'
+import WishTrack from '~/pages/WishTrack'
+
 export const routes = {
   home: '/',
   login: '/login',
@@ -30,14 +32,17 @@ export const routes = {
   albumUpdate: '/album/:albumParam/edit',
   trackCreate: '/track/create',
   trackUpdate: '/track/:trackParam/edit',
+  playlistDetails: '/playlist/:albumParam',
+  playlistUpdate: '/playlist/:playlistParam/edit',
+  createlist: '/mylist/create',
+  rank: '/rank',
   topic: '/topic',
   userDetails: '/user',
-  rank: '/rank',
-  playlistDetails: '/playlist',
   mylist: '/mylist',
+  wishTrack: '/wishTrack',
   account: '/account',
   role: '/role',
-  artistDetails: '/artist',
+  artistDetails: '/artist/:artistParam',
   artistBioCreate: '/mybio',
   artistPin: '/mypin',
   artistAlbum: '/myalbum',
@@ -59,16 +64,17 @@ export const publicRoutes: {
 }[] = [
   { path: routes.home, component: Home },
   { path: routes.search, component: Search },
-  {
-    path: routes.playlistDetails,
-    component: PlaylistDetails
-  },
+
   { path: routes.topic, component: Topic },
-  { path: routes.artistDetails, component: ArtistDetails },
+  { path: routes.artistDetails, component: ArtistHome },
   { path: routes.rank, component: Rank },
   { path: routes.userDetails, component: UserDetails },
   {
     path: routes.albumDetails,
+    component: AlbumDetails
+  },
+  {
+    path: routes.playlistDetails,
     component: AlbumDetails
   }
 ]
@@ -77,8 +83,10 @@ export const privateRoutes: {
   path: string
   component: React.ComponentType
 }[] = [
-  { path: routes.mylist, component: Mylist },
-  { path: routes.account, component: Account }
+  { path: routes.mylist, component: UserMylist },
+  { path: routes.account, component: Account },
+  { path: routes.createlist, component: UserMyListCreate },
+  { path: routes.wishTrack, component: WishTrack }
 ]
 
 export const artistRoutes: {

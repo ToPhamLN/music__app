@@ -153,7 +153,7 @@ export const updateTrack = async (
     ])
 
     res.status(200).json({
-      message: 'Tài khoản bài hát thành công.',
+      message: 'Cập nhập bài hát thành công.',
       updateTrack
     })
   } catch (error) {
@@ -195,50 +195,50 @@ export const listensTrack = async (
   }
 }
 
-export const likesTrack = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { idRole } = req.auth as { idRole: never }
-    const { idTrack } = req.params
-    const existedTrack =
-      await TrackModel.findById(idTrack).lean()
-    if (!existedTrack) {
-      return res.status(404).json({
-        message: 'Không tìm thấy bài hát này!'
-      })
-    }
-    const userLiked = existedTrack.likes.includes(idRole)
+// export const likesTrack = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { idRole } = req.auth as { idRole: never }
+//     const { idTrack } = req.params
+//     const existedTrack =
+//       await TrackModel.findById(idTrack).lean()
+//     if (!existedTrack) {
+//       return res.status(404).json({
+//         message: 'Không tìm thấy bài hát này!'
+//       })
+//     }
+//     const userLiked = existedTrack.likes.includes(idRole)
 
-    if (userLiked) {
-      await TrackModel.findByIdAndUpdate(
-        idTrack,
-        {
-          $pull: { likes: idRole }
-        },
-        { new: true }
-      )
-      return res.status(200).json({
-        message: 'Bỏ thích bài hát thành công!'
-      })
-    } else {
-      await TrackModel.findByIdAndUpdate(
-        idTrack,
-        {
-          $push: { likes: idRole }
-        },
-        { new: true }
-      )
-      return res.status(200).json({
-        message: 'Thích bài hát thành công!'
-      })
-    }
-  } catch (error) {
-    next(error)
-  }
-}
+//     if (userLiked) {
+//       await TrackModel.findByIdAndUpdate(
+//         idTrack,
+//         {
+//           $pull: { likes: idRole }
+//         },
+//         { new: true }
+//       )
+//       return res.status(200).json({
+//         message: 'Bỏ thích bài hát thành công!'
+//       })
+//     } else {
+//       await TrackModel.findByIdAndUpdate(
+//         idTrack,
+//         {
+//           $push: { likes: idRole }
+//         },
+//         { new: true }
+//       )
+//       return res.status(200).json({
+//         message: 'Thích bài hát thành công!'
+//       })
+//     }
+//   } catch (error) {
+//     next(error)
+//   }
+// }
 
 export const deleteTrack = async (
   req: Request,
@@ -276,7 +276,10 @@ export const getTrack = async (
         path: 'album',
         select: '_id title slug'
       })
-      .populate({ path: 'artist', select: '_id username slug' })
+      .populate({
+        path: 'artist author',
+        select: '_id username slug avatar'
+      })
       .exec()
     res.status(200).json(track)
   } catch (error) {
@@ -290,16 +293,22 @@ export const getTracks = async (
   next: NextFunction
 ) => {
   try {
-    const tracks = await TrackModel.find()
+    const { author } = req.query as { author: string }
+
+    const query: { author?: string } = {}
+    if (author) query.author = author
+
+    const tracks = await TrackModel.find(query)
       .populate({
         path: 'album',
         select: '_id title slug'
       })
       .populate({
         path: 'artist author',
-        select: '_id username slug'
+        select: '_id username slug avatar'
       })
       .exec()
+
     res.status(200).json(tracks)
   } catch (error) {
     next(error)

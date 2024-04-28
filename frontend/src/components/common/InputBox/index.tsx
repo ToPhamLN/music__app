@@ -52,6 +52,7 @@ const InputBox = ({ label, name, type }: Props) => {
               : type
           }
           id={name}
+          content={type}
           autoComplete='off'
           {...register(name)}
         />

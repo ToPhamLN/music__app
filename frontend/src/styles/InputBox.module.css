@@ -24,7 +24,8 @@
     background-color: transparent;
     outline: none;
     border: none;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    font-weight: 500;
     color: var(--text-color);
 }
 
@@ -39,6 +40,7 @@
     overflow-y: scroll;
     width: 100%;
     min-height: 25rem;
+    padding-left: 2.5rem;
 
     &::-webkit-scrollbar {
         width: 0.1rem;
@@ -89,24 +91,21 @@ label {
 .input__box.input__color {
     border: 1px solid var(--main-color);
 
-
-    .show {
-        visibility: hidden;
-        display: unset;
-    }
-
     &.type__pwd .show {
         visibility: unset;
         display: flex;
     }
-
 }
 
 .input__box input[type='date'],
 .input__box input[type='text'] {
     padding-left: 2.5rem;
-
 }
+
+.input__box input[content='password'] {
+    padding: 0;
+}
+
 
 ::-webkit-calendar-picker-indicator {
     padding: 1rem;
@@ -312,6 +311,7 @@ p.value {
 }
 
 .files__list {
+    min-height: 130px !important;
     margin-top: 0.5rem;
     border: 0.1rem dashed var(--main-color);
     padding: 0.5rem;

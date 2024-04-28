@@ -19,7 +19,7 @@ import { useAppDispatch, useAxiosPrivate } from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
 import { ECategory } from '~/constants/enum'
 
-interface FormAlbum {
+interface FormPlayList {
   title: string
   photo: File | string
   background: string
@@ -30,20 +30,20 @@ const schema = yup.object().shape({
   title: yup.string().required('Vui lòng nhập tiêu đề.'),
   photo: yup
     .mixed()
-    .required('Vui lòng tải ảnh lên.')
+    // .required('Vui lòng tải ảnh lên.')
     .nullable(),
-  background: yup
-    .string()
-    .required('Vui lòng nhập màu nền.'),
-  description: yup.string().required('Vui lòng nhập mô tả.')
+  background: yup.string(),
+  // .required('Vui lòng nhập màu nền.'),
+  description: yup.string()
+  // .required('Vui lòng nhập mô tả.')
 })
 
-const ArtistCreateAlbum: React.FC = () => {
+const UserMyListCreate: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const methods = useForm<FormAlbum>({
+  const methods = useForm<FormPlayList>({
     resolver: yupResolver(
       schema
-    ) as unknown as Resolver<FormAlbum>,
+    ) as unknown as Resolver<FormPlayList>,
     defaultValues: {
       background: '#0F172A'
     }
@@ -51,12 +51,12 @@ const ArtistCreateAlbum: React.FC = () => {
   const axios = useAxiosPrivate()
   const dispatch = useAppDispatch()
 
-  const onSubmit = async (data: FormAlbum) => {
+  const onSubmit = async (data: FormPlayList) => {
     try {
       setLoading(true)
       const res = await axios.post(
         '/api/v1/listtracks/create',
-        { ...data, category: ECategory.ALBUM },
+        { ...data, category: ECategory.PLAYLIST },
         {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -84,7 +84,9 @@ const ArtistCreateAlbum: React.FC = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           style={{ opacity: loading ? '0.8' : 'unset' }}
         >
-          <div className={style.title}>Tạo Album Mới</div>
+          <div className={style.title}>
+            Tạo Playlist Mới
+          </div>
           <InputBox
             label='Tiêu đề'
             name='title'
@@ -117,4 +119,4 @@ const ArtistCreateAlbum: React.FC = () => {
   )
 }
 
-export default ArtistCreateAlbum
+export default UserMyListCreate

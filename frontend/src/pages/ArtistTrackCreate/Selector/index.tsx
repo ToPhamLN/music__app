@@ -20,9 +20,7 @@ const Selector = () => {
 
   const handleGetAlbums = async () => {
     try {
-      const res = await axios.get(
-        'api/v1/listtracks/albumsforartist'
-      )
+      const res = await axios.get('api/v1/listtracks/all')
       setAlbums(res.data)
     } catch (error) {
       console.log(error)

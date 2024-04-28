@@ -4,25 +4,45 @@ import style from '~/styles/Home.module.css'
 import style2 from '~/styles/Card.module.css'
 import Section from './Section'
 import CardPlaylist from '../CardPlayList'
-const SlickPlaylist = () => {
+import { DListTrack } from '~/types/data'
+
+interface Props {
+  listListTrack: DListTrack[]
+  nameSection: string
+}
+const SlickPlaylist = ({
+  listListTrack,
+  nameSection
+}: Props) => {
   const [widthInner, setWithInner] = useState<number>(0)
   const casrouselRef: React.MutableRefObject<HTMLDivElement | null> =
     useRef(null)
   const [openSection, setOpenSection] =
     useState<boolean>(false)
 
-  useEffect(() => {
+  const updateWidthInner = () => {
     const casrousel = casrouselRef.current
     if (casrousel) {
       setWithInner(
         casrousel.scrollWidth - casrousel.offsetWidth
       )
     }
-  }, [])
+  }
+
+  useEffect(() => {
+    updateWidthInner()
+    const handleResize = () => {
+      updateWidthInner()
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [listListTrack])
   return (
     <div className={style.playlist__row}>
       <div className={style.header}>
-        <h1>Dành cho bạn</h1>
+        <h1>{nameSection}</h1>
         <button onClick={() => setOpenSection(true)}>
           Xem tất cả
         </button>
@@ -36,18 +56,19 @@ const SlickPlaylist = () => {
           dragConstraints={{ right: 0, left: -widthInner }}
           className={style2.flex__hidden}
         >
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
-          <CardPlaylist />
+          {listListTrack?.length > 0 &&
+            listListTrack?.map((list, index) => (
+              <CardPlaylist listTrack={list} key={index} />
+            ))}
         </motion.div>
       </motion.div>
-      {openSection && <Section setExit={setOpenSection} />}
+      {openSection && (
+        <Section
+          listListTrack={listListTrack}
+          setExit={setOpenSection}
+          nameSection={nameSection}
+        />
+      )}
     </div>
   )
 }

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { IoHeadset, IoHeartOutline } from 'react-icons/io5'
+import {
+  IoHeadset,
+  IoHeartOutline,
+  IoHeart
+} from 'react-icons/io5'
 import {
   MdAudiotrack,
   MdDelete,
@@ -12,17 +16,28 @@ import { Link } from 'react-router-dom'
 import style from '~/styles/MoreList.module.css'
 import MoreListCreatePlayList from './MoreListCreatePlayList'
 import { FaShare } from 'react-icons/fa'
-import { useAppSelector } from '~/hooks'
+import { useAppSelector, useAxiosPrivate } from '~/hooks'
 import { RiPencilFill } from 'react-icons/ri'
 import { ERole } from '~/constants/enum'
-import { DTrack } from '~/types/data'
+import { DInteraction, DTrack } from '~/types/data'
+import { mutate } from 'swr'
 
 interface Props {
   refItem: React.RefObject<HTMLDivElement>
   location: { top: number; left: number }
   track: DTrack
+  interaction: DInteraction
+  handleLikeTrack: () => Promise<void>
+  likedTrack: boolean
 }
-const MoreList = ({ location, refItem, track }: Props) => {
+const MoreList = ({
+  location,
+  refItem,
+  track,
+  interaction,
+  handleLikeTrack,
+  likedTrack
+}: Props) => {
   const { role, idRole } = useAppSelector(
     (state) => state.profile
   )
@@ -33,6 +48,19 @@ const MoreList = ({ location, refItem, track }: Props) => {
     top: 0,
     left: 0
   })
+  const axios = useAxiosPrivate()
+
+  const handleDeleteTrack = () => {
+    console.log('delete track')
+  }
+
+  const handleRemoveTrack = () => {
+    console.log('remove track')
+  }
+
+  const handleAddWaittingList = () => {
+    console.log('add waitting list')
+  }
 
   useEffect(() => {
     const { width, height } =
@@ -86,7 +114,7 @@ const MoreList = ({ location, refItem, track }: Props) => {
       </div>
       <div className={style.choose__option}>
         {role === ERole.ARTIST &&
-          track?.author == idRole?._id && (
+          track?.author?._id == idRole?._id && (
             <>
               <Link
                 to={`/track/${track?.slug}${track?._id}.html/edit`}
@@ -96,12 +124,94 @@ const MoreList = ({ location, refItem, track }: Props) => {
                   Sửa đổi bài hát này
                 </button>
               </Link>
-              <button className={style.btn}>
+              <button
+                className={style.btn}
+                onClick={handleDeleteTrack}
+              >
                 <MdDelete className={style.icon} />
                 Xóa khỏi danh sách này
               </button>
             </>
           )}
+        {role === ERole.USER &&
+          track?.author?._id == idRole?._id && (
+            <button
+              className={style.btn}
+              onClick={handleRemoveTrack}
+            >
+              <MdOutlinePlaylistAdd
+                className={style.icon}
+              />
+              Xóa khỏi danh sách này
+            </button>
+          )}
+        {role === ERole.USER && (
+          <>
+            <button
+              className={style.btn}
+              onClick={handleLikeTrack}
+            >
+              {likedTrack ? (
+                <>
+                  <IoHeart className={style.icon} />
+                  Xóa khỏi Bài hát ưa thích
+                </>
+              ) : (
+                <>
+                  <IoHeartOutline className={style.icon} />
+                  Thêm vào Bài hát ưa thích
+                </>
+              )}
+            </button>
+            <div className={style.btn} role='button'>
+              <MdOutlineAdd className={style.icon} />
+              Thêm vào playlist
+              <MoreListCreatePlayList />
+            </div>
+          </>
+        )}
+        {role !== ERole.ARTIST && (
+          <button
+            className={style.btn}
+            onClick={handleAddWaittingList}
+          >
+            <MdFormatListBulletedAdd
+              className={style.icon}
+            />
+            Thêm vào danh sách chờ
+          </button>
+        )}
+
+        <button className={style.btn}>
+          <MdPeopleAlt className={style.icon} />
+          Chuyển đến nghệ sĩ
+          <div className={style.artist__list}>
+            <div className={style.mylist}>
+              <Link
+                to={`/artist/${track?.author?.slug}${track?.author?._id}.html`}
+                className={style.add__new}
+              >
+                <span>{track?.author?.username}</span>
+              </Link>
+              {track?.artist?.map((artist, index) => (
+                <Link
+                  key={index}
+                  to={`/artist/${artist?.slug}${artist?._id}.html`}
+                  className={style.add__new}
+                >
+                  <span>{artist?.username}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </button>
+        <Link
+          to={`/album/${track?.album?._id}.html`}
+          className={style.btn}
+        >
+          <MdAudiotrack className={style.icon} />
+          Chuyển đến album
+        </Link>
         <button
           className={style.btn}
           onClick={() =>
@@ -114,38 +224,6 @@ const MoreList = ({ location, refItem, track }: Props) => {
           Chia sẻ
         </button>
       </div>
-      {/* <div className={style.choose__option}>
-        <button className={style.btn}>
-          <MdOutlineAdd className={style.icon} />
-          Thêm vào playlist
-          <MoreListCreatePlayList />
-        </button>
-        <button className={style.btn}>
-          <IoHeartOutline className={style.icon} />
-          Thêm vào/Xóa khỏi Bài hát ưa thích
-        </button>
-        <button className={style.btn}>
-          <MdOutlinePlaylistAdd className={style.icon} />
-          Xóa khỏi danh sách này
-        </button>
-        <button className={style.btn}>
-          <MdFormatListBulletedAdd className={style.icon} />
-          Thêm vào danh sách chờ
-        </button>
-        <button className={style.btn}>
-          <MdPeopleAlt className={style.icon} />
-          Chuyển đến nghệ sĩ
-          <div className={style.artist__list}></div>
-        </button>
-        <button className={style.btn}>
-          <MdAudiotrack className={style.icon} />
-          Chuyển đến album
-        </button>
-        <button className={style.btn}>
-          <FaShare className={style.icon} />
-          Chia sẻ
-        </button>
-      </div> */}
     </div>
   )
 }

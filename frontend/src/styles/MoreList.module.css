@@ -162,61 +162,61 @@
     .searchlist .icon:hover {
         transform: scale(1.4);
     }
+}
 
-    .my__list {
-        flex: 1;
-        display: flex;
-        flex-flow: column;
-        gap: 0.5rem;
-        overflow-y: auto;
+.my__list {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+    overflow-y: auto;
 
-        &::-webkit-scrollbar {
-            width: 0.3rem;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: var(--main-color);
-        }
-
-        scrollbar-width: thin;
-        scrollbar-color: var(--main-color) transparent;
+    &::-webkit-scrollbar {
+        width: 0.3rem;
     }
 
-    .add__new {
-        border-radius: 0.3rem;
-        width: 100%;
-        padding: 1rem;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        background-color: transparent;
-        gap: 2rem;
-        white-space: nowrap;
-
-        &:hover {
-            background-color: var(--hover-color);
-            color: var(--text-color)
-        }
-
-        &>span {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            font-size: 1.4rem;
-        }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--main-color);
     }
 
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) transparent;
+}
+
+.add__new {
+    border-radius: 0.3rem;
+    width: 100%;
+    padding: 1rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: transparent;
+    gap: 2rem;
+    white-space: nowrap;
+
+    &:hover {
+        background-color: var(--hover-color);
+        color: var(--text-color)
+    }
+
+    &>span {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 1.4rem;
+    }
 }
 
 .artist__list {
     position: absolute;
     padding: 0.5rem;
     right: 100%;
-    bottom: -10rem;
+    top: 50%;
+    transform: translateY(-50%);
     width: 20rem;
-    height: 20rem;
+    height: auto;
     background-color: var(--navbar);
     border-radius: 0.3rem;
     border: 0.1rem solid var(--stripe-color);

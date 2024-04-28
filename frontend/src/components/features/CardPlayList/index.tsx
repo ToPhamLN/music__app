@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { FaPlay } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { TrackAnimation } from '~/components/common'
@@ -10,9 +9,12 @@ interface Props {
   listTrack: DListTrack
 }
 const CardPlaylist = ({ listTrack }: Props) => {
-  return <div>card</div>
-  const { photo, title, category, slug, _id } = listTrack
+  const { photo, title, category, slug, _id, description } =
+    listTrack
   const { role } = useAppSelector((state) => state.profile)
+  if (!photo || !title || !category || !slug || !_id) {
+    return null
+  }
 
   return (
     <div className={`${style.card__playlist} `}>
@@ -41,13 +43,7 @@ const CardPlaylist = ({ listTrack }: Props) => {
         </Link>
       </div>
       <div className={style.playlist__artist}>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
-        <Link> toos ptt</Link>
+        {description}
       </div>
     </div>
   )
