@@ -1,8 +1,8 @@
-import { FaPlay } from 'react-icons/fa'
+// import { FaPlay } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { TrackAnimation } from '~/components/common'
-import { ERole } from '~/constants/enum'
-import { useAppSelector } from '~/hooks'
+// import { TrackAnimation } from '~/components/common'
+// import { ERole } from '~/constants/enum'
+// import { useAppSelector } from '~/hooks'
 import style from '~/styles/Card.module.css'
 import { DListTrack } from '~/types/data'
 interface Props {
@@ -11,18 +11,23 @@ interface Props {
 const CardPlaylist = ({ listTrack }: Props) => {
   const { photo, title, category, slug, _id, description } =
     listTrack
-  const { role } = useAppSelector((state) => state.profile)
-  if (!photo || !title || !category || !slug || !_id) {
-    return null
-  }
+
+  // const { role } = useAppSelector((state) => state.profile)
 
   return (
     <div className={`${style.card__playlist} `}>
       <div className={style.title}>
         <div className={style.image}>
-          <img src={photo.path} alt='Image Playlist' />
+          <img
+            src={
+              photo?.path
+                ? photo?.path
+                : '/src/assets/disc.png'
+            }
+            alt='Image Playlist'
+          />
         </div>
-        {role === ERole.USER && (
+        {/* {role === ERole.USER && (
           <>
             <div className={style.song__animation}>
               <TrackAnimation />
@@ -33,11 +38,11 @@ const CardPlaylist = ({ listTrack }: Props) => {
               </button>
             </div>
           </>
-        )}
+        )} */}
       </div>
       <div className={style.playlist__name}>
         <Link
-          to={`/${category.toLowerCase()}/${slug}${_id}.html`}
+          to={`/${category?.toLowerCase()}/${slug}${_id}.html`}
         >
           {title}
         </Link>

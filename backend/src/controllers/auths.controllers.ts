@@ -58,7 +58,10 @@ export const postLogin = async (
   try {
     const { email, password } = req.body
     const auth = await AuthModel.findOne({ email })
-      .populate({ path: 'idRole', select: 'username avatar' })
+      .populate({
+        path: 'idRole',
+        select: 'username avatar slug'
+      })
       .lean()
 
     if (!auth) {

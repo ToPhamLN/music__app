@@ -108,7 +108,7 @@
     padding: 0.5rem;
     position: absolute;
     right: 100%;
-    top: 0;
+    top: -9rem;
     width: 20rem;
     height: 27rem;
     background-color: var(--navbar);
@@ -136,7 +136,8 @@
     }
 
     .searchlist input {
-        flex: 1;
+        width: 12rem;
+        height: 100%;
         background-color: transparent;
         outline: none;
         border: none;
@@ -152,7 +153,7 @@
         flex: 0 0 auto;
         background-color: transparent;
         color: var(--text-color);
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -160,7 +161,7 @@
     }
 
     .searchlist .icon:hover {
-        transform: scale(1.4);
+        transform: scale(1.2);
     }
 }
 
@@ -192,7 +193,7 @@
     align-items: center;
     justify-content: flex-start;
     background-color: transparent;
-    gap: 2rem;
+    gap: 1rem;
     white-space: nowrap;
 
     &:hover {

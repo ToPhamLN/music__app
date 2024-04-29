@@ -11,7 +11,7 @@ const ArtistAlbum = () => {
   ) as { _id: string }
   const fetcher = useFetcher()
   const API = 'api/v1/listtracks/all' as string
-  const { data } = useSWR(API, () =>
+  const { data } = useSWR(API + 'artist', () =>
     fetcher(API, {
       params: {
         author: _id
@@ -20,6 +20,8 @@ const ArtistAlbum = () => {
   ) as {
     data: DListTrack[]
   }
+
+  console.log(data, _id, 'artistalbum')
 
   return (
     <div className={style.artist__album}>

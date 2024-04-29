@@ -12,6 +12,11 @@ interface IReqBody {
   background?: string
   genre?: EGenre // Do not render genre
 }
+
+interface IError extends Error {
+  statusCode: number
+}
+
 export const createListTrack = async (
   req: Request,
   res: Response,
@@ -116,6 +121,35 @@ export const updateListTrack = async (
   }
 }
 
+export const pinlistTrack = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { idListTrack } = req.params
+    const existListTrack =
+      await ListTrackModel.findById(idListTrack)
+    if (!existListTrack)
+      throw new Error('Danh sách nhạc này không tồn tại')
+    const newListTrack: Partial<IListTrack> = {
+      pin: !existListTrack?.pin
+    }
+    const updateListTrack =
+      await ListTrackModel.findByIdAndUpdate(
+        idListTrack,
+        { $set: newListTrack },
+        { $new: true }
+      )
+    if (!updateListTrack) throw new Error('Không thể cập nhập')
+    res.status(201).json({
+      message: 'Cập nhập thành công.'
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const listensListTrack = async (
   req: Request,
   res: Response,
@@ -184,17 +218,72 @@ export const likesListTrack = async (
   }
 }
 
+export const addTrack = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { idListTrack } = req.params
+    const { track } = req.body as { track: never }
+    const existedListTrack =
+      await ListTrackModel.findById(idListTrack)
+    if (!existedListTrack) {
+      const error = new Error(
+        'Không tìm thấy danh sách này'
+      ) as IError
+      error.statusCode = 404
+      throw error
+    }
+    const existedTrack = existedListTrack?.list?.includes(track)
+    if (existedTrack) {
+      await ListTrackModel.findByIdAndUpdate(
+        idListTrack,
+        {
+          $pull: { list: track }
+        },
+        { new: true }
+      )
+      return res.status(200).json({
+        message: 'Loại bỏ bài hát thành công'
+      })
+    } else {
+      await ListTrackModel.findByIdAndUpdate(
+        idListTrack,
+        {
+          $push: { list: track }
+        },
+        { new: true }
+      )
+      return res.status(200).json({
+        message: 'Thêm bài hát thành công'
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const getListTracks = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { author } = req.query as { author: string }
-    const query: { author?: string } = {}
+    const { author, pin } = req.query as {
+      author?: string
+      pin?: string
+    }
+    const query: { author?: string; pin?: boolean } = {}
 
     if (author) {
       query.author = author
+    }
+
+    if (pin === 'true') {
+      query.pin = true
+    } else if (pin === 'false') {
+      query.pin = false
     }
     const listTracks = await ListTrackModel.find(query)
       .populate({

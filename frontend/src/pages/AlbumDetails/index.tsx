@@ -77,6 +77,9 @@ const ArtistAlbumDetails: React.FC = () => {
     }
     return 0
   }, [listTrack])
+
+  const { list, ...listInfo } = listTrack || {}
+
   return (
     <div className={style.artist__album__details}>
       <div className={style.information}>
@@ -155,7 +158,7 @@ const ArtistAlbumDetails: React.FC = () => {
         </button>
       </div>
       <div style={{ margin: '0 1rem' }}>
-        <Playlist list={listTrack?.list as []} />
+        <Playlist list={list} listInfo={listInfo} />
       </div>
       {isMoreVisible && (
         <MoreListHeader

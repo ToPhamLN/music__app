@@ -4,6 +4,8 @@ import listTrackRoutes from './listTracks.routes'
 import trackRoutes from './tracks.routes'
 import biosRoutes from './bios.routes'
 import interactionRoutes from './interactions.routes'
+import userRoutes from './users.routes'
+import followingRoutes from './followings.routes'
 
 export {
   authRoutes,
@@ -11,5 +13,7 @@ export {
   listTrackRoutes,
   trackRoutes,
   biosRoutes,
-  interactionRoutes
+  interactionRoutes,
+  userRoutes,
+  followingRoutes
 }

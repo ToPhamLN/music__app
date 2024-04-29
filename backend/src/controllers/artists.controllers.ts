@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express'
 import { ArtistModel } from '~/models'
 import { v2 as cloudinary } from 'cloudinary'
+import { convertSlug } from '~/utils/helper'
 
 interface IReqFiles {
   avatar?: Express.Multer.File[] | []
@@ -20,8 +21,8 @@ export const updateArtist = async (
 ) => {
   try {
     const { idRole: artistId } = req.auth as { idRole: string }
-    const exstedArtist = await ArtistModel.findById(artistId)
-    if (!exstedArtist)
+    const existedArtist = await ArtistModel.findById(artistId)
+    if (!existedArtist)
       throw new Error('Không tìm thấy nghệ sĩ này')
 
     const { username, backgroundOld, avatarOld } =
@@ -38,7 +39,8 @@ export const updateArtist = async (
     }
 
     const newArtist: Partial<IArtist> = {
-      username: username
+      username: username,
+      slug: username ? convertSlug(username) : ''
     }
     if (avatar && avatar[0]?.filename) {
       newArtist.avatar = {
@@ -67,17 +69,17 @@ export const updateArtist = async (
     }
     if (
       !convertAvatar?.fileName &&
-      exstedArtist?.avatar?.fileName
+      existedArtist?.avatar?.fileName
     )
       await cloudinary.uploader.destroy(
-        exstedArtist?.avatar?.fileName
+        existedArtist?.avatar?.fileName
       )
     if (
       !convertBackground?.fileName &&
-      exstedArtist?.background?.fileName
+      existedArtist?.background?.fileName
     )
       await cloudinary.uploader.destroy(
-        exstedArtist?.background?.fileName
+        existedArtist?.background?.fileName
       )
 
     res.status(201).json({

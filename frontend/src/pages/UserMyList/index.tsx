@@ -7,15 +7,15 @@ import { useAppSelector, useFetcher } from '~/hooks'
 import useSWR from 'swr'
 
 const Mylist: React.FC = () => {
-  const { _id } = useAppSelector(
-    (state) => state.profile?.idRole
-  ) as { _id: string }
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
   const fetcher = useFetcher()
   const API = 'api/v1/listtracks/all' as string
   const { data: playistCreated } = useSWR(API, () =>
     fetcher(API, {
       params: {
-        author: _id
+        author: idRole?._id
       }
     })
   ) as {
@@ -28,19 +28,22 @@ const Mylist: React.FC = () => {
     photo: {
       path: '/src/assets/wish.png',
       fileName: 'wishList'
-    }
+    },
+    list: []
   }
   return (
     <div className={style.mylist}>
       <div className={style.map}>
         <h1>Danh sách của tôi</h1>
         <div className={style2.grid}>
-          <CardListTrackArtist listTrack={wishTrack} />
+          <CardListTrackArtist
+            listTrack={wishTrack}
+            type={'wishTrack'}
+          />
           {playistCreated?.map((listTrack) => (
             <CardListTrackArtist
               key={listTrack._id}
               listTrack={listTrack}
-              type={'wishTrack'}
             />
           ))}
         </div>

@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { IoHeadset, IoHeartOutline } from 'react-icons/io5'
 import {
-  MdAudiotrack,
   MdDelete,
-  MdFormatListBulletedAdd,
-  MdOutlineAccountCircle,
-  MdOutlineAdd,
-  MdOutlinePlaylistAdd,
-  MdPeopleAlt
+  MdOutlineAccountCircle
 } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import style from '~/styles/MoreList.module.css'
 import { FaPen, FaShare } from 'react-icons/fa'
 import { DListTrack } from '~/types/data'
-import { useAppSelector } from '~/hooks'
+import { useAppSelector, useAxiosPrivate } from '~/hooks'
 import { ERole } from '~/constants/enum'
+import { mutate } from 'swr'
 
 interface Props {
   refItem: React.RefObject<HTMLDivElement>
@@ -36,6 +32,18 @@ const MoreListHeader = ({
     top: 0,
     left: 0
   })
+  const axios = useAxiosPrivate()
+
+  const handlePin = async () => {
+    try {
+      await axios.put(
+        `api/v1/listtracks/pin/${listTrack?._id}`
+      )
+      mutate(`api/v1/listtracks/${listTrack?._id}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     const { width, height } =
@@ -107,6 +115,17 @@ const MoreListHeader = ({
                 <MdDelete className={style.icon} />
                 Xóa danh sách này
               </button>
+              <button
+                className={style.btn}
+                onClick={handlePin}
+              >
+                <MdOutlineAccountCircle
+                  className={style.icon}
+                />
+                {listTrack?.pin
+                  ? 'Ẩn khỏi hồ sơ'
+                  : 'Hiện trên hồ sơ'}
+              </button>
             </>
           )}
           {role == ERole.USER && (
@@ -114,12 +133,6 @@ const MoreListHeader = ({
               <button className={style.btn}>
                 <IoHeartOutline className={style.icon} />
                 Thêm vào thư viện
-              </button>
-              <button className={style.btn}>
-                <MdOutlineAccountCircle
-                  className={style.icon}
-                />
-                Hiện trên hồ sơ
               </button>
             </>
           )}

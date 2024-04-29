@@ -4,7 +4,16 @@ import style from '~/styles/Home.module.css'
 import style2 from '~/styles/Card.module.css'
 import CardPeople from '../CardPeople'
 import Section from './Section'
-const SlickPeople = () => {
+import { DPerson } from '~/types/data'
+
+interface Props {
+  listPerson: DPerson[]
+  nameSection: string
+}
+const SlickPeople = ({
+  listPerson,
+  nameSection
+}: Props) => {
   const [widthInner, setWithInner] = useState<number>(0)
   const casrouselRef: React.MutableRefObject<HTMLDivElement | null> =
     useRef(null)
@@ -22,7 +31,7 @@ const SlickPeople = () => {
   return (
     <div className={style.playlist__row}>
       <div className={style.header}>
-        <h1>Dành cho bạn</h1>
+        <h1>{nameSection}</h1>
         <button onClick={() => setOpenSection(true)}>
           Xem tất cả
         </button>
@@ -36,19 +45,18 @@ const SlickPeople = () => {
           dragConstraints={{ right: 0, left: -widthInner }}
           className={style2.flex__hidden}
         >
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
+          {listPerson?.map((person, index) => (
+            <CardPeople person={person} key={index} />
+          ))}
         </motion.div>
       </motion.div>
-      {openSection && <Section setExit={setOpenSection} />}
+      {openSection && (
+        <Section
+          setExit={setOpenSection}
+          listPerson={listPerson}
+          nameSection={nameSection}
+        />
+      )}
     </div>
   )
 }

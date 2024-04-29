@@ -13,13 +13,22 @@ const userSchema = new Schema<IUser>(
         type: String
       }
     },
+    background: {
+      path: {
+        type: String
+      },
+      fileName: {
+        type: String
+      }
+    },
     auth: {
       type: Schema.Types.ObjectId,
       ref: 'Auth'
     },
     slug: {
       type: String
-    }
+    },
+    role: { type: String, default: 'User' }
   },
   { timestamps: true }
 )

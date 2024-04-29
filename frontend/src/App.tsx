@@ -6,9 +6,7 @@ import {
   artistRoutes
 } from '~/constants/pathUrl'
 import DefaultLayout from '~/layouts/DefaultLayout'
-import LoginPage from './pages/Auth/LoginPage'
 import NotFound from './pages/Error/NotFound'
-import AuthLayout from './layouts/AuthLayout'
 import ArtistLayout from './layouts/ArtistLayout'
 import { useAppSelector } from './hooks'
 import { ERole } from './constants/enum'
@@ -17,6 +15,7 @@ const App: React.FC = () => {
   const userInfo = useAppSelector(
     (state) => state.profile.role
   )
+
   return (
     <Routes>
       {userInfo === ERole.ARTIST && (

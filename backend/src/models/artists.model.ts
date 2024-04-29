@@ -27,6 +27,10 @@ const artistSchema = new Schema<IArtist>(
       required: true,
       unique: true
     },
+    role: {
+      type: String,
+      default: 'Artist'
+    },
     slug: {
       type: String
     }

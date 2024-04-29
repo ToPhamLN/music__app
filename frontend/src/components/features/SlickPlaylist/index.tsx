@@ -56,10 +56,9 @@ const SlickPlaylist = ({
           dragConstraints={{ right: 0, left: -widthInner }}
           className={style2.flex__hidden}
         >
-          {listListTrack?.length > 0 &&
-            listListTrack?.map((list, index) => (
-              <CardPlaylist listTrack={list} key={index} />
-            ))}
+          {listListTrack?.map((list, index) => (
+            <CardPlaylist listTrack={list} key={index} />
+          ))}
         </motion.div>
       </motion.div>
       {openSection && (

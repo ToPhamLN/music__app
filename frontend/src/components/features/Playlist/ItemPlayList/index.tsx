@@ -14,7 +14,11 @@ import {
 import TrackAnimation from '../../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
 import { ERole } from '~/constants/enum'
-import { DInteraction, DTrack } from '~/types/data'
+import {
+  DInteraction,
+  DListTrack,
+  DTrack
+} from '~/types/data'
 import { formatDay, formatTime } from '~/utils/format'
 import {
   setIsPlaying,
@@ -23,9 +27,12 @@ import {
 } from '~/reduxStore/trackPlaySlice'
 import { mutate } from 'swr'
 
+type DListTrackWithoutList = Omit<DListTrack, 'list'>
+
 interface Props {
   track: DTrack
   list: DTrack[]
+  listInfo?: DListTrackWithoutList
   index: number
   interaction: DInteraction
 }
@@ -33,6 +40,7 @@ interface Props {
 const ItemPlayList = ({
   track,
   list,
+  listInfo,
   index,
   interaction
 }: Props) => {
@@ -273,6 +281,7 @@ const ItemPlayList = ({
           interaction={interaction}
           handleLikeTrack={handleLikeTrack}
           likedTrack={likedTrack}
+          listInfo={listInfo}
         />
       )}
     </div>

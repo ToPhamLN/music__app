@@ -16,6 +16,11 @@ interface DAuthor {
   avatar: DImage
 }
 
+interface DPerson extends DAuthor {
+  role: ERole
+  slug: string
+}
+
 interface DAuth {
   _id: string
   email: string
@@ -55,6 +60,7 @@ interface DListTrack {
   likes?: []
   list: DTrack[]
   listens?: number
+  pin?: boolean
 }
 
 interface DTrack {

@@ -1,19 +1,27 @@
 import React, { useRef, useState } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
 import { MdAdd, MdCreate } from 'react-icons/md'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import {
   CardPlaylist,
   Playlist,
+  SlickPeople,
   SlickPlaylist
 } from '~/components/features'
 import {
   useAppDispatch,
   useAppSelector,
+  useAxiosPrivate,
   useFetcher
 } from '~/hooks'
 import style from '~/styles/ArtistDetails.module.css'
-import { DArtist, DBios, DTrack } from '~/types/data'
+import {
+  DArtist,
+  DBios,
+  DListTrack,
+  DPerson,
+  DTrack
+} from '~/types/data'
 import UpdateArtist from './UpdateArtist'
 import { ERole } from '~/constants/enum'
 import Bios from './Bios'
@@ -44,10 +52,12 @@ const ArtistHome = () => {
 
   const idArtist = idParam || idRole?._id
   const fetcher = useFetcher()
+  const axios = useAxiosPrivate()
   const apiArtist = `api/v1/artists/${idArtist}`
   const apiTracks = 'api/v1/tracks/all'
   const apiLists = 'api/v1/listtracks/all'
   const apiBios = `api/v1/bios/${idArtist}`
+  const apiFollower = `api/v1/followings/artists/${idArtist}`
 
   const { data: artist, isLoading: loadingArtist } = useSWR(
     apiArtist,
@@ -64,7 +74,7 @@ const ArtistHome = () => {
       })
   ) as { data: DTrack[]; isLoading: boolean }
   const { data: lists, isLoading: loadingLists } = useSWR(
-    apiLists,
+    apiLists + 'artist',
     () =>
       fetcher(apiLists, {
         params: {
@@ -72,6 +82,20 @@ const ArtistHome = () => {
         }
       })
   )
+
+  const { data: pinLists } = useSWR(
+    apiLists + 'artist/pin',
+    () =>
+      fetcher(apiLists, {
+        params: {
+          author: idArtist,
+          pin: true
+        }
+      })
+  ) as {
+    data: DListTrack[]
+  }
+
   const { data: bios, isLoading: loadingBios } = useSWR(
     apiBios,
     fetcher
@@ -80,7 +104,17 @@ const ArtistHome = () => {
     isLoading: boolean
   }
 
-  // ref Menu
+  const { data: followers, isLoading: loadingFollower } =
+    useSWR(apiFollower, fetcher) as {
+      data: DPerson[]
+      isLoading: boolean
+    }
+
+  const isFollowing =
+    followers?.some(
+      (follower) => follower?._id == idRole?._id
+    ) && role == ERole.USER
+  //RefMenu
   const menuRef = {
     pin: useRef<HTMLDivElement>(null),
     popular: useRef<HTMLDivElement>(null),
@@ -90,12 +124,27 @@ const ArtistHome = () => {
   const scrollToSection = (
     ref: React.RefObject<HTMLDivElement>
   ) => {
-    if (ref.current)
-      ref?.current.scrollIntoView({ behavior: 'smooth' })
+    const main = document.querySelector('.main') as Element
+    if (ref.current) {
+      ref?.current.scrollIntoView({
+        // behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      })
+
+      main.scrollBy(0, -80)
+    }
   }
 
-  const handleFollow = () => {
-    console.log('follow')
+  const handleFollow = async () => {
+    try {
+      await axios.post('api/v1/followings/follow', {
+        artistId: idArtist
+      })
+      mutate(apiFollower)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handlePlay = () => {
@@ -104,9 +153,15 @@ const ArtistHome = () => {
     dispatch(setIsPlaying(true))
     if (isPlaying) dispatch(setIsPlaying(false))
   }
+
   return (
     <div className={style.artist__details}>
-      <div className={style.background}>
+      <div
+        className={`${style.background} ${loadingArtist ? 'loading' : ''}`}
+        style={{
+          background: loadingArtist ? '' : '#0F172A'
+        }}
+      >
         {artist?.background?.path && (
           <div className={style.image}>
             <img src={artist?.background?.path} alt='' />
@@ -137,7 +192,6 @@ const ArtistHome = () => {
           </div>
         </div>
       </div>
-
       <div className={`${style.header} `}>
         <div className={style.menu}>
           <button
@@ -178,16 +232,22 @@ const ArtistHome = () => {
               onClick={handleFollow}
             >
               <MdAdd className={style.icon} />
-              Theo dõi
+              {isFollowing ? 'Bỏ theo dõi' : 'Theo dõi'}
             </button>
           )}
         </div>
       </div>
+
       <div className={style.map} ref={menuRef.pin}>
         <div className={style.pin}>
           <h1>Nổi bật</h1>
           <div className={`${style.container}`}>
-            <CardPlaylist listTrack={{}} />
+            {pinLists?.map((pinList, index) => (
+              <CardPlaylist
+                key={index}
+                listTrack={pinList}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -224,6 +284,12 @@ const ArtistHome = () => {
           />
         )}
       </div>
+      {!loadingFollower && (
+        <SlickPeople
+          listPerson={followers}
+          nameSection='Đang theo dõi'
+        />
+      )}
       <div className={style.artist__bio} ref={menuRef.bio}>
         <h1>Tiểu sử</h1>
         <article

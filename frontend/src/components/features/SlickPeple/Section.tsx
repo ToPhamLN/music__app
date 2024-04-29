@@ -2,11 +2,17 @@ import React from 'react'
 import style from '~/styles/Home.module.css'
 import style2 from '~/styles/Card.module.css'
 import CardPeople from '../CardPeople'
+import { DPerson } from '~/types/data'
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
+  nameSection: string
+  listPerson: DPerson[]
 }
-const Section = (props: Props) => {
-  const { setExit } = props
+const Section = ({
+  setExit,
+  nameSection,
+  listPerson
+}: Props) => {
   return (
     <div className={style.section__playlistrow}>
       <div className={style.container}>
@@ -16,34 +22,11 @@ const Section = (props: Props) => {
         >
           X
         </button>
-        <h1>Dành cho bạn</h1>
+        <h1>{nameSection}</h1>
         <div className={`${style.wrapper} ${style2.grid}`}>
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople /> <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople /> <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople /> <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople /> <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
-          <CardPeople />
+          {listPerson?.map((person, index) => (
+            <CardPeople person={person} key={index} />
+          ))}
         </div>
       </div>
     </div>

@@ -42,7 +42,7 @@ const WishTrack: React.FC = () => {
     },
     background: '#0F172A',
     author: idRole,
-    list: [] // Initialize an empty list for tracks
+    list: []
   })
 
   const getTrack = async (id: string) => {

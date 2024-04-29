@@ -1,17 +1,17 @@
 import { MdOutlineAccessTime } from 'react-icons/md'
 import style from '~/styles/PlayListDetails.module.css'
 import ItemPlayList from './ItemPlayList'
-import { DTrack } from '~/types/data'
+import { DListTrack, DTrack } from '~/types/data'
 import { useAppSelector, useFetcher } from '~/hooks'
 import { ERole } from '~/constants/enum'
-import { useEffect } from 'react'
 import useSWR from 'swr'
-
+type DListTrackWithoutList = Omit<DListTrack, 'list'>
 interface Props {
   list: DTrack[] | string[]
+  listInfo?: DListTrackWithoutList
 }
 
-const Playlist = ({ list }: Props) => {
+const Playlist = ({ list, listInfo }: Props) => {
   const { role, idRole } = useAppSelector(
     (state) => state.profile
   )
@@ -22,9 +22,6 @@ const Playlist = ({ list }: Props) => {
     fetcher
   )
 
-  useEffect(() => {
-    console.log('mount playlist:', interaction)
-  }, [interaction, userID])
   return (
     <div className={style.playlist__songs}>
       <div className={style.column__name}>
@@ -46,6 +43,7 @@ const Playlist = ({ list }: Props) => {
           key={index}
           track={track as DTrack}
           list={list as DTrack[]}
+          listInfo={listInfo}
           index={index + 1}
           interaction={interaction}
         />

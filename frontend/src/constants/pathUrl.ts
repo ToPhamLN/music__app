@@ -37,7 +37,7 @@ export const routes = {
   createlist: '/mylist/create',
   rank: '/rank',
   topic: '/topic',
-  userDetails: '/user',
+  userDetails: '/user/:userParam',
   mylist: '/mylist',
   wishTrack: '/wishTrack',
   account: '/account',

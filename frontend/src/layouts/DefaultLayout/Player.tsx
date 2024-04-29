@@ -38,7 +38,6 @@ import { reverseSuffle, sortPlayList } from '~/utils/array'
 import { setIsView } from '~/reduxStore/globalSlice'
 import { DTrack } from '~/types/data'
 import useSWR from 'swr'
-import { ERole } from '~/constants/enum'
 
 const Player: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -55,7 +54,7 @@ const Player: React.FC = () => {
   const [duration, setDuration] = useState<number>(0)
   const [like, setLike] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { role, idRole } = useAppSelector(
+  const { idRole } = useAppSelector(
     (state) => state.profile
   )
   const fetcher = useFetcher()
@@ -223,7 +222,7 @@ const Player: React.FC = () => {
 
   //
 
-  const userID = role == ERole.USER ? idRole?._id : null
+  const userID = idRole?._id || null
   const { data } = useSWR(
     userID ? `api/v1/interactions/${userID}` : null,
     fetcher

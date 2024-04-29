@@ -48,6 +48,22 @@ const trackPlaySlice = createSlice({
         JSON.stringify(state)
       )
     },
+    addWaitingList: (
+      state,
+      action: PayloadAction<DTrack>
+    ) => {
+      const existingIndex = state.waitingList.findIndex(
+        (item) => item._id === action.payload._id
+      )
+      if (existingIndex !== -1) {
+        state.waitingList.splice(existingIndex, 1)
+      }
+      state.waitingList.splice(1, 0, action.payload)
+      localStorage.setItem(
+        'trackPlay',
+        JSON.stringify(state)
+      )
+    },
     setList: (state, action: PayloadAction<DTrack[]>) => {
       state.list = action.payload
       const { track, list, mode } = { ...state }
@@ -123,6 +139,7 @@ const trackPlaySlice = createSlice({
 
 export const {
   setWaitingList,
+  addWaitingList,
   setList,
   setTrack,
   setCurrentTime,

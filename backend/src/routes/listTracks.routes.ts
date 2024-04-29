@@ -1,8 +1,10 @@
 import express from 'express'
 import {
+  addTrack,
   createListTrack,
   getAlbum,
   getListTracks,
+  pinlistTrack,
   updateListTrack
 } from '~/controllers/listTracks.controller'
 import { verifyToken } from '~/middlewares/auth.middlewares'
@@ -22,6 +24,8 @@ route.put(
   uploadCloud.single('photo'),
   updateListTrack
 )
+route.put('/pin/:idListTrack', verifyToken, pinlistTrack)
+route.put('/addtrack/:idListTrack', verifyToken, addTrack)
 
 route.get('/all', getListTracks)
 route.get('/:idListTrack', getAlbum)

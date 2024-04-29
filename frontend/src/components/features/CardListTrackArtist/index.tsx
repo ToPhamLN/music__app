@@ -8,7 +8,6 @@ interface Props {
 const CardPlaylist = ({ listTrack, type }: Props) => {
   const { photo, title, category, slug, _id, description } =
     listTrack
-  console.log(type)
   return (
     <div className={`${style.card__playlist} `}>
       <div className={style.title}>
@@ -22,7 +21,7 @@ const CardPlaylist = ({ listTrack, type }: Props) => {
       <div className={style.playlist__name}>
         <Link
           to={
-            type
+            !type
               ? `/${category?.toLowerCase()}/${slug}${_id}.html`
               : '/wishtrack'
           }

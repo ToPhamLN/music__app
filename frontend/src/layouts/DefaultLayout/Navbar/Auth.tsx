@@ -14,6 +14,7 @@ import {
 import { RiLogoutBoxFill } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import Notify from './Notify'
+import { useAppSelector } from '~/hooks'
 
 const Auth: React.FC = () => {
   const [openMore, setOpenMore] = useState<boolean>(false)
@@ -22,6 +23,9 @@ const Auth: React.FC = () => {
 
   const notifyRef = useRef<HTMLDivElement | null>(null)
   const moreRef = useRef<HTMLDivElement | null>(null)
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
 
   const moreHandler = useCallback(() => {
     setOpenMore((p) => !p)
@@ -80,12 +84,16 @@ const Auth: React.FC = () => {
                 Tải khoản
               </button>
             </Link>
-            <Link to={'/user'}>
-              <button>
-                <MdAccountBox />
-                Hồ sơ
-              </button>
-            </Link>
+            {idRole?._id && (
+              <Link
+                to={`/user/${idRole.slug}${idRole?._id}.html`}
+              >
+                <button>
+                  <MdAccountBox />
+                  Hồ sơ
+                </button>
+              </Link>
+            )}
             <button>
               <IoMdSunny />
               Sáng

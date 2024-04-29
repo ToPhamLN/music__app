@@ -10,7 +10,9 @@ import {
   listTrackRoutes,
   trackRoutes,
   biosRoutes,
-  interactionRoutes
+  interactionRoutes,
+  userRoutes,
+  followingRoutes
 } from './routes'
 import {
   notFound,
@@ -41,6 +43,8 @@ app.use('/api/v1/listtracks', listTrackRoutes)
 app.use('/api/v1/tracks', trackRoutes)
 app.use('/api/v1/bios', biosRoutes)
 app.use('/api/v1/interactions', interactionRoutes)
+app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/followings', followingRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

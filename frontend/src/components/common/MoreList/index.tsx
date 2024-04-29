@@ -19,8 +19,16 @@ import { FaShare } from 'react-icons/fa'
 import { useAppSelector, useAxiosPrivate } from '~/hooks'
 import { RiPencilFill } from 'react-icons/ri'
 import { ERole } from '~/constants/enum'
-import { DInteraction, DTrack } from '~/types/data'
+import {
+  DInteraction,
+  DListTrack,
+  DTrack
+} from '~/types/data'
+import { useDispatch } from 'react-redux'
+import { addWaitingList } from '~/reduxStore/trackPlaySlice'
 import { mutate } from 'swr'
+
+type DListTrackWithoutList = Omit<DListTrack, 'list'>
 
 interface Props {
   refItem: React.RefObject<HTMLDivElement>
@@ -29,14 +37,15 @@ interface Props {
   interaction: DInteraction
   handleLikeTrack: () => Promise<void>
   likedTrack: boolean
+  listInfo?: DListTrackWithoutList
 }
 const MoreList = ({
   location,
   refItem,
   track,
-  interaction,
   handleLikeTrack,
-  likedTrack
+  likedTrack,
+  listInfo
 }: Props) => {
   const { role, idRole } = useAppSelector(
     (state) => state.profile
@@ -48,26 +57,37 @@ const MoreList = ({
     top: 0,
     left: 0
   })
+  const dispatch = useDispatch()
   const axios = useAxiosPrivate()
 
   const handleDeleteTrack = () => {
     console.log('delete track')
   }
-
-  const handleRemoveTrack = () => {
-    console.log('remove track')
+  const handleRemoveTrack = async () => {
+    try {
+      await axios.put(
+        `api/v1/listtracks/addtrack/${listInfo?._id}`,
+        {
+          track: track?._id
+        }
+      )
+      mutate(`api/v1/listtracks/${listInfo?._id}`)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleAddWaittingList = () => {
-    console.log('add waitting list')
+    dispatch(addWaitingList(track))
   }
 
   useEffect(() => {
     const { width, height } =
       refItem.current?.getBoundingClientRect() as DOMRect
     let newTop = location.top
-    if (newTop + height > innerHeight)
-      newTop = innerHeight - height - 10
+    console.log(height, location.top, innerHeight)
+    if (newTop + height + 100 > innerHeight)
+      newTop = innerHeight - height - 100
     let newLeft = location.left
     if (newLeft + width > innerWidth)
       newLeft = innerWidth - width - 10
@@ -76,7 +96,6 @@ const MoreList = ({
       left: newLeft
     })
   }, [location])
-
   return (
     <div
       className={style.more__option}
@@ -134,7 +153,8 @@ const MoreList = ({
             </>
           )}
         {role === ERole.USER &&
-          track?.author?._id == idRole?._id && (
+          listInfo &&
+          listInfo?.author?._id == idRole?._id && (
             <button
               className={style.btn}
               onClick={handleRemoveTrack}
@@ -166,7 +186,7 @@ const MoreList = ({
             <div className={style.btn} role='button'>
               <MdOutlineAdd className={style.icon} />
               Thêm vào playlist
-              <MoreListCreatePlayList />
+              <MoreListCreatePlayList track={track} />
             </div>
           </>
         )}

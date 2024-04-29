@@ -21,9 +21,11 @@ declare global {
 
   interface IUser extends Document {
     username?: string
+    background?: IImage
     avatar?: IImage
     auth?: Types.ObjectId
     slug?: string
+    role: 'User'
   }
 
   interface IArtist extends Document {
@@ -32,6 +34,12 @@ declare global {
     background: IImage
     auth: Types.ObjectId
     slug?: string
+    role: 'Artist'
+  }
+
+  interface IFollowing extends Document {
+    user: Types.ObjectId
+    followedArtists: Types.ObjectId[]
   }
 
   interface ITrack extends Document {
@@ -62,6 +70,7 @@ declare global {
     listens: number
     likes: []
     genre: EGenre
+    pin: boolean
   }
   interface IBios extends Document {
     artist?: Types.ObjectId
