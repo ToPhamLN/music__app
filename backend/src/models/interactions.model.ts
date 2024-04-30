@@ -4,7 +4,8 @@ const interactionSchema = new Schema<IInteraction>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      required: true
     },
     wishTrack: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],

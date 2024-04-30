@@ -9,6 +9,7 @@ interface IProfile {
     username: string
     avatar: DImage
     background: DImage
+    slug: string
   }
 }
 

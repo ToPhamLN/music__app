@@ -8,6 +8,7 @@ import { setNotify } from '~/reduxStore/globalSlice'
 import style from '~/styles/ArtistDetails.module.css'
 import { DArtist, DImage } from '~/types/data'
 import { mutate } from 'swr'
+import { updateProfile } from '~/reduxStore/profileSlice'
 
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
@@ -59,6 +60,11 @@ const UpdateArtist = ({ setExit, artist }: Props) => {
         setNotify({
           type: 'success',
           message: res.data.message
+        })
+      )
+      dispatch(
+        updateProfile({
+          idRole: res.data.artist
         })
       )
       setExit((p) => !p)

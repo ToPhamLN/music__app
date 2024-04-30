@@ -8,6 +8,7 @@ import { setNotify } from '~/reduxStore/globalSlice'
 import style from '~/styles/ArtistDetails.module.css'
 import { DImage, DUser } from '~/types/data'
 import { mutate } from 'swr'
+import { updateProfile } from '~/reduxStore/profileSlice'
 
 interface Props {
   setExit: React.Dispatch<React.SetStateAction<boolean>>
@@ -48,7 +49,6 @@ const UpdateUser = ({ setExit, user }: Props) => {
 
     try {
       setLoading(true)
-      console.log(data)
       const res = await axios.put(
         `api/v1/users/update`,
         formData,
@@ -59,6 +59,11 @@ const UpdateUser = ({ setExit, user }: Props) => {
         setNotify({
           type: 'success',
           message: res.data.message
+        })
+      )
+      dispatch(
+        updateProfile({
+          idRole: res.data.user
         })
       )
       setExit((p) => !p)

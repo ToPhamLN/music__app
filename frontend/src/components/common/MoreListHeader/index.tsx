@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { IoHeadset, IoHeartOutline } from 'react-icons/io5'
+import {
+  IoHeadset,
+  IoHeart,
+  IoHeartOutline
+} from 'react-icons/io5'
 import {
   MdDelete,
   MdOutlineAccountCircle
@@ -16,11 +20,15 @@ interface Props {
   refItem: React.RefObject<HTMLDivElement>
   location: { top: number; left: number }
   listTrack: DListTrack
+  handleAddWishList: () => Promise<void>
+  likedListTrack: boolean
 }
 const MoreListHeader = ({
   location,
   refItem,
-  listTrack
+  listTrack,
+  likedListTrack,
+  handleAddWishList
 }: Props) => {
   const { idRole, role } = useAppSelector(
     (state) => state?.profile
@@ -49,8 +57,8 @@ const MoreListHeader = ({
     const { width, height } =
       refItem.current?.getBoundingClientRect() as DOMRect
     let newTop = location.top
-    if (newTop + height > innerHeight)
-      newTop = innerHeight - height - 10
+    if (newTop + height + 100 > innerHeight)
+      newTop = innerHeight - height - 100
     let newLeft = location.left
     if (newLeft + width > innerWidth)
       newLeft = innerWidth - width - 10
@@ -128,14 +136,29 @@ const MoreListHeader = ({
               </button>
             </>
           )}
-          {role == ERole.USER && (
-            <>
-              <button className={style.btn}>
-                <IoHeartOutline className={style.icon} />
-                Thêm vào thư viện
-              </button>
-            </>
-          )}
+          {role == ERole.USER &&
+            idRole?._id !== listTrack.author?._id && (
+              <>
+                <button
+                  className={style.btn}
+                  onClick={handleAddWishList}
+                >
+                  {likedListTrack ? (
+                    <>
+                      <IoHeart className={style.icon} />
+                      Xóa khỏi thư viện
+                    </>
+                  ) : (
+                    <>
+                      <IoHeartOutline
+                        className={style.icon}
+                      />
+                      Thêm vào thư viện
+                    </>
+                  )}
+                </button>
+              </>
+            )}
           <button
             className={style.btn}
             onClick={() =>

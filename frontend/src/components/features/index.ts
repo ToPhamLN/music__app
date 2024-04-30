@@ -10,20 +10,18 @@ import CardPeople from './CardPeople'
 import SlickPlaylist from './SlickPlaylist'
 import SlickPeople from './SlickPeple'
 import ItemNotify from './ItemNotify'
-import CardListTrackArtist from './CardListTrackArtist'
 
 export {
   ItemListBar,
   ItemViewBar,
+  ItemNotify,
   SearchNav,
   RenamePlaylist,
   HomeSlick,
+  SlickPeople,
   SlickPlaylist,
   PlaylistGrid,
   Playlist,
   CardPlaylist,
-  CardPeople,
-  SlickPeople,
-  ItemNotify,
-  CardListTrackArtist
+  CardPeople
 }

@@ -1,4 +1,4 @@
-import { CardListTrackArtist } from '~/components/features'
+import { CardPlaylist } from '~/components/features'
 import style from '~/styles/ArtistAlbum.module.css'
 import style2 from '~/styles/Card.module.css'
 import { useAppSelector, useFetcher } from '~/hooks'
@@ -29,10 +29,7 @@ const ArtistAlbum = () => {
 
       <div className={style2.grid}>
         {data?.map((album) => (
-          <CardListTrackArtist
-            key={album._id}
-            listTrack={album}
-          />
+          <CardPlaylist key={album._id} listTrack={album} />
         ))}
       </div>
     </div>

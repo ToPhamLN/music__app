@@ -33,7 +33,7 @@ export const routes = {
   trackCreate: '/track/create',
   trackUpdate: '/track/:trackParam/edit',
   playlistDetails: '/playlist/:albumParam',
-  playlistUpdate: '/playlist/:playlistParam/edit',
+  playlistUpdate: '/playlist/:albumParam/edit',
   createlist: '/mylist/create',
   rank: '/rank',
   topic: '/topic',
@@ -86,7 +86,11 @@ export const privateRoutes: {
   { path: routes.mylist, component: UserMylist },
   { path: routes.account, component: Account },
   { path: routes.createlist, component: UserMyListCreate },
-  { path: routes.wishTrack, component: WishTrack }
+  { path: routes.wishTrack, component: WishTrack },
+  {
+    path: routes.playlistUpdate,
+    component: ArtistAlbumUpdate
+  }
 ]
 
 export const artistRoutes: {

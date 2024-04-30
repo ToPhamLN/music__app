@@ -23,6 +23,7 @@ import { formatTime } from '~/utils/format'
 import {
   useAppDispatch,
   useAppSelector,
+  useAxiosPrivate,
   useFetcher
 } from '~/hooks'
 
@@ -36,8 +37,8 @@ import {
 } from '~/reduxStore/trackPlaySlice'
 import { reverseSuffle, sortPlayList } from '~/utils/array'
 import { setIsView } from '~/reduxStore/globalSlice'
-import { DTrack } from '~/types/data'
-import useSWR from 'swr'
+import { DInteraction, DTrack } from '~/types/data'
+import useSWR, { mutate } from 'swr'
 
 const Player: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -52,12 +53,12 @@ const Player: React.FC = () => {
   } = useAppSelector((state) => state.trackPlay)
   const { view } = useAppSelector((state) => state.global)
   const [duration, setDuration] = useState<number>(0)
-  const [like, setLike] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const { idRole } = useAppSelector(
     (state) => state.profile
   )
   const fetcher = useFetcher()
+  const axios = useAxiosPrivate()
 
   const togglePlayPause = () => {
     dispatch(setIsPlaying(!isPlaying))
@@ -222,15 +223,42 @@ const Player: React.FC = () => {
 
   //
 
-  const userID = idRole?._id || null
-  const { data } = useSWR(
-    userID ? `api/v1/interactions/${userID}` : null,
+  const { data: interaction } = useSWR(
+    `api/v1/interactions/${idRole?._id}`,
     fetcher
-  )
+  ) as { data: DInteraction }
+
+  const likedTrack = track?._id
+    ? interaction?.wishTrack?.includes(track?._id)
+    : false
+
+  const handleLikeTrack = async () => {
+    if (idRole?._id && track?._id)
+      try {
+        await axios.put(
+          `api/v1/interactions/wish/track/${track?._id}`
+        )
+        mutate(`api/v1/interactions/${idRole?._id}`)
+      } catch (error) {
+        console.log(error)
+      }
+  }
+
+  const handleAddReacently = async () => {
+    if (idRole?._id && track?._id)
+      try {
+        await axios.put(
+          `api/v1/interactions/recently/track/${track?._id}`
+        )
+        mutate(`api/v1/interactions/${idRole?._id}`)
+      } catch (error) {
+        console.log(error)
+      }
+  }
 
   useEffect(() => {
-    console.log('mount:', data)
-  }, [data, userID])
+    handleAddReacently()
+  }, [track])
 
   return (
     <div
@@ -258,8 +286,13 @@ const Player: React.FC = () => {
         <button
           className={style.track__like}
           hover-content={'Lưa vào Thư viện'}
+          onClick={handleLikeTrack}
         >
-          {like ? <IoHeartSharp /> : <IoHeartOutline />}
+          {likedTrack ? (
+            <IoHeartSharp />
+          ) : (
+            <IoHeartOutline />
+          )}
         </button>
       </div>
       <div className={style.track__process}>
@@ -281,8 +314,15 @@ const Player: React.FC = () => {
         </audio>
         <div className={style.track__control}>
           <div className={style.left}>
-            <button className={style.like}>
-              <IoHeartOutline />
+            <button
+              className={style.like}
+              onClick={handleLikeTrack}
+            >
+              {likedTrack ? (
+                <IoHeartSharp />
+              ) : (
+                <IoHeartOutline />
+              )}
             </button>
             <button
               className={`${style.suffle} ${mode.isSuffle && style.choose}`}

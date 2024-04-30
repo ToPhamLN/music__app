@@ -7,8 +7,9 @@ import style from '~/styles/Card.module.css'
 import { DListTrack } from '~/types/data'
 interface Props {
   listTrack: DListTrack
+  type?: string
 }
-const CardPlaylist = ({ listTrack }: Props) => {
+const CardPlaylist = ({ listTrack, type }: Props) => {
   const { photo, title, category, slug, _id, description } =
     listTrack
 
@@ -42,7 +43,11 @@ const CardPlaylist = ({ listTrack }: Props) => {
       </div>
       <div className={style.playlist__name}>
         <Link
-          to={`/${category?.toLowerCase()}/${slug}${_id}.html`}
+          to={
+            !type
+              ? `/${category?.toLowerCase()}/${slug}${_id}.html`
+              : '/wishtrack'
+          }
         >
           {title}
         </Link>

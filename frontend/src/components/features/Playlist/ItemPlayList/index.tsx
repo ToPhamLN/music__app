@@ -130,7 +130,6 @@ const ItemPlayList = ({
   const likedTrack = track?._id
     ? interaction?.wishTrack?.includes(track?._id)
     : false
-
   return (
     <div className={style.song__item}>
       <div className={style.song__index}>{index}</div>
@@ -142,14 +141,16 @@ const ItemPlayList = ({
           />
           {role !== ERole.ARTIST && (
             <>
-              {isPlaying && trackPlaying == track && (
-                <div className={style.song__animation}>
-                  <TrackAnimation />
-                </div>
-              )}
+              {isPlaying &&
+                trackPlaying?._id == track?._id && (
+                  <div className={style.song__animation}>
+                    <TrackAnimation />
+                  </div>
+                )}
               <div className={style.song__play}>
                 <button onClick={handlePlay}>
-                  {isPlaying && trackPlaying == track ? (
+                  {isPlaying &&
+                  trackPlaying?._id == track._id ? (
                     <FaPause />
                   ) : (
                     <FaPlay />

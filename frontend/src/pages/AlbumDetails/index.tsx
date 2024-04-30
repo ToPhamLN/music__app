@@ -5,7 +5,7 @@ import React, {
   MouseEvent
 } from 'react'
 import { IoMdDownload } from 'react-icons/io'
-import { IoHeartOutline } from 'react-icons/io5'
+import { IoHeart, IoHeartOutline } from 'react-icons/io5'
 import {
   MdAudiotrack,
   MdOutlineAccessTime,
@@ -15,13 +15,18 @@ import style from '~/styles/ArtistAlbumDetails.module.css'
 import { MoreListHeader } from '~/components/common'
 import {
   useAppSelector,
+  useAxiosPrivate,
   useClickOutside,
   useFetcher
 } from '~/hooks'
 import { useParams } from 'react-router-dom'
-import { DListTrack, DTrack } from '~/types/data'
+import {
+  DInteraction,
+  DListTrack,
+  DTrack
+} from '~/types/data'
 import { Playlist } from '~/components/features'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { formatTime } from '~/utils/format'
 import { ERole } from '~/constants/enum'
 
@@ -37,7 +42,10 @@ const ArtistAlbumDetails: React.FC = () => {
     left: 0
   })
   const idAlbum = useParams().albumParam?.slice(-29, -5)
-  const { role } = useAppSelector((state) => state.profile)
+  const { role, idRole } = useAppSelector(
+    (state) => state.profile
+  )
+  const axios = useAxiosPrivate()
 
   //MoreListHeader
   const toggleMoreVisible = () => {
@@ -66,6 +74,24 @@ const ArtistAlbumDetails: React.FC = () => {
     apiEndPoint,
     fetcher
   ) as { data: DListTrack }
+  const { data: interaction } = useSWR(
+    `api/v1/interactions/${idRole?._id}`,
+    fetcher
+  ) as { data: DInteraction }
+
+  const likedListTrack = listTrack?._id
+    ? interaction?.wishList?.includes(listTrack?._id)
+    : false
+  const handleAddWishList = async () => {
+    try {
+      await axios.put(
+        `api/v1/interactions/wish/listTrack/${listTrack?._id}`
+      )
+      mutate(`api/v1/interactions/${idRole?._id}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const durationAll = useMemo(() => {
     if (listTrack) {
@@ -79,6 +105,8 @@ const ArtistAlbumDetails: React.FC = () => {
   }, [listTrack])
 
   const { list, ...listInfo } = listTrack || {}
+  const fileMp3 = list?.map((track) => track?.source?.path)
+  console.log(fileMp3)
 
   return (
     <div className={style.artist__album__details}>
@@ -142,9 +170,18 @@ const ArtistAlbumDetails: React.FC = () => {
       <div className={style.control}>
         {role == ERole.USER && (
           <>
-            <button className={style.like}>
-              <IoHeartOutline />
-            </button>
+            {idRole?._id !== listTrack?.author?._id && (
+              <button
+                className={style.like}
+                onClick={handleAddWishList}
+              >
+                {likedListTrack ? (
+                  <IoHeart />
+                ) : (
+                  <IoHeartOutline />
+                )}
+              </button>
+            )}
             <button className={style.download}>
               <IoMdDownload />
             </button>
@@ -165,6 +202,8 @@ const ArtistAlbumDetails: React.FC = () => {
           refItem={moreOptionRef}
           location={location}
           listTrack={listTrack}
+          likedListTrack={likedListTrack}
+          handleAddWishList={handleAddWishList}
         />
       )}
     </div>

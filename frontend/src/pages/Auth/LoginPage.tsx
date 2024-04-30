@@ -50,7 +50,6 @@ const LoginPage: React.FC = () => {
         data
       )
       const { role } = res.data.auth
-      console.log(res.data)
 
       if (role) {
         dispatch(updateProfile(res.data.auth))

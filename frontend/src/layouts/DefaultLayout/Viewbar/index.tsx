@@ -1,18 +1,33 @@
 import React from 'react'
 import style from '~/styles/Viewbar.module.css'
-import style2 from '~/styles/MoreList.module.css'
 import {
   LuAlarmClock,
   LuMoreHorizontal
 } from 'react-icons/lu'
-import { useAppDispatch, useAppSelector } from '~/hooks'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useFetcher
+} from '~/hooks'
 import { setIsRecently } from '~/reduxStore/globalSlice'
-import { ItemViewBar } from '~/components/features'
+import ListPlaying from './ListPlaying'
+import { DInteraction } from '~/types/data'
+import useSWR from 'swr'
+import RecentlyTrack from './RecentlyTrack'
 
 const Viewbar: React.FC = () => {
   const { view } = useAppSelector((state) => state.global)
-
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
   const dispatch = useAppDispatch()
+  const fetcher = useFetcher()
+
+  const { data: interaction } = useSWR(
+    `api/v1/interactions/${idRole?._id}`,
+    fetcher
+  ) as { data: DInteraction }
+
   return (
     <div className={style.viewbar}>
       <div className={style.header}>
@@ -30,37 +45,18 @@ const Viewbar: React.FC = () => {
             Nghe gần đây
           </button>
         </div>
-        <button className={style.btn__header}>
+        {/* <button className={style.btn__header}>
           <LuAlarmClock />
         </button>
         <button className={style.btn__header}>
           <LuMoreHorizontal />
-        </button>
+        </button> */}
       </div>
-
-      <div className={style.top}>
-        <h2 style={{ textAlign: 'center' }}>Đang phát</h2>
-        <ItemViewBar />
-        <h2 style={{ textAlign: 'center' }}>Tiếp theo</h2>
-        <div
-          style={{
-            height: '2px',
-            width: '100%',
-            background: 'var(--text)'
-          }}
-        ></div>
-      </div>
-      <div className={style.list}>
-        <ItemViewBar />
-        <ItemViewBar />
-        <ItemViewBar /> <ItemViewBar />
-        <ItemViewBar />
-        <ItemViewBar /> <ItemViewBar />
-        <ItemViewBar />
-        <ItemViewBar /> <ItemViewBar />
-        <ItemViewBar />
-        <ItemViewBar />
-      </div>
+      {view.isRecently ? (
+        <RecentlyTrack interaction={interaction} />
+      ) : (
+        <ListPlaying interaction={interaction} />
+      )}
     </div>
   )
 }

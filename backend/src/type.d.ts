@@ -81,9 +81,9 @@ declare global {
   }
   interface IInteraction extends Document {
     user: Types.ObjectId
-    wishTrack?: Types.ObjectId[]
-    wishList?: Types.ObjectId[]
-    recentlyTrack?: Types.ObjectId[]
+    wishTrack: Types.ObjectId[]
+    wishList: Types.ObjectId[]
+    recentlyTrack: Types.ObjectId[]
   }
 
   interface IJwtPayload {

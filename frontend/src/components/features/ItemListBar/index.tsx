@@ -1,8 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useHover } from '~/hooks'
 import style from '~/styles/Sidebar.module.css'
+import { DListTrack } from '~/types/data'
 
-const ItemListBar: React.FC = () => {
+interface Props {
+  listTrack: DListTrack
+  type?: string
+}
+
+const ItemListBar = ({ listTrack, type }: Props) => {
+  const { photo, title, category, slug, _id } = listTrack
   const {
     isHovered,
     handleMouseEnter,
@@ -17,13 +25,25 @@ const ItemListBar: React.FC = () => {
     >
       <div className={style.icon}>
         <img
-          src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-          alt='Poster List'
+          src={
+            photo?.path
+              ? photo?.path
+              : '/src/assets/disc.png'
+          }
+          alt='Image Playlist'
         />
       </div>
       <span className={style.name__item}>playlis</span>
       <div className={style.hover__content}>
-        playlist name vertical eeeeeee eee
+        <Link
+          to={
+            !type
+              ? `/${category?.toLowerCase()}/${slug}${_id}.html`
+              : '/wishtrack'
+          }
+        >
+          {title}
+        </Link>
       </div>
       {isHovered && (
         <div
@@ -33,7 +53,7 @@ const ItemListBar: React.FC = () => {
             left: hoverPosition.left
           }}
         >
-          playlist name vertical eeeeeee eee
+          {title}
         </div>
       )}
     </div>

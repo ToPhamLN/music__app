@@ -73,7 +73,10 @@ const Auth: React.FC = () => {
       </div>
       <div className={style.auth} onClick={moreHandler}>
         <img
-          src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
+          src={
+            idRole?.avatar?.path ||
+            '/src/assets/account-default.png'
+          }
           alt=''
         />
         {openMore && (
@@ -86,7 +89,7 @@ const Auth: React.FC = () => {
             </Link>
             {idRole?._id && (
               <Link
-                to={`/user/${idRole.slug}${idRole?._id}.html`}
+                to={`/user/${idRole?.slug}${idRole?._id}.html`}
               >
                 <button>
                   <MdAccountBox />

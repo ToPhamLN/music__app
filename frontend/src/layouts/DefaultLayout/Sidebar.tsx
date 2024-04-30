@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
 import style from '~/styles/Sidebar.module.css'
-import { useAppSelector } from '~/hooks'
 import { GrHomeRounded } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 import {
@@ -10,10 +10,78 @@ import {
   MdOutlineEmojiEvents
 } from 'react-icons/md'
 import { ItemListBar } from '~/components/features'
+import { DInteraction, DListTrack } from '~/types/data'
+import {
+  useAppSelector,
+  useAxiosPrivate,
+  useFetcher
+} from '~/hooks'
+import useSWR from 'swr'
 const Sidebar: React.FC = () => {
   const { isSidebar } = useAppSelector(
     (state) => state.global
   )
+
+  const [wishList, setWishList] = useState<DListTrack[]>([])
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
+  const axios = useAxiosPrivate()
+  const fetcher = useFetcher()
+  const API = 'api/v1/listtracks/all' as string
+  const { data: playistCreated } = useSWR(API, () =>
+    fetcher(API, {
+      params: {
+        author: idRole?._id
+      }
+    })
+  ) as {
+    data: DListTrack[]
+  }
+
+  const { data: interaction } = useSWR(
+    `api/v1/interactions/${idRole?._id}`,
+    fetcher
+  ) as { data: DInteraction }
+
+  const wishTrack: DListTrack = {
+    title: 'Danh sách ưu thích',
+    description: 'Danh sách bài hát ưa thích của tôi',
+    photo: {
+      path: '/src/assets/wish.png',
+      fileName: 'wishList'
+    },
+    list: []
+  }
+
+  const getTrack = async (id: string) => {
+    try {
+      const res = await axios.get(`api/v1/listtracks/${id}`)
+      return res.data
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+  useEffect(() => {
+    if (interaction && interaction.wishTrack) {
+      const fetchTrackDetails = async () => {
+        const trackDetailsPromises =
+          interaction.wishList.map(async (trackId) => {
+            const trackData = await getTrack(trackId)
+            return trackData
+          })
+
+        const trackDetails = await Promise.all(
+          trackDetailsPromises
+        )
+
+        setWishList(trackDetails.filter(Boolean))
+      }
+
+      fetchTrackDetails()
+    }
+  }, [interaction])
   return (
     <div
       className={`${style.sidebar} ${isSidebar && style.show}`}
@@ -56,14 +124,22 @@ const Sidebar: React.FC = () => {
         </Link>
       </div>
       <div className={style.my__list}>
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
-        <ItemListBar />
+        <ItemListBar
+          listTrack={wishTrack}
+          type={'wishTrack'}
+        />
+        {playistCreated?.map((listTrack) => (
+          <ItemListBar
+            key={listTrack._id}
+            listTrack={listTrack}
+          />
+        ))}
+        {wishList?.map((listTrack) => (
+          <ItemListBar
+            key={listTrack._id}
+            listTrack={listTrack}
+          />
+        ))}
       </div>
       <div className={style.menu}>
         <Link to={'mylist/create'} className={style.link}>
