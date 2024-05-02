@@ -21,8 +21,6 @@ const ArtistAlbum = () => {
     data: DListTrack[]
   }
 
-  console.log(data, _id, 'artistalbum')
-
   return (
     <div className={style.artist__album}>
       <h1>Album của tôi</h1>

@@ -10,7 +10,7 @@ interface IReqBody {
   title?: string
   category?: string
   background?: string
-  genre?: EGenre // Do not render genre
+  genre?: EGenre[]
 }
 
 interface IError extends Error {
@@ -270,21 +270,32 @@ export const getListTracks = async (
   next: NextFunction
 ) => {
   try {
-    const { author, pin } = req.query as {
+    const { author, pin, q } = req.query as {
       author?: string
       pin?: string
+      q?: string
     }
-    const query: { author?: string; pin?: boolean } = {}
+    const query = {} as {
+      author?: string
+      pin?: boolean
+      slug: {
+        $regex: RegExp
+      }
+    }
 
     if (author) {
       query.author = author
     }
-
     if (pin === 'true') {
       query.pin = true
     } else if (pin === 'false') {
       query.pin = false
     }
+    if (q)
+      query.slug = {
+        $regex: new RegExp(convertSlug(q), 'i')
+      }
+
     const listTracks = await ListTrackModel.find(query)
       .populate({
         path: 'author',

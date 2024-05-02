@@ -51,17 +51,17 @@
 
 .playlist__row {
     display: flex;
+    width: auto;
     flex-flow: column;
     gap: 0.5rem;
-    margin-bottom: 4rem;
+    margin: 0 1rem 2rem;
+    min-height: 26rem;
 }
 
 .playlist__row .header {
-    width: auto;
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 1rem;
     padding-bottom: 1rem;
 }
 
@@ -72,8 +72,6 @@
 }
 
 .carousel {
-    width: auto;
-    margin: 0 1rem;
     overflow: hidden;
     cursor: grab;
 }

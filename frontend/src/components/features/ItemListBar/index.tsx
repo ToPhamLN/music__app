@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { useHover } from '~/hooks'
 import style from '~/styles/Sidebar.module.css'
@@ -33,8 +32,7 @@ const ItemListBar = ({ listTrack, type }: Props) => {
           alt='Image Playlist'
         />
       </div>
-      <span className={style.name__item}>playlis</span>
-      <div className={style.hover__content}>
+      <span className={`${style.name__item}`}>
         <Link
           to={
             !type
@@ -44,7 +42,8 @@ const ItemListBar = ({ listTrack, type }: Props) => {
         >
           {title}
         </Link>
-      </div>
+      </span>
+      <div className={style.hover__content}>{title}</div>
       {isHovered && (
         <div
           className={style.item__hover__content}

@@ -2,8 +2,6 @@ import React from 'react'
 import Home from '~/pages/Home'
 import Login from '~/pages/Auth/LoginPage'
 import Signup from '~/pages/Auth/SignupPage'
-import PlaylistDetails from '~/pages/PlayListDetails'
-import Topic from '~/pages/Topic'
 import Search from '~/pages/Search'
 import Rank from '~/pages/Rank'
 import UserMylist from '~/pages/UserMyList'
@@ -21,6 +19,7 @@ import ArtistHome from '~/pages/ArtistHome'
 import ArtistTrack from '~/pages/ArtistTrack'
 import UserMyListCreate from '~/pages/UserMyListCreate'
 import WishTrack from '~/pages/WishTrack'
+import GenrePage from '~/pages/Genre'
 
 export const routes = {
   home: '/',
@@ -28,15 +27,19 @@ export const routes = {
   signup: '/signup',
   search: '/search',
   albumDetails: '/album/:albumParam',
-  albumCreate: '/album/create',
+  albumCreate: '/project/create',
   albumUpdate: '/album/:albumParam/edit',
   trackCreate: '/track/create',
   trackUpdate: '/track/:trackParam/edit',
   playlistDetails: '/playlist/:albumParam',
   playlistUpdate: '/playlist/:albumParam/edit',
+  epDetails: '/ep/:albumParam',
+  epUpdate: '/ep/:albumParam/edit',
+  singleDetails: '/single/:albumParam',
+  singleUpdate: '/single/:albumParam/edit',
   createlist: '/mylist/create',
   rank: '/rank',
-  topic: '/topic',
+  genre: '/genre',
   userDetails: '/user/:userParam',
   mylist: '/mylist',
   wishTrack: '/wishTrack',
@@ -45,7 +48,7 @@ export const routes = {
   artistDetails: '/artist/:artistParam',
   artistBioCreate: '/mybio',
   artistPin: '/mypin',
-  artistAlbum: '/myalbum',
+  artistAlbum: '/myproject',
   artistTrack: '/mytrack'
 } as const
 
@@ -65,7 +68,7 @@ export const publicRoutes: {
   { path: routes.home, component: Home },
   { path: routes.search, component: Search },
 
-  { path: routes.topic, component: Topic },
+  { path: routes.genre, component: GenrePage },
   { path: routes.artistDetails, component: ArtistHome },
   { path: routes.rank, component: Rank },
   { path: routes.userDetails, component: UserDetails },
@@ -75,6 +78,14 @@ export const publicRoutes: {
   },
   {
     path: routes.playlistDetails,
+    component: AlbumDetails
+  },
+  {
+    path: routes.epDetails,
+    component: AlbumDetails
+  },
+  {
+    path: routes.singleDetails,
     component: AlbumDetails
   }
 ]
@@ -110,6 +121,14 @@ export const artistRoutes: {
   },
   {
     path: routes.albumUpdate,
+    component: ArtistAlbumUpdate
+  },
+  {
+    path: routes.epUpdate,
+    component: ArtistAlbumUpdate
+  },
+  {
+    path: routes.singleUpdate,
     component: ArtistAlbumUpdate
   },
   {

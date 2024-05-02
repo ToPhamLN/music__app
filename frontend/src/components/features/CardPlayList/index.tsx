@@ -12,8 +12,9 @@ interface Props {
 const CardPlaylist = ({ listTrack, type }: Props) => {
   const { photo, title, category, slug, _id, description } =
     listTrack
-
-  // const { role } = useAppSelector((state) => state.profile)
+  // const [searchParams, setSearchParams] = useSearchParams()
+  // const q = searchParams.get('q') ?? ''
+  // console.log(q)
 
   return (
     <div className={`${style.card__playlist} `}>

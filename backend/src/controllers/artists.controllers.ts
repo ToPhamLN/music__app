@@ -110,7 +110,19 @@ export const getArtists = async (
   next: NextFunction
 ) => {
   try {
-    const artist = await ArtistModel.find().lean()
+    const { q } = req.query as {
+      q: string
+    }
+    const query = {} as {
+      slug: {
+        $regex: RegExp
+      }
+    }
+    if (q)
+      query.slug = {
+        $regex: new RegExp(convertSlug(q), 'i')
+      }
+    const artist = await ArtistModel.find(query).lean()
     res.status(200).json(artist)
   } catch (error) {
     next(error)

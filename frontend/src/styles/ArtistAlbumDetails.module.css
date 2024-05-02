@@ -32,10 +32,24 @@
 .photo {
     width: clamp(10rem, 20%, 25%);
     aspect-ratio: 1 / 1;
+    position: relative;
 }
 
 .photo img {
     border-radius: 1rem;
+}
+
+.photo__wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.category {
+    position: relative;
+    margin-right: auto;
+    color: #fff;
+    font-size: 1.4rem;
 }
 
 .listtrack__title {

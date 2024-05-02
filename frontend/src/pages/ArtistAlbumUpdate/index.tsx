@@ -22,8 +22,10 @@ import {
 } from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
 import { useParams } from 'react-router-dom'
-import { DImage } from '~/types/data'
+import { DImage, DListTrack } from '~/types/data'
 import useSWR from 'swr'
+import SelectorCategory from '~/pages/ArtistAlbumCreate/SelectorCategory'
+import MultipleGenre from '~/pages/ArtistAlbumCreate/MultipleGenre'
 
 interface FormAlbum {
   title: string
@@ -31,6 +33,8 @@ interface FormAlbum {
   photo: File | string
   background: string
   description: string
+  genre: { value: string }[]
+  category: string
 }
 
 const schema = yup.object().shape({
@@ -55,7 +59,10 @@ const ArtistAlbumUpdate: React.FC = () => {
   const { data: album, isLoading } = useSWR(
     apiEndpoint,
     fetcher
-  )
+  ) as {
+    data: DListTrack
+    isLoading: boolean
+  }
 
   const onSubmit = async (data: FormAlbum) => {
     try {
@@ -72,6 +79,13 @@ const ArtistAlbumUpdate: React.FC = () => {
         formData.append('background', data.background)
       if (data.description)
         formData.append('description', data.description)
+      if (data.category)
+        formData.append('category', data.category)
+      if (data.genre) {
+        data.genre.forEach((genre) =>
+          formData.append('genre', genre?.value)
+        )
+      }
 
       const res = await axios.put(
         `api/v1/listtracks/update/${album?._id}`,
@@ -98,7 +112,11 @@ const ArtistAlbumUpdate: React.FC = () => {
       title: album?.title,
       photoOld: album?.photo,
       background: album?.background,
-      description: album?.description
+      description: album?.description,
+      category: album?.category,
+      genre: album?.genre?.map((genre) => ({
+        value: genre
+      }))
     } as unknown as FormAlbum
     methods.reset(formAlbum)
   }, [album])
@@ -113,16 +131,18 @@ const ArtistAlbumUpdate: React.FC = () => {
             style={{ opacity: loading ? '0.8' : 'unset' }}
           >
             <div className={style.title}>Sửa đổi Album</div>
-            <InputBox
-              label='Tiêu đề'
-              name='title'
-              type='text'
-            />
             <InputFile
               label='Thay đổi Ảnh tiêu đề'
               name='photo'
               accept='image/*'
             />
+            <InputBox
+              label='Tiêu đề'
+              name='title'
+              type='text'
+            />
+            <SelectorCategory />
+            <MultipleGenre />
 
             <ColorPicker
               name='background'

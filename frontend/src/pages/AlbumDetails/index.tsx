@@ -116,14 +116,19 @@ const ArtistAlbumDetails: React.FC = () => {
           style={{ background: listTrack?.background }}
         ></div>
         <div className={style.container__information}>
-          <div className={style.photo}>
-            <img
-              src={
-                listTrack?.photo?.path ||
-                '/src/assets/disc.png'
-              }
-              alt={listTrack?.photo?.fileName}
-            />
+          <div className={style.photo__wrapper}>
+            <div className={style.photo}>
+              <img
+                src={
+                  listTrack?.photo?.path ||
+                  '/src/assets/disc.png'
+                }
+                alt={listTrack?.photo?.fileName}
+              />
+            </div>
+            <div className={style.category}>
+              {listTrack?.category}
+            </div>
           </div>
           <h1 className={style.listtrack__title}>
             {listTrack?.title}

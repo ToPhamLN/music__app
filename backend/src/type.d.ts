@@ -69,7 +69,7 @@ declare global {
     slug: string
     listens: number
     likes: []
-    genre: EGenre
+    genre: EGenre[]
     pin: boolean
   }
   interface IBios extends Document {

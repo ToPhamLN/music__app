@@ -17,13 +17,16 @@ import * as yup from 'yup'
 import { MdOutlineLibraryAddCheck } from 'react-icons/md'
 import { useAppDispatch, useAxiosPrivate } from '~/hooks'
 import { setNotify } from '~/reduxStore/globalSlice'
-import { ECategory } from '~/constants/enum'
+import SelectorCategory from './SelectorCategory'
+import MultipleGenre from './MultipleGenre'
 
 interface FormAlbum {
   title: string
   photo: File | string
   background: string
   description: string
+  category: string
+  genre: { value: string }[]
 }
 
 const schema = yup.object().shape({
@@ -48,15 +51,31 @@ const ArtistCreateAlbum: React.FC = () => {
       background: '#0F172A'
     }
   })
+
   const axios = useAxiosPrivate()
   const dispatch = useAppDispatch()
 
   const onSubmit = async (data: FormAlbum) => {
     try {
       setLoading(true)
+      const formData = new FormData()
+      if (data.title) formData.append('title', data.title)
+      if (data.photo) formData.append('photo', data.photo)
+      if (data.background)
+        formData.append('background', data.background)
+      if (data.description)
+        formData.append('description', data.description)
+      if (data.category)
+        formData.append('category', data.category)
+      if (data.genre) {
+        data.genre.forEach((genre) =>
+          formData.append('genre', genre?.value)
+        )
+      }
+
       const res = await axios.post(
         '/api/v1/listtracks/create',
-        { ...data, category: ECategory.ALBUM },
+        formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -84,17 +103,21 @@ const ArtistCreateAlbum: React.FC = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           style={{ opacity: loading ? '0.8' : 'unset' }}
         >
-          <div className={style.title}>Tạo Album Mới</div>
-          <InputBox
-            label='Tiêu đề'
-            name='title'
-            type='text'
-          />
+          <div className={style.title}>
+            Tạo dự án âm nhạc mới
+          </div>
           <InputFile
             label='Ảnh tiêu đề'
             name='photo'
             accept='image/*'
           />
+          <InputBox
+            label='Tiêu đề'
+            name='title'
+            type='text'
+          />
+          <SelectorCategory />
+          <MultipleGenre />
 
           <ColorPicker
             name='background'

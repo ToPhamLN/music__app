@@ -103,7 +103,7 @@ const Sidebar: React.FC = () => {
             Xếp hạng
           </div>
         </Link>
-        <Link to={'/topic'} className={style.link}>
+        <Link to={'/genre'} className={style.link}>
           <MdOutlineCategory className={style.icon} />
           <span className={style.link__name}>Chủ đề</span>
           <div className={style.hover__content}>Chủ đề</div>

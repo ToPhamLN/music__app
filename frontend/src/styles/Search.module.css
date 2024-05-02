@@ -109,14 +109,15 @@
 
 .search .main {
     width: auto;
-    margin: 0 1rem;
+    margin: 0 1rem 2rem;
     display: flex;
-    gap: 1rem
+    gap: 2rem
 }
 
 .search .main .top__result {
     flex: 0 0 auto;
-    width: 30%;
+    min-width: 20rem;
+    min-height: 25rem;
 }
 
 .search .main .songs {
@@ -143,6 +144,11 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
     gap: 1rem;
+}
+
+.map {
+    min-height: 26rem;
+    margin-bottom: 2rem;
 }
 
 @media only screen and (max-width:601px) {

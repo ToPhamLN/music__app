@@ -5,7 +5,9 @@ export enum ERole {
 
 export enum ECategory {
   PLAYLIST = 'Playlist',
-  ALBUM = 'Album'
+  ALBUM = 'Album',
+  SINGLE = 'Single',
+  EP = 'Ep'
 }
 
 export enum EGenre {
@@ -22,5 +24,6 @@ export enum EGenre {
   RAP = 'Rap',
   FOLK = 'Nhân gian',
   BLUE = 'Nhịp điệu',
-  LOFFI = 'Loffi'
+  LOFFI = 'Loffi',
+  OST = 'Ost'
 }

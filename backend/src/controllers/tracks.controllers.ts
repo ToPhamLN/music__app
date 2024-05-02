@@ -293,10 +293,22 @@ export const getTracks = async (
   next: NextFunction
 ) => {
   try {
-    const { author } = req.query as { author: string }
+    const { author, q } = req.query as {
+      author: string
+      q: string
+    }
 
-    const query: { author?: string } = {}
+    const query = {} as {
+      author?: string
+      slug: {
+        $regex: RegExp
+      }
+    }
     if (author) query.author = author
+    if (q)
+      query.slug = {
+        $regex: new RegExp(convertSlug(q), 'i')
+      }
 
     const tracks = await TrackModel.find(query)
       .populate({

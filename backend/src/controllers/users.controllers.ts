@@ -30,6 +30,31 @@ export const getUser = async (
   }
 }
 
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { q } = req.query as {
+      q: string
+    }
+    const query = {} as {
+      slug: {
+        $regex: RegExp
+      }
+    }
+    if (q)
+      query.slug = {
+        $regex: new RegExp(convertSlug(q), 'i')
+      }
+    const user = await UserModel.find(query)
+    res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const updateUser = async (
   req: Request,
   res: Response,

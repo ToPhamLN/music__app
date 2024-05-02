@@ -30,32 +30,36 @@ const Sidebar: React.FC = () => {
         </Link>
         <Link to={'/mytrack'} className={style.link}>
           <MdMusicNote className={style.icon} />
-          <span className={style.link__name}>Bài Hát</span>
+          <span className={style.link__name}>Bài hát</span>
           <div className={style.hover__content}>
-            Bài Hát
+            Bài hát
           </div>
         </Link>
         <Link to={'/track/create'} className={style.link}>
           <IoMdAdd className={style.icon} />
           <span className={style.link__name}>
-            Thêm Bài Hát
+            Thêm bài hát
           </span>
           <div className={style.hover__content}>
-            Thêm Bài Hát
+            Thêm bài hát
           </div>
         </Link>
-        <Link to={'/myalbum'} className={style.link}>
+        <Link to={'/myproject'} className={style.link}>
           <MdOutlineLibraryMusic className={style.icon} />
-          <span className={style.link__name}>Album</span>
-          <div className={style.hover__content}>Album</div>
-        </Link>
-        <Link to={'/album/create'} className={style.link}>
-          <MdOutlineLibraryAdd className={style.icon} />
           <span className={style.link__name}>
-            Tạo Album Mới
+            Dự án của tôi
           </span>
           <div className={style.hover__content}>
-            Tạo Album Mới
+            Dự án của tôi
+          </div>
+        </Link>
+        <Link to={'/project/create'} className={style.link}>
+          <MdOutlineLibraryAdd className={style.icon} />
+          <span className={style.link__name}>
+            Tạo dự án mới
+          </span>
+          <div className={style.hover__content}>
+            Tạo dự án mới
           </div>
         </Link>
         <Link to={'/mybio'} className={style.link}>

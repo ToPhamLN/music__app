@@ -24,10 +24,7 @@ const listTrackSchema = new Schema<IListTrack>(
       type: String,
       default: 'playlist'
     },
-    genre: {
-      type: String,
-      enum: Object.values(EGenre)
-    },
+    genre: [{ type: String, enum: Object.values(EGenre) }],
     list: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
       default: []

@@ -30,6 +30,16 @@ const App: React.FC = () => {
               ></Route>
             )
           })}
+          {publicRoutes.map((route) => {
+            const Page = route.component
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<Page />}
+              ></Route>
+            )
+          })}
         </Route>
       )}
       <Route path='/' element={<DefaultLayout />}>

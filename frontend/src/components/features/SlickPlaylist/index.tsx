@@ -39,9 +39,16 @@ const SlickPlaylist = ({
       window.removeEventListener('resize', handleResize)
     }
   }, [listListTrack])
+  const render: boolean = listListTrack?.length > 0
+  if (!render)
+    return (
+      <div
+        className={`${style.playlist__row} loading`}
+      ></div>
+    )
   return (
     <div className={style.playlist__row}>
-      <div className={style.header}>
+      <div className={`${style.header} `}>
         <h1>{nameSection}</h1>
         <button onClick={() => setOpenSection(true)}>
           Xem tất cả

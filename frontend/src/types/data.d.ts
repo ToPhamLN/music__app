@@ -1,4 +1,4 @@
-import { ERole, ECategory } from '~/constants/enum'
+import { ERole, ECategory, EGenre } from '~/constants/enum'
 
 interface DImage {
   path: string
@@ -61,6 +61,7 @@ interface DListTrack {
   list: DTrack[]
   listens?: number
   pin?: boolean
+  genre: EGenre[]
 }
 
 interface DTrack {

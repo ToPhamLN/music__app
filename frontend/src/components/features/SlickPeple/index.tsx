@@ -28,6 +28,13 @@ const SlickPeople = ({
       )
     }
   }, [])
+  const render: boolean = listPerson?.length > 0
+  if (!render)
+    return (
+      <div
+        className={`${style.playlist__row} loading`}
+      ></div>
+    )
   return (
     <div className={style.playlist__row}>
       <div className={style.header}>

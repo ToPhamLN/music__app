@@ -1,41 +1,28 @@
 import React from 'react'
+import { EGenre } from '~/constants/enum'
 import style from '~/styles/Topic.module.css'
 
-const TopicPage = () => {
+const GenrePage = () => {
   return (
     <div className={style.topic}>
       <div className={style.map}>
         <h1>Tất cả chủ đề</h1>
         <div className={style.parent}>
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
-          <Child />
+          {Object.keys(EGenre).map((genre, index) => (
+            <Child
+              key={index}
+              genre={EGenre[genre as keyof typeof EGenre]}
+            />
+          ))}
         </div>
       </div>
     </div>
   )
 }
 
-export default TopicPage
+export default GenrePage
 
-const Child = () => {
+const Child = ({ genre }: { genre: string }) => {
   return (
     <div className={style.child}>
       <div className={style.image}>
@@ -45,7 +32,7 @@ const Child = () => {
         />
       </div>
       <div className={style.title}>
-        <h1>Name Topic brrr</h1>
+        <h1>{genre}</h1>
       </div>
     </div>
   )

@@ -7,18 +7,19 @@ import React, {
 import { IoNotifications } from 'react-icons/io5'
 import style from '~/styles/Navbar.module.css'
 import { IoMdSunny } from 'react-icons/io'
-import {
-  MdAccountBox,
-  MdManageAccounts
-} from 'react-icons/md'
+import { MdManageAccounts } from 'react-icons/md'
 import { RiLogoutBoxFill } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import Notify from './Notify'
+import { useAppSelector } from '~/hooks'
 
 const Auth: React.FC = () => {
   const [openMore, setOpenMore] = useState<boolean>(false)
   const [openNotify, setOpenNotify] =
     useState<boolean>(false)
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
 
   const notifyRef = useRef<HTMLDivElement | null>(null)
   const moreRef = useRef<HTMLDivElement | null>(null)
@@ -69,7 +70,10 @@ const Auth: React.FC = () => {
       </div>
       <div className={style.auth} onClick={moreHandler}>
         <img
-          src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
+          src={
+            idRole?.avatar?.path ||
+            '/src/assets/account-default.png'
+          }
           alt=''
         />
         {openMore && (
