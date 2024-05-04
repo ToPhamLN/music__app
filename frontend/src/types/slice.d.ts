@@ -54,4 +54,17 @@ interface GlobalSliceType {
   }
   isSidebar: boolean
   notify: SNotification[]
+  search: (SearchItem | SearchKey)[]
+}
+
+interface SearchItem {
+  type: 'item'
+  image?: DImage
+  title?: string
+  path?: string
+}
+
+interface SearchKey {
+  type: 'key'
+  title?: string
 }

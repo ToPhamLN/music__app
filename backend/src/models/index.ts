@@ -6,6 +6,7 @@ import ListTrackModel from './listTracks.model'
 import BiosModel from './bios.models'
 import InteractionModel from './interactions.model'
 import FollowingModel from './followings.model'
+import MonthlyListenModel from './monlyListens'
 
 export {
   UserModel,
@@ -15,5 +16,6 @@ export {
   AuthModel,
   BiosModel,
   InteractionModel,
-  FollowingModel
+  FollowingModel,
+  MonthlyListenModel
 }

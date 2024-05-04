@@ -1,20 +1,24 @@
 // import { FaPlay } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { useSearchHandler } from '~/hooks'
 // import { TrackAnimation } from '~/components/common'
 // import { ERole } from '~/constants/enum'
 // import { useAppSelector } from '~/hooks'
 import style from '~/styles/Card.module.css'
 import { DListTrack } from '~/types/data'
+
 interface Props {
   listTrack: DListTrack
   type?: string
 }
+
 const CardPlaylist = ({ listTrack, type }: Props) => {
   const { photo, title, category, slug, _id, description } =
     listTrack
-  // const [searchParams, setSearchParams] = useSearchParams()
-  // const q = searchParams.get('q') ?? ''
-  // console.log(q)
+  const { handleAddSearch } = useSearchHandler()
+  const path = !type
+    ? `/${category?.toLowerCase()}/${slug}${_id}.html`
+    : '/wishtrack'
 
   return (
     <div className={`${style.card__playlist} `}>
@@ -44,10 +48,9 @@ const CardPlaylist = ({ listTrack, type }: Props) => {
       </div>
       <div className={style.playlist__name}>
         <Link
-          to={
-            !type
-              ? `/${category?.toLowerCase()}/${slug}${_id}.html`
-              : '/wishtrack'
+          to={path}
+          onClick={() =>
+            handleAddSearch(title, photo, path)
           }
         >
           {title}

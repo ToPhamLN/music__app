@@ -4,8 +4,12 @@ import {
 } from '@reduxjs/toolkit'
 import {
   GlobalSliceType,
+  SearchItem,
+  SearchKey,
   SNotification
 } from '~/types/slice'
+
+const MAX_SEARCH_ITEMS = 22
 
 const initialState: GlobalSliceType = {
   view: {
@@ -13,7 +17,8 @@ const initialState: GlobalSliceType = {
     isRecently: false
   },
   isSidebar: false,
-  notify: []
+  notify: [],
+  search: []
 }
 
 const globalSlice = createSlice({
@@ -45,6 +50,59 @@ const globalSlice = createSlice({
       state.notify = state.notify.filter(
         (item) => item.message !== action.payload.message
       )
+    },
+    addSearchItem: (
+      state,
+      action: PayloadAction<SearchItem>
+    ) => {
+      const { path } = action.payload
+      const updatedSearch = state.search.filter(
+        (item) => item.type === 'key' || item.path !== path
+      )
+      updatedSearch.unshift(action.payload)
+      if (updatedSearch.length > MAX_SEARCH_ITEMS) {
+        updatedSearch.pop()
+      }
+      state.search = updatedSearch
+    },
+
+    addSearchKey: (
+      state,
+      action: PayloadAction<SearchKey>
+    ) => {
+      const { title } = action.payload
+      const updatedSearch = state.search.filter(
+        (item) =>
+          item.type === 'item' || item.title !== title
+      )
+      updatedSearch.unshift(action.payload)
+      if (updatedSearch.length > MAX_SEARCH_ITEMS) {
+        updatedSearch.pop()
+      }
+      state.search = updatedSearch
+    },
+
+    removeSearchItem: (
+      state,
+      action: PayloadAction<SearchItem>
+    ) => {
+      const { path } = action.payload
+      const updatedSearch = state.search.filter(
+        (item) => item.type === 'key' || item.path !== path
+      )
+      state.search = updatedSearch
+    },
+
+    removeSearchKey: (
+      state,
+      action: PayloadAction<SearchKey>
+    ) => {
+      const { title } = action.payload
+      const updatedSearch = state.search.filter(
+        (item) =>
+          item.type === 'item' || item.title !== title
+      )
+      state.search = updatedSearch
     }
   }
 })
@@ -54,7 +112,11 @@ export const {
   setIsRecently,
   setIsSidebar,
   setNotify,
-  removeNotify
+  removeNotify,
+  addSearchItem,
+  addSearchKey,
+  removeSearchItem,
+  removeSearchKey
 } = globalSlice.actions
 
 export default globalSlice.reducer

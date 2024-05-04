@@ -33,6 +33,10 @@ const artistSchema = new Schema<IArtist>(
     },
     slug: {
       type: String
+    },
+    listens: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }

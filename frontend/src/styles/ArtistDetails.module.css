@@ -46,7 +46,8 @@
             right: 0;
             height: 100%;
             width: 0.2rem;
-            background-color: var(--text-color);
+            background-color: #eaecf8;
+
         }
 
         &:first-child {

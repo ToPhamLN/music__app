@@ -3,7 +3,6 @@ import { FaPause, FaPlay } from 'react-icons/fa'
 import { MdAdd, MdCreate } from 'react-icons/md'
 import useSWR, { mutate } from 'swr'
 import {
-  CardPlaylist,
   Playlist,
   SlickPeople,
   SlickPlaylist
@@ -83,7 +82,7 @@ const ArtistHome = () => {
       })
   )
 
-  const { data: pinLists } = useSWR(
+  const { data: pinLists, isLoading: loadingPin } = useSWR(
     apiLists + 'artist/pin',
     () =>
       fetcher(apiLists, {
@@ -94,6 +93,7 @@ const ArtistHome = () => {
       })
   ) as {
     data: DListTrack[]
+    isLoading: boolean
   }
 
   const { data: bios, isLoading: loadingBios } = useSWR(
@@ -239,17 +239,12 @@ const ArtistHome = () => {
       </div>
 
       <div className={style.map} ref={menuRef.pin}>
-        <div className={style.pin}>
-          <h1>Nổi bật</h1>
-          <div className={`${style.container}`}>
-            {pinLists?.map((pinList, index) => (
-              <CardPlaylist
-                key={index}
-                listTrack={pinList}
-              />
-            ))}
-          </div>
-        </div>
+        {!loadingPin && (
+          <SlickPlaylist
+            listListTrack={pinLists}
+            nameSection='Nổi bật'
+          />
+        )}
       </div>
       <div
         className={style.popular__songs}

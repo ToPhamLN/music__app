@@ -5,6 +5,7 @@ import useScroll from './scroll'
 import useAxiosPrivate from './useAxiosPrivate'
 import useAxiosPublic from './useAxiosPublic'
 import useFetcher from './useFetcher'
+import useSearchHandler from './useSearchHandler'
 
 export {
   useAxiosPrivate,
@@ -14,5 +15,6 @@ export {
   useClickOutside,
   useScroll,
   useAxiosPublic,
-  useFetcher
+  useFetcher,
+  useSearchHandler
 }

@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
-import { TrackModel, ListTrackModel } from '~/models'
+import {
+  TrackModel,
+  ListTrackModel,
+  ArtistModel
+} from '~/models'
 import { v2 as cloudinary } from 'cloudinary'
 import { convertSlug } from '~/utils/helper'
 
@@ -175,6 +179,7 @@ export const listensTrack = async (
 ) => {
   try {
     const { idTrack } = req.params
+    const { listInfo } = req.body as { listInfo: never }
     const existedTrack =
       await TrackModel.findById(idTrack).lean()
     if (!existedTrack)
@@ -186,6 +191,25 @@ export const listensTrack = async (
       { _id: idTrack },
       { $inc: { listens: 1 } }
     )
+    await ListTrackModel.updateOne(
+      { _id: existedTrack?.album },
+      { $inc: { listens: 1 } }
+    )
+    if (listInfo !== existedTrack?.album)
+      await ListTrackModel.updateOne(
+        { _id: listInfo },
+        { $inc: { listens: 1 } }
+      )
+    await ArtistModel.updateOne(
+      { _id: existedTrack?.author },
+      { $inc: { listens: 1 } }
+    )
+    existedTrack?.artist.forEach(async (artist) => {
+      await ArtistModel.updateOne(
+        { _id: artist },
+        { $inc: { listens: 1 } }
+      )
+    })
 
     res.status(201).json({
       message: 'Tăng lượt nghe thành công!'
@@ -194,51 +218,6 @@ export const listensTrack = async (
     next(error)
   }
 }
-
-// export const likesTrack = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { idRole } = req.auth as { idRole: never }
-//     const { idTrack } = req.params
-//     const existedTrack =
-//       await TrackModel.findById(idTrack).lean()
-//     if (!existedTrack) {
-//       return res.status(404).json({
-//         message: 'Không tìm thấy bài hát này!'
-//       })
-//     }
-//     const userLiked = existedTrack.likes.includes(idRole)
-
-//     if (userLiked) {
-//       await TrackModel.findByIdAndUpdate(
-//         idTrack,
-//         {
-//           $pull: { likes: idRole }
-//         },
-//         { new: true }
-//       )
-//       return res.status(200).json({
-//         message: 'Bỏ thích bài hát thành công!'
-//       })
-//     } else {
-//       await TrackModel.findByIdAndUpdate(
-//         idTrack,
-//         {
-//           $push: { likes: idRole }
-//         },
-//         { new: true }
-//       )
-//       return res.status(200).json({
-//         message: 'Thích bài hát thành công!'
-//       })
-//     }
-//   } catch (error) {
-//     next(error)
-//   }
-// }
 
 export const deleteTrack = async (
   req: Request,

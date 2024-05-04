@@ -1,5 +1,5 @@
 import { Document, Types } from 'mongoose'
-import { EGenre, ERole } from '~/types'
+import { EGenre, EListens, ERole } from '~/types'
 
 declare global {
   interface IImage {
@@ -35,6 +35,7 @@ declare global {
     auth: Types.ObjectId
     slug?: string
     role: 'Artist'
+    listens: number
   }
 
   interface IFollowing extends Document {
@@ -89,6 +90,14 @@ declare global {
   interface IJwtPayload {
     authId: string
     role?: ERole
+  }
+
+  interface IMonthlyListens {
+    item: Types.ObjectId
+    itemCategory: EListens
+    month: number
+    year: number
+    count: number
   }
 }
 

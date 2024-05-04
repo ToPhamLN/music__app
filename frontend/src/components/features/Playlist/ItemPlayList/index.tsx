@@ -9,7 +9,8 @@ import {
   useClickOutside,
   useAppSelector,
   useAppDispatch,
-  useAxiosPrivate
+  useAxiosPrivate,
+  useSearchHandler
 } from '~/hooks'
 import TrackAnimation from '../../../common/TrackAnimation'
 import { MoreList } from '~/components/common'
@@ -106,8 +107,11 @@ const ItemPlayList = ({
     handleMouseEnter: handleAlbumMouseEnter,
     handleMouseLeave: handleAlbumMouseLeave
   } = useHover()
-  //
 
+  //add search item
+  const { handleAddSearch } = useSearchHandler()
+
+  //handle
   const handlePlay = () => {
     dispatch(setTrack(track))
     dispatch(setList(list))
@@ -168,6 +172,13 @@ const ItemPlayList = ({
           >
             <Link
               to={`/track/${track?.slug}${track?._id}.html`}
+              onClick={() =>
+                handleAddSearch(
+                  track?.title,
+                  track?.photo,
+                  `/track/${track?.slug}${track?._id}.html`
+                )
+              }
             >
               {track?.title}
             </Link>
@@ -191,8 +202,14 @@ const ItemPlayList = ({
           >
             {track.author && (
               <Link
-                key={track.author._id}
                 to={`/artist/${track.author?.slug}${track?.author?._id}.html`}
+                onClick={() =>
+                  handleAddSearch(
+                    track?.author?.username,
+                    track?.author?.avatar,
+                    `/artist/${track.author?.slug}${track?.author?._id}.html`
+                  )
+                }
               >
                 {track?.author?.username}
               </Link>
@@ -201,6 +218,13 @@ const ItemPlayList = ({
               <Link
                 key={artist._id}
                 to={`/artist/${artist?.slug}${artist?._id}.html`}
+                onClick={() =>
+                  handleAddSearch(
+                    artist?.username,
+                    artist?.avatar,
+                    `/artist/${artist?.slug}${artist?._id}.html`
+                  )
+                }
               >
                 {artist.username}
               </Link>
@@ -233,6 +257,13 @@ const ItemPlayList = ({
       >
         <Link
           to={`/album/${track?.album?.slug}${track?.album?._id}.html`}
+          onClick={() =>
+            handleAddSearch(
+              track?.album?.title,
+              track?.album?.photo,
+              `/album/${track?.album?.slug}${track?.album?._id}.html`
+            )
+          }
         >
           {track?.album?.title}
         </Link>

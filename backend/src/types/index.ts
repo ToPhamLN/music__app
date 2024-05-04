@@ -27,3 +27,9 @@ export enum EGenre {
   LOFFI = 'Loffi',
   OST = 'Ost'
 }
+
+export enum EListens {
+  ARTIST = 'Artist',
+  LISTTRACK = 'ListTrack',
+  TRACK = 'Track'
+}
