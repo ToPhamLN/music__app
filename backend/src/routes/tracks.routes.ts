@@ -3,7 +3,8 @@ import {
   createTrack,
   getTrack,
   updateTrack,
-  getTracks
+  getTracks,
+  listensTrack
 } from '~/controllers/tracks.controllers'
 import { verifyToken } from '~/middlewares/auth.middlewares'
 import uploadCloud from '~/middlewares/uploader'
@@ -31,5 +32,6 @@ route.put(
 )
 route.get('/all', getTracks)
 route.get('/:idTrack', getTrack)
+route.post('/:idTrack/listen', listensTrack)
 
 export default route

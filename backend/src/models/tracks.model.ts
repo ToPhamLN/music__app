@@ -47,10 +47,6 @@ const trackSchema = new Schema<ITrack>(
     listens: {
       type: Number,
       default: 0
-    },
-    likes: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-      defaut: 0
     }
   },
   { timestamps: true }

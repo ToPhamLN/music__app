@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { ListTrackModel } from '~/models'
 import { EGenre } from '~/types'
 import { convertSlug } from '~/utils/helper'
+import { getListTrackLike } from './interactions.controllers'
 
 interface IReqBody {
   photoOld: string
@@ -175,49 +176,6 @@ export const listensListTrack = async (
   }
 }
 
-export const likesListTrack = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { idRole } = req.auth as { idRole: never }
-    const { idListTrack } = req.params
-    const existedListTrack =
-      await ListTrackModel.findById(idListTrack)
-    if (!existedListTrack)
-      return res
-        .status(404)
-        .json({ message: 'Không tìm thấy danh sách này' })
-    const userLiked = existedListTrack.likes.includes(idRole)
-    if (userLiked) {
-      await ListTrackModel.findByIdAndUpdate(
-        idListTrack,
-        {
-          $pull: { likes: idRole }
-        },
-        { new: true }
-      )
-      return res.status(200).json({
-        message: 'Bỏ thích bài hát thành công!'
-      })
-    } else {
-      await ListTrackModel.findByIdAndUpdate(
-        idListTrack,
-        {
-          $push: { likes: idRole }
-        },
-        { new: true }
-      )
-      return res.status(200).json({
-        message: 'Thích bài hát thành công!'
-      })
-    }
-  } catch (error) {
-    next(error)
-  }
-}
-
 export const addTrack = async (
   req: Request,
   res: Response,
@@ -270,16 +228,21 @@ export const getListTracks = async (
   next: NextFunction
 ) => {
   try {
-    const { author, pin, q } = req.query as {
+    const { author, pin, q, genre, ramdom } = req.query as {
       author?: string
       pin?: string
       q?: string
+      genre?: string
+      ramdom?: number
     }
     const query = {} as {
       author?: string
       pin?: boolean
       slug: {
         $regex: RegExp
+      }
+      genre?: {
+        $in: string[]
       }
     }
 
@@ -295,13 +258,23 @@ export const getListTracks = async (
       query.slug = {
         $regex: new RegExp(convertSlug(q), 'i')
       }
+    if (genre)
+      query.genre = {
+        $in: [genre]
+      }
 
-    const listTracks = await ListTrackModel.find(query)
+    let listTracks = await ListTrackModel.find(query)
       .populate({
         path: 'author',
         select: 'username _id avatar slug'
       })
       .lean()
+
+    if (ramdom) {
+      listTracks = listTracks
+        ?.sort(() => Math.random() - 0.5)
+        ?.slice(0, ramdom)
+    }
     res.status(200).json(listTracks)
   } catch (error) {
     next(error)
@@ -330,7 +303,9 @@ export const getAlbum = async (
 
       .lean()
 
-    res.status(200).json(listTrack)
+    const likes = await getListTrackLike(idListTrack)
+
+    res.status(200).json({ ...listTrack, likes })
   } catch (error) {
     next(error)
   }

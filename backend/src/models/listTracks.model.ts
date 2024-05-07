@@ -44,10 +44,6 @@ const listTrackSchema = new Schema<IListTrack>(
       type: Number,
       default: 0
     },
-    likes: {
-      type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-      defaut: 0
-    },
     pin: {
       type: Boolean,
       default: false

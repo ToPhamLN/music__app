@@ -55,7 +55,6 @@ declare global {
     lyrics: string
     slug?: string
     listens: number
-    likes: []
   }
 
   interface IListTrack extends Document {
@@ -69,7 +68,6 @@ declare global {
     list: Types.ObjectId[]
     slug: string
     listens: number
-    likes: []
     genre: EGenre[]
     pin: boolean
   }

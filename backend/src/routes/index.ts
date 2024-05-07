@@ -6,6 +6,7 @@ import biosRoutes from './bios.routes'
 import interactionRoutes from './interactions.routes'
 import userRoutes from './users.routes'
 import followingRoutes from './followings.routes'
+import monthlyListensRoutes from './monthlyListens.routes'
 
 export {
   authRoutes,
@@ -15,5 +16,6 @@ export {
   biosRoutes,
   interactionRoutes,
   userRoutes,
-  followingRoutes
+  followingRoutes,
+  monthlyListensRoutes
 }

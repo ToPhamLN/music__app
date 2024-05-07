@@ -143,3 +143,29 @@ export const addWishListTrack = async (
     next(error)
   }
 }
+
+export const getTrackLike = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { idTrack } = req.params as { idTrack: never }
+    const count = await InteractionModel.countDocuments({
+      wishTrack: { $in: [idTrack] }
+    })
+    res.status(200).json(count)
+  } catch (error) {
+    next(error)
+  }
+}
+export const getListTrackLike = async (listTrackId: string) => {
+  try {
+    const count = await InteractionModel.countDocuments({
+      wishList: { $in: [listTrackId] }
+    })
+    return count
+  } catch (error) {
+    return null
+  }
+}

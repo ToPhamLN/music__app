@@ -6,6 +6,8 @@ import {
 } from '~/models'
 import { v2 as cloudinary } from 'cloudinary'
 import { convertSlug } from '~/utils/helper'
+import { createMonthlyListens } from './monthlyListens.controller'
+import { EListens } from '~/types'
 
 const destroyFile = async (fileName?: string) => {
   if (fileName) await cloudinary.uploader.destroy(fileName)
@@ -180,40 +182,20 @@ export const listensTrack = async (
   try {
     const { idTrack } = req.params
     const { listInfo } = req.body as { listInfo: never }
-    const existedTrack =
-      await TrackModel.findById(idTrack).lean()
-    if (!existedTrack)
-      return res.status(404).json({
-        message: 'Không tìm thấy bài hát này!'
-      })
 
-    await TrackModel.updateOne(
-      { _id: idTrack },
-      { $inc: { listens: 1 } }
-    )
-    await ListTrackModel.updateOne(
-      { _id: existedTrack?.album },
-      { $inc: { listens: 1 } }
-    )
-    if (listInfo !== existedTrack?.album)
-      await ListTrackModel.updateOne(
-        { _id: listInfo },
-        { $inc: { listens: 1 } }
-      )
-    await ArtistModel.updateOne(
-      { _id: existedTrack?.author },
-      { $inc: { listens: 1 } }
-    )
-    existedTrack?.artist.forEach(async (artist) => {
-      await ArtistModel.updateOne(
-        { _id: artist },
-        { $inc: { listens: 1 } }
-      )
-    })
+    const foundTrack = await TrackModel.findById(idTrack).lean()
 
-    res.status(201).json({
-      message: 'Tăng lượt nghe thành công!'
-    })
+    if (!foundTrack) {
+      return res
+        .status(404)
+        .json({ message: 'Không tìm thấy bài hát này!' })
+    }
+
+    await increaseListens(foundTrack, listInfo)
+
+    return res
+      .status(201)
+      .json({ message: 'Tăng lượt nghe thành công!' })
   } catch (error) {
     next(error)
   }
@@ -303,5 +285,64 @@ export const getTracks = async (
     res.status(200).json(tracks)
   } catch (error) {
     next(error)
+  }
+}
+
+async function increaseListens(
+  track: ITrack,
+  listInfo?: string
+) {
+  const today = new Date()
+  const month = today.getMonth() + 1
+  const year = today.getFullYear()
+  const listTrackIds = [
+    track.album as unknown as string
+  ] as string[]
+  const artistIds = [
+    track.author as unknown as string,
+    ...track.artist
+  ] as string[]
+
+  if (listInfo && listInfo !== String(track.album)) {
+    listTrackIds.push(listInfo)
+  }
+  await TrackModel.updateOne(
+    { _id: track._id },
+    { $inc: { listens: 1 } }
+  )
+  await createMonthlyListens(
+    track.id,
+    EListens.TRACK,
+    month,
+    year,
+    1
+  )
+
+  for (const listTrackId of listTrackIds) {
+    await ListTrackModel.updateOne(
+      { _id: listTrackId },
+      { $inc: { listens: 1 } }
+    )
+    await createMonthlyListens(
+      listTrackId,
+      EListens.LISTTRACK,
+      month,
+      year,
+      1
+    )
+  }
+
+  for (const artistId of artistIds) {
+    await ArtistModel.updateOne(
+      { _id: artistId },
+      { $inc: { listens: 1 } }
+    )
+    await createMonthlyListens(
+      artistId,
+      EListens.ARTIST,
+      month,
+      year,
+      1
+    )
   }
 }

@@ -26,32 +26,22 @@ export const createMonthlyListens = async (
       })
       await listenThisMonth.save()
     }
+    if (count) {
+      const monthlyListens =
+        await MonthlyListenModel.findOneAndUpdate(
+          {
+            item,
+            itemCategory,
+            month,
+            year
+          },
+          { $inc: { count: 1 } },
+          { new: true }
+        )
+      return monthlyListens
+    }
 
     return listenThisMonth
-  } catch (error) {
-    throw new Error('Đã xảy ra lỗi')
-  }
-}
-
-export const addCountListenThisMonth = async (
-  item: string,
-  itemCategory: EListens,
-  month: number,
-  year: number
-) => {
-  try {
-    const monthlyListens =
-      await MonthlyListenModel.findOneAndUpdate(
-        {
-          item,
-          itemCategory,
-          month,
-          year
-        },
-        { $inc: { count: 1 } },
-        { new: true }
-      )
-    return monthlyListens
   } catch (error) {
     throw new Error('Đã xảy ra lỗi')
   }
@@ -63,7 +53,7 @@ export const getListenThisMonth = async (
   next: NextFunction
 ) => {
   try {
-    const { item, itemCategory } = req.body as {
+    const { item, itemCategory } = req.query as {
       item: string
       itemCategory: EListens
     }

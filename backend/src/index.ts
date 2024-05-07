@@ -12,7 +12,8 @@ import {
   biosRoutes,
   interactionRoutes,
   userRoutes,
-  followingRoutes
+  followingRoutes,
+  monthlyListensRoutes
 } from './routes'
 import {
   notFound,
@@ -45,6 +46,7 @@ app.use('/api/v1/bios', biosRoutes)
 app.use('/api/v1/interactions', interactionRoutes)
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/followings', followingRoutes)
+app.use('/api/v1/monthlylistens', monthlyListensRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

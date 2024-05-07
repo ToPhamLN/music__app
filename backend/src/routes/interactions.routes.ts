@@ -3,7 +3,8 @@ import {
   getInteraction,
   addWishTrack,
   addRecentlyTrack,
-  addWishListTrack
+  addWishListTrack,
+  getTrackLike
 } from '~/controllers/interactions.controllers'
 import { verifyToken } from '~/middlewares/auth.middlewares'
 
@@ -21,5 +22,6 @@ route.put(
   verifyToken,
   addWishListTrack
 )
+route.get('/count/wish/track/:idTrack', getTrackLike)
 
 export default route
