@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
 import { GrNext, GrPrevious } from 'react-icons/gr'
+import { Link } from 'react-router-dom'
 import Slider, { Settings } from 'react-slick'
-import style from '~/styles/ArtistAlbum.module.css'
+import style from '~/styles/Home.module.css'
 
 const HomeSlick: React.FC = () => {
   const slideRef = useRef<Slider | null>(null)
@@ -10,7 +11,7 @@ const HomeSlick: React.FC = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -30,12 +31,34 @@ const HomeSlick: React.FC = () => {
       slick.slickNext()
     }
   }
-  const lists = [1, 2, 3, 4, 6, 7]
+  const lists = [
+    {
+      title: 'Ưu thích',
+      photo: {
+        path: '/src/assets/rank.jpg'
+      },
+      link: '/rank/likes'
+    },
+    {
+      title: 'Nghe nhiều',
+      photo: {
+        path: '/src/assets/rank2.png'
+      },
+      link: '/rank/listens'
+    },
+    {
+      title: 'Nhạc mới',
+      photo: {
+        path: '/src/assets/rank2.jpg'
+      },
+      link: '/rank/lasted'
+    }
+  ]
   return (
     <div className={style.slider}>
       <Slider ref={slideRef} {...settings}>
-        {lists.map((slider) => (
-          <Child key={slider} />
+        {lists.map((slider, index) => (
+          <Child key={index} slider={slider} />
         ))}
       </Slider>
       <button
@@ -56,13 +79,26 @@ const HomeSlick: React.FC = () => {
 
 export default HomeSlick
 
-const Child = () => {
+const Child = ({
+  slider
+}: {
+  slider: {
+    title: string
+    photo: {
+      path: string
+    }
+    link: string
+  }
+}) => {
   return (
-    <div className={style.item__slider}>
-      <img
-        src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-        alt='Poster Playlist'
-      />
-    </div>
+    <Link to={slider.link}>
+      <div className={style.item__slider}>
+        <img
+          src={slider.photo.path}
+          alt='Poster Playlist'
+        />
+        <h1>{slider.title}</h1>
+      </div>
+    </Link>
   )
 }

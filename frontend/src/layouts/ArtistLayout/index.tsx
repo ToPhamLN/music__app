@@ -4,7 +4,8 @@ import { useAppSelector } from '~/hooks'
 import Navbar from './Navbar'
 import Footer from '../DefaultLayout/Footer'
 import Sidebar from './Sidebar'
-import Notification from './Notification'
+import Notification from '~/layouts/DefaultLayout/Notification'
+import { Navigator } from '~/components/features'
 
 const ArtistLayout: React.FC = () => {
   const { theme } = useAppSelector(
@@ -27,6 +28,9 @@ const ArtistLayout: React.FC = () => {
       <div className='container'>
         <Sidebar />
         <div className='main'>
+          <div className='navigator'>
+            <Navigator />
+          </div>
           <Outlet />
           <Footer />
         </div>

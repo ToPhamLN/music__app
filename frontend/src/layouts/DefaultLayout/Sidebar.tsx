@@ -7,7 +7,7 @@ import {
   MdOutlineAdd,
   MdOutlineCategory,
   MdOutlineBookmarkBorder,
-  MdOutlineEmojiEvents
+  MdAccountBox
 } from 'react-icons/md'
 import { ItemListBar } from '~/components/features'
 import { DInteraction, DListTrack } from '~/types/data'
@@ -28,20 +28,28 @@ const Sidebar: React.FC = () => {
   )
   const axios = useAxiosPrivate()
   const fetcher = useFetcher()
-  const API = 'api/v1/listtracks/all' as string
-  const { data: playistCreated } = useSWR(API, () =>
-    fetcher(API, {
-      params: {
-        author: idRole?._id
-      }
-    })
+  const apiCreated = 'api/v1/listtracks/all' as string
+  const { data: playistCreated } = useSWR(
+    idRole?._id ? apiCreated : '',
+    () => {
+      if (idRole?._id)
+        return fetcher(apiCreated, {
+          params: {
+            author: idRole?._id
+          }
+        })
+      return null
+    }
   ) as {
     data: DListTrack[]
   }
-
+  const apiInteraction = `api/v1/interactions/${idRole?._id}`
   const { data: interaction } = useSWR(
-    `api/v1/interactions/${idRole?._id}`,
-    fetcher
+    idRole?._id ? apiInteraction : null,
+    () => {
+      if (idRole?._id) return fetcher(apiInteraction)
+      return null
+    }
   ) as { data: DInteraction }
 
   const wishTrack: DListTrack = {
@@ -51,7 +59,8 @@ const Sidebar: React.FC = () => {
       path: '/src/assets/wish.png',
       fileName: 'wishList'
     },
-    list: []
+    list: [],
+    genre: []
   }
 
   const getTrack = async (id: string) => {
@@ -96,13 +105,6 @@ const Sidebar: React.FC = () => {
             Trang chủ
           </div>
         </Link>
-        <Link to={'/rank'} className={style.link}>
-          <MdOutlineEmojiEvents className={style.icon} />
-          <span className={style.link__name}>Xếp hạng</span>
-          <div className={style.hover__content}>
-            Xếp hạng
-          </div>
-        </Link>
         <Link to={'/genre'} className={style.link}>
           <MdOutlineCategory className={style.icon} />
           <span className={style.link__name}>Chủ đề</span>
@@ -110,48 +112,79 @@ const Sidebar: React.FC = () => {
         </Link>
         <div
           style={{
-            height: '2px',
+            height: '1px',
             width: '100%',
-            background: 'var(--text)'
+            background: 'var(--stripe-color)'
           }}
         ></div>
-        <Link to={'/mylist'} className={style.link}>
-          <MdOutlineBookmarkBorder />
-          <span className={style.link__name}>Thư viện</span>
-          <div className={style.hover__content}>
-            Thư viện
+        {idRole && (
+          <Link to={'/mylist'} className={style.link}>
+            <MdOutlineBookmarkBorder />
+            <span className={style.link__name}>
+              Thư viện
+            </span>
+            <div className={style.hover__content}>
+              Thư viện
+            </div>
+          </Link>
+        )}
+      </div>
+      {idRole && (
+        <>
+          <div className={style.my__list}>
+            <ItemListBar
+              listTrack={wishTrack}
+              type={'wishTrack'}
+            />
+            {playistCreated?.map((listTrack) => (
+              <ItemListBar
+                key={listTrack._id}
+                listTrack={listTrack}
+              />
+            ))}
+            {wishList?.map((listTrack) => (
+              <ItemListBar
+                key={listTrack._id}
+                listTrack={listTrack}
+              />
+            ))}
           </div>
-        </Link>
-      </div>
-      <div className={style.my__list}>
-        <ItemListBar
-          listTrack={wishTrack}
-          type={'wishTrack'}
-        />
-        {playistCreated?.map((listTrack) => (
-          <ItemListBar
-            key={listTrack._id}
-            listTrack={listTrack}
-          />
-        ))}
-        {wishList?.map((listTrack) => (
-          <ItemListBar
-            key={listTrack._id}
-            listTrack={listTrack}
-          />
-        ))}
-      </div>
-      <div className={style.menu}>
-        <Link to={'mylist/create'} className={style.link}>
-          <MdOutlineAdd className={style.icon} />
-          <span className={style.link__name}>
-            Thêm playlist mới
-          </span>
-          <div className={style.hover__content}>
-            Thêm playlist mới
+          <div className={style.menu}>
+            <Link
+              to={'mylist/create'}
+              className={style.link}
+            >
+              <MdOutlineAdd className={style.icon} />
+              <span className={style.link__name}>
+                Thêm playlist mới
+              </span>
+              <div className={style.hover__content}>
+                Thêm playlist mới
+              </div>
+            </Link>
+            <div
+              style={{
+                height: '1px',
+                width: '100%',
+                background: 'var(--stripe-color)'
+              }}
+            ></div>
+            <Link
+              to={`/user/${idRole?.slug}${idRole?._id}.html`}
+              className={style.link}
+            >
+              <MdAccountBox className={style.icon} />
+
+              <span className={style.link__name}>
+                Hồ sơ
+              </span>
+              <div className={style.hover__content}>
+                Hồ sơ
+              </div>
+            </Link>
           </div>
-        </Link>
-      </div>
+        </>
+      )}
     </div>
   )
 }

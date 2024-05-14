@@ -10,6 +10,7 @@ import CardPeople from './CardPeople'
 import SlickPlaylist from './SlickPlaylist'
 import SlickPeople from './SlickPeple'
 import ItemNotify from './ItemNotify'
+import Navigator from './Navigator'
 
 export {
   ItemListBar,
@@ -23,5 +24,6 @@ export {
   PlaylistGrid,
   Playlist,
   CardPlaylist,
-  CardPeople
+  CardPeople,
+  Navigator
 }

@@ -1,7 +1,5 @@
 .login {
-    margin-top: 6rem;
     background-color: var(--bg-color);
-    padding: 4rem;
     min-height: 100vh;
 }
 
@@ -12,8 +10,6 @@
     height: auto;
     text-align: center;
     border-radius: 0.5rem;
-    box-shadow: var(--box-shadow);
-    border: 0.1rem solid var(--stripe-color);
     padding: 2rem 0;
     background-color: var(--navbar);
 }
@@ -86,6 +82,12 @@
     &:hover {
         background-color: var(--hover-btn);
     }
+}
+
+.reminder {
+    color: var(--text);
+    display: inline-flex;
+    gap: 1rem;
 }
 
 .forget {

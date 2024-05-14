@@ -29,7 +29,9 @@ const Mylist: React.FC = () => {
   }
 
   const { data: interaction } = useSWR(
-    `api/v1/interactions/${idRole?._id}`,
+    idRole?._id
+      ? `api/v1/interactions/${idRole?._id}`
+      : null,
     fetcher
   ) as { data: DInteraction }
 
@@ -40,7 +42,8 @@ const Mylist: React.FC = () => {
       path: '/src/assets/wish.png',
       fileName: 'wishList'
     },
-    list: []
+    list: [],
+    genre: []
   }
 
   const getTrack = async (id: string) => {

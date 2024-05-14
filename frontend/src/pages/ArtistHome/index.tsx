@@ -18,6 +18,7 @@ import {
   DArtist,
   DBios,
   DListTrack,
+  DMonthlyListens,
   DPerson,
   DTrack
 } from '~/types/data'
@@ -28,8 +29,10 @@ import { useParams } from 'react-router-dom'
 import {
   setIsPlaying,
   setList,
+  setListInfo,
   setTrack
 } from '~/reduxStore/trackPlaySlice'
+import { formatNumber } from '~/utils/format'
 
 interface BiosData extends DBios {
   createdAt: string
@@ -57,6 +60,7 @@ const ArtistHome = () => {
   const apiLists = 'api/v1/listtracks/all'
   const apiBios = `api/v1/bios/${idArtist}`
   const apiFollower = `api/v1/followings/artists/${idArtist}`
+  const apiMonthlyListen = `api/v1/monthlylistens/thismonth`
 
   const { data: artist, isLoading: loadingArtist } = useSWR(
     apiArtist,
@@ -109,6 +113,16 @@ const ArtistHome = () => {
       data: DPerson[]
       isLoading: boolean
     }
+  const { data: monthlyListens } = useSWR(
+    apiMonthlyListen,
+    () =>
+      fetcher(apiMonthlyListen, {
+        params: {
+          item: idArtist,
+          itemCategory: 'Artist'
+        }
+      })
+  ) as { data: DMonthlyListens }
 
   const isFollowing =
     followers?.some(
@@ -148,6 +162,7 @@ const ArtistHome = () => {
   }
 
   const handlePlay = () => {
+    dispatch(setListInfo(undefined))
     dispatch(setTrack(tracks[0]))
     dispatch(setList(tracks))
     dispatch(setIsPlaying(true))
@@ -186,8 +201,15 @@ const ArtistHome = () => {
             <div
               className={`${style.statistical}  ${loadingArtist ? 'loading' : ''}`}
             >
-              <span> 28K Lượt nghe</span>
-              <span> 27K Lượt thích</span>
+              <span>
+                {formatNumber(monthlyListens?.count)} Lượt
+                nghe tháng này
+              </span>
+              <span>
+                {followers &&
+                  formatNumber(followers?.length)}{' '}
+                Lượt theo dõi
+              </span>
             </div>
           </div>
         </div>

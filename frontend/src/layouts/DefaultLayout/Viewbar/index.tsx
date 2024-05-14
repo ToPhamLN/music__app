@@ -24,7 +24,9 @@ const Viewbar: React.FC = () => {
   const fetcher = useFetcher()
 
   const { data: interaction } = useSWR(
-    `api/v1/interactions/${idRole?._id}`,
+    idRole?._id
+      ? `api/v1/interactions/${idRole?._id}`
+      : null,
     fetcher
   ) as { data: DInteraction }
 

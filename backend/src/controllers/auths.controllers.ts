@@ -128,7 +128,7 @@ export const updateAuth = async (
     const newAuth: Partial<IAuth> = {
       email: email || auth.email,
       role: role || auth.role,
-      idRole: idRole || auth.role
+      idRole: idRole || auth.idRole
     }
     if (oldPassword && newPassword) {
       const validPassword = await bcrypt.compare(
@@ -146,14 +146,15 @@ export const updateAuth = async (
       newAuth.password = hashed
     }
 
-    const result = await AuthModel.updateOne(
-      { _id: auth._id },
-      { $set: newAuth }
+    const result = await AuthModel.findByIdAndUpdate(
+      auth._id,
+      { $set: newAuth },
+      { $new: true }
     )
 
     res.status(200).json({
       message: 'Tài khoản cập nhật thành công.',
-      result
+      auth: result
     })
   } catch (error) {
     next(error)

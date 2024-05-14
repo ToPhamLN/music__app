@@ -50,3 +50,12 @@ export const calculateDate = (date: string): string => {
     }
   }
 }
+export const formatNumber = (number: number) => {
+  if (number < 1000) {
+    return number.toString()
+  } else if (number < 10000) {
+    return (number / 1000).toFixed(1) + 'k'
+  } else {
+    return Math.round(number / 1000) + 'k'
+  }
+}

@@ -14,14 +14,11 @@ const themeSlice = createSlice({
   name: 'theme',
   initialState,
   reducers: {
-    setThemeMode: (
-      state,
-      action: PayloadAction<boolean>
-    ) => {
-      state.theme = action.payload
+    setThemeMode: (state) => {
+      state.theme = !state.theme
       localStorage.setItem(
         'themeMode',
-        JSON.stringify(action.payload)
+        JSON.stringify(state.theme)
       )
     }
   }

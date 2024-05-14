@@ -14,6 +14,7 @@ import { LoadingIcon } from '~/components/pure'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAxiosPublic } from '~/hooks'
 import { setProfile } from '~/reduxStore/profileSlice'
+import { setNotify } from '~/reduxStore/globalSlice'
 
 interface SignupForm {
   email: string
@@ -67,6 +68,12 @@ const SignupPage: React.FC = () => {
         data
       )
       dispatch(setProfile(res.data.auth))
+      dispatch(
+        setNotify({
+          type: 'success',
+          message: res.data?.message
+        })
+      )
       navigate('/role')
     } catch (error) {
       console.error(error)

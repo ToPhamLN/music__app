@@ -3,7 +3,11 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5'
 import { LuMoreHorizontal } from 'react-icons/lu'
 import { FaPlay, FaPause } from 'react-icons/fa'
 import style from '~/styles/PlayListDetails.module.css'
-import { Link } from 'react-router-dom'
+import {
+  Link,
+  useLocation,
+  useNavigate
+} from 'react-router-dom'
 import {
   useHover,
   useClickOutside,
@@ -24,6 +28,7 @@ import { formatDay, formatTime } from '~/utils/format'
 import {
   setIsPlaying,
   setList,
+  setListInfo,
   setTrack
 } from '~/reduxStore/trackPlaySlice'
 import { mutate } from 'swr'
@@ -63,6 +68,8 @@ const ItemPlayList = ({
     (state) => state.profile
   )
   const axios = useAxiosPrivate()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   // show option block
   const toggleMoreVisible = () => {
@@ -111,10 +118,10 @@ const ItemPlayList = ({
   //add search item
   const { handleAddSearch } = useSearchHandler()
 
-  //handle
   const handlePlay = () => {
+    dispatch(setListInfo(listInfo as DListTrack))
     dispatch(setTrack(track))
-    dispatch(setList(list))
+    if (role != ERole.ARTIST) dispatch(setList(list))
     dispatch(setIsPlaying(true))
     if (isPlaying && trackPlaying == track)
       dispatch(setIsPlaying(false))
@@ -122,10 +129,20 @@ const ItemPlayList = ({
 
   const handleLikeTrack = async () => {
     try {
-      await axios.put(
-        `api/v1/interactions/wish/track/${track?._id}`
-      )
-      mutate(`api/v1/interactions/${idRole?._id}`)
+      if (role === ERole.USER && idRole?._id) {
+        await axios.put(
+          `api/v1/interactions/wish/track/${track?._id}`
+        )
+        mutate(`api/v1/interactions/${idRole?._id}`)
+        mutate(
+          `api/v1/interactions/count/wish/track/${track?._id}`
+        )
+      } else
+        navigate('/login', {
+          state: {
+            history: pathname
+          }
+        })
     } catch (error) {
       console.log(error)
     }
@@ -172,13 +189,14 @@ const ItemPlayList = ({
           >
             <Link
               to={`/track/${track?.slug}${track?._id}.html`}
-              onClick={() =>
+              onClick={() => {
+                handlePlay()
                 handleAddSearch(
                   track?.title,
                   track?.photo,
                   `/track/${track?.slug}${track?._id}.html`
                 )
-              }
+              }}
             >
               {track?.title}
             </Link>

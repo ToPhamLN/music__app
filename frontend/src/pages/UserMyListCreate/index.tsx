@@ -63,12 +63,15 @@ const UserMyListCreate: React.FC = () => {
           }
         }
       )
-      dispatch(
-        setNotify({
-          type: 'success',
-          message: res.data.message
-        })
-      )
+      if (res.data) {
+        dispatch(
+          setNotify({
+            type: 'success',
+            message: res.data.message
+          })
+        )
+        methods.reset({})
+      }
     } catch (error) {
       console.log(error)
     } finally {

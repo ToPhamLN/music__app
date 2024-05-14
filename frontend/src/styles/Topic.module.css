@@ -4,7 +4,11 @@
 }
 
 .map {
-    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.topic__ctn {
+    margin: 1rem;
 }
 
 .topic .parent {
@@ -19,7 +23,6 @@
     position: relative;
     border-radius: var(--b-r);
     aspect-ratio: 1 / 1;
-    background-color: aqua;
     border: 0.1rem solid var(--stripe-color);
     cursor: pointer;
 }
@@ -35,16 +38,79 @@
 }
 
 .topic .child .title h1 {
-    color: var(--text);
+    color: #ddf6f8;
 }
 
 .topic .child .image {
     border-radius: var(--b-r);
     height: 100%;
+    background-color: #0F172A;
 }
 
 .topic .child .image img {
     border-radius: var(--b-r);
+}
+
+.genre__details {
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.information {
+    position: relative;
+    /* height: 40vh; */
+
+}
+
+.background {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.background img {
+    height: 100%;
+}
+
+.container__information {
+    width: 100%;
+    padding: 2rem;
+    background-color: transparent;
+
+}
+
+.photo {
+    width: clamp(10rem, 20%, 25%);
+    aspect-ratio: 1 / 1;
+    position: relative;
+}
+
+.photo img {
+    border-radius: 1rem;
+}
+
+.photo__wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.category {
+    position: relative;
+    margin-right: auto;
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+.listtrack__title {
+    position: relative;
+    display: block;
+    z-index: 99;
+    font-size: 3rem;
+    color: #fff;
+    word-wrap: break-word;
 }
 
 @media only screen and (max-width: 801px) {

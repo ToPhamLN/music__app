@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { IoMdDownload } from 'react-icons/io'
-import { IoHeartOutline } from 'react-icons/io5'
 import {
   MdAudiotrack,
   MdOutlineAccessTime
@@ -20,6 +19,7 @@ import { Playlist } from '~/components/features'
 import useSWR from 'swr'
 import { formatTime } from '~/utils/format'
 import { ERole } from '~/constants/enum'
+import { Link } from 'react-router-dom'
 
 const WishTrack: React.FC = () => {
   const { role, idRole } = useAppSelector(
@@ -42,7 +42,8 @@ const WishTrack: React.FC = () => {
     },
     background: '#0F172A',
     author: idRole,
-    list: []
+    list: [],
+    genre: []
   })
 
   const getTrack = async (id: string) => {
@@ -88,6 +89,8 @@ const WishTrack: React.FC = () => {
     }
     return 0
   }, [listTrack])
+  const categoryAuthor =
+    listTrack?.author?.role === 'Artist' ? 'artist' : 'user'
 
   return (
     <div className={style.artist__album__details}>
@@ -119,21 +122,25 @@ const WishTrack: React.FC = () => {
           ))}
       </div>
       <div className={style.more__information}>
-        <div className={style.info__user}>
-          <div className={style.img__user}>
-            <img
-              src={
-                listTrack?.author?.avatar?.path
-                  ? listTrack?.author?.avatar?.path
-                  : '/src/assets/account-default.png'
-              }
-              alt={listTrack?.author?.avatar?.fileName}
-            />
+        <Link
+          to={`/${categoryAuthor}/${listTrack?.author?.slug}${listTrack?.author?._id}.html`}
+        >
+          <div className={style.info__user}>
+            <div className={style.img__user}>
+              <img
+                src={
+                  listTrack?.author?.avatar?.path
+                    ? listTrack?.author?.avatar?.path
+                    : '/src/assets/account-default.png'
+                }
+                alt={listTrack?.author?.avatar?.fileName}
+              />
+            </div>
+            <span className={style.user__name}>
+              {listTrack?.author?.username}
+            </span>
           </div>
-          <span className={style.user__name}>
-            {listTrack?.author?.username}
-          </span>
-        </div>
+        </Link>
         <ul className={style.statistics}>
           <li>
             {listTrack?.list?.length} <MdAudiotrack />
@@ -147,9 +154,6 @@ const WishTrack: React.FC = () => {
       <div className={style.control}>
         {role == ERole.USER && (
           <>
-            <button className={style.like}>
-              <IoHeartOutline />
-            </button>
             <button className={style.download}>
               <IoMdDownload />
             </button>

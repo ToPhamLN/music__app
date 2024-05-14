@@ -26,5 +26,5 @@ export const sortPlayList = (
 }
 
 export const findTrack = (item: string, arr: DTrack[]) => {
-  return arr.findIndex((song) => song.title === item)
+  return arr.findIndex((song) => song._id === item)
 }

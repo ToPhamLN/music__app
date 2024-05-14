@@ -77,6 +77,9 @@ const ItemViewBar = ({ track, interaction }: Props) => {
         `api/v1/interactions/wish/track/${track?._id}`
       )
       mutate(`api/v1/interactions/${idRole?._id}`)
+      mutate(
+        `api/v1/interactions/count/wish/track/${track?._id}`
+      )
     } catch (error) {
       console.log(error)
     }
@@ -147,7 +150,10 @@ const ItemViewBar = ({ track, interaction }: Props) => {
       <div className={style.control}>
         <div className={style.wrapper__control}>
           {role !== ERole.ARTIST && (
-            <button className={style.btn}>
+            <button
+              className={style.btn}
+              onClick={handleLikeTrack}
+            >
               {likedTrack ? (
                 <IoHeart />
               ) : (

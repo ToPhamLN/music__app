@@ -7,6 +7,7 @@ import Sidebar from './Sidebar'
 import Viewbar from './Viewbar'
 import Footer from './Footer'
 import Notification from './Notification'
+import { Navigator } from '~/components/features'
 
 const DefaultLayout: React.FC = () => {
   const { theme } = useAppSelector(
@@ -37,6 +38,9 @@ const DefaultLayout: React.FC = () => {
       >
         <Sidebar />
         <div className='main'>
+          <div className='navigator'>
+            <Navigator />
+          </div>
           <Outlet />
           <Footer />
         </div>

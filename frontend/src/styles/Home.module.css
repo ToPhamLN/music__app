@@ -30,6 +30,7 @@
     align-items: center;
     font-size: 2rem;
     user-select: none;
+    background-color: #144c7a21;
 
     &:hover {
         cursor: pointer;
@@ -45,8 +46,22 @@
     left: 1rem;
 }
 
+.item__slider {
+    position: relative;
+}
+
+.item__slider h1 {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 100;
+    color: #d6e9ec;
+    white-space: nowrap;
+}
+
 .item__slider img {
-    border-radius: 5%;
+    border-radius: 2%;
 }
 
 .playlist__row {
@@ -55,7 +70,7 @@
     flex-flow: column;
     gap: 0.5rem;
     margin: 0 1rem 2rem;
-    min-height: 26rem;
+    /* min-height: 26rem; */
 }
 
 .playlist__row .header {
@@ -193,7 +208,6 @@
 }
 
 .parent {
-    margin: 0 1rem;
     width: auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
@@ -232,8 +246,8 @@
 }
 
 .parent .playlist__name {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .song__animation,
@@ -336,10 +350,6 @@
 
 
 @media only screen and (max-width:801px) {
-
-
-
-
     .section__playlistrow .container .exit {
         top: 0.5rem;
         left: calc(100% - 5rem);
@@ -354,13 +364,10 @@
 }
 
 @media only screen and (max-width:601px) {
-
     .parent .child .playlist__name {
         font-size: 1.5rem;
         font-weight: 600;
     }
-
-
 
     .parent .image {
         width: 5rem;
@@ -369,6 +376,10 @@
 
     .item__slider {
         margin: 0 0.5rem;
+    }
+
+    .item__slider h1 {
+        font-size: 1rem;
     }
 
 

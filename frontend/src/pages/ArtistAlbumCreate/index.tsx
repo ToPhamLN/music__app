@@ -82,12 +82,15 @@ const ArtistCreateAlbum: React.FC = () => {
           }
         }
       )
-      dispatch(
-        setNotify({
-          type: 'success',
-          message: res.data.message
-        })
-      )
+      if (res.data) {
+        dispatch(
+          setNotify({
+            type: 'success',
+            message: res.data.message
+          })
+        )
+        methods.reset({})
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -103,9 +106,9 @@ const ArtistCreateAlbum: React.FC = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           style={{ opacity: loading ? '0.8' : 'unset' }}
         >
-          <div className={style.title}>
+          <h1 className={style.title}>
             Tạo dự án âm nhạc mới
-          </div>
+          </h1>
           <InputFile
             label='Ảnh tiêu đề'
             name='photo'

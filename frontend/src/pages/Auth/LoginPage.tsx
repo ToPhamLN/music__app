@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAppDispatch, useAxiosPublic } from '~/hooks'
 import { updateProfile } from '~/reduxStore/profileSlice'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import style from '~/styles/Login.module.css'
 import { InputBox } from '~/components/common'
 import { LoadingIcon } from '~/components/pure'
@@ -41,6 +41,7 @@ const LoginPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const axiosPublic = useAxiosPublic()
+  const { state } = useLocation()
 
   const onSubmit = async (data: FormLogin) => {
     try {
@@ -49,11 +50,16 @@ const LoginPage: React.FC = () => {
         'api/v1/auths/login',
         data
       )
-      const { role } = res.data.auth
+      const { role, idRole } = res.data.auth
+      console.log(state)
 
-      if (role) {
+      if (role && idRole) {
         dispatch(updateProfile(res.data.auth))
-        navigate('/')
+        if (state?.history) {
+          navigate(state?.history)
+        } else {
+          navigate('/')
+        }
       } else {
         navigate('/role')
       }

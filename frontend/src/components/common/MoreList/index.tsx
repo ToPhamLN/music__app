@@ -16,17 +16,24 @@ import { Link } from 'react-router-dom'
 import style from '~/styles/MoreList.module.css'
 import MoreListCreatePlayList from './MoreListCreatePlayList'
 import { FaShare } from 'react-icons/fa'
-import { useAppSelector, useAxiosPrivate } from '~/hooks'
+import {
+  useAppSelector,
+  useAxiosPrivate,
+  useFetcher
+} from '~/hooks'
 import { RiPencilFill } from 'react-icons/ri'
 import { ERole } from '~/constants/enum'
 import {
+  DImage,
   DInteraction,
   DListTrack,
   DTrack
 } from '~/types/data'
 import { useDispatch } from 'react-redux'
 import { addWaitingList } from '~/reduxStore/trackPlaySlice'
-import { mutate } from 'swr'
+import useSWR, { mutate } from 'swr'
+import { IoMdDownload } from 'react-icons/io'
+import { downloadMusic } from '~/utils/helpers'
 
 type DListTrackWithoutList = Omit<DListTrack, 'list'>
 
@@ -59,6 +66,11 @@ const MoreList = ({
   })
   const dispatch = useDispatch()
   const axios = useAxiosPrivate()
+  const fetcher = useFetcher()
+  const { data: likes } = useSWR(
+    `api/v1/interactions/count/wish/track/${track?._id}`,
+    fetcher
+  ) as { data: number }
 
   const handleDeleteTrack = () => {
     console.log('delete track')
@@ -79,6 +91,13 @@ const MoreList = ({
 
   const handleAddWaittingList = () => {
     dispatch(addWaitingList(track))
+  }
+  const handleDowload = () => {
+    const fileMp3 = {
+      path: track?.source?.path,
+      fileName: track?.slug
+    } as unknown as DImage
+    downloadMusic(fileMp3)
   }
 
   useEffect(() => {
@@ -122,7 +141,7 @@ const MoreList = ({
           <div className={style.popularity}>
             <div className={style.item__popularity}>
               <IoHeartOutline />
-              <div>{track?.likes?.length?.toString()}</div>
+              <div>{likes ? likes : 0}</div>
             </div>
             <div className={style.item__popularity}>
               <IoHeadset />
@@ -188,6 +207,13 @@ const MoreList = ({
               Thêm vào playlist
               <MoreListCreatePlayList track={track} />
             </div>
+            <button
+              className={style.btn}
+              onClick={handleDowload}
+            >
+              <IoMdDownload className={style.icon} />
+              Tải nhạc xuống
+            </button>
           </>
         )}
         {role !== ERole.ARTIST && (

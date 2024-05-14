@@ -62,6 +62,8 @@
     font-size: 1.3rem;
     font-weight: 600;
 
+    color: var(--text-color);
+
     svg {
         font-size: 2rem;
     }

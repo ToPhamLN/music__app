@@ -47,6 +47,10 @@ const trackSchema = new Schema<ITrack>(
     listens: {
       type: Number,
       default: 0
+    },
+    likes: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }

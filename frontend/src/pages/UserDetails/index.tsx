@@ -62,7 +62,7 @@ const UserDetails = () => {
   const {
     data: interaction,
     isLoading: loadingInteraction
-  } = useSWR(apiInteraction, fetcher) as {
+  } = useSWR(idUser ? apiInteraction : null, fetcher) as {
     data: DInteraction
     isLoading: boolean
   }
@@ -156,11 +156,13 @@ const UserDetails = () => {
       </div>
       <div className={`${style.header} `}>
         <div className={style.menu}>
-          <button
-            onClick={() => scrollToSection(menuRef.pin)}
-          >
-            Công khai
-          </button>
+          {loadingPin && (
+            <button
+              onClick={() => scrollToSection(menuRef.pin)}
+            >
+              Công khai
+            </button>
+          )}
           <button
             onClick={() =>
               scrollToSection(menuRef.recentlyTrack)
@@ -168,13 +170,15 @@ const UserDetails = () => {
           >
             Nghe gần đây
           </button>
-          <button
-            onClick={() =>
-              scrollToSection(menuRef.following)
-            }
-          >
-            Theo dõi
-          </button>
+          {loadingFollowing && (
+            <button
+              onClick={() =>
+                scrollToSection(menuRef.following)
+              }
+            >
+              Theo dõi
+            </button>
+          )}
         </div>
         <div className={style.handler}>
           {idRole?._id === idUser && (

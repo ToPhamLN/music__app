@@ -41,21 +41,14 @@ const RecentlyTrack = ({ interaction }: Props) => {
   }, [interaction])
 
   return (
-    <div>
-      <div className={style.top}>
-        <h2 style={{ textAlign: 'center' }}>
-          Nghe gần đây
-        </h2>
-      </div>
-      <div className={style.list}>
-        {recentlyTrack.map((track, index) => (
-          <ItemViewBar
-            key={index}
-            track={track}
-            interaction={interaction}
-          />
-        ))}
-      </div>
+    <div className={style.list}>
+      {recentlyTrack.map((track, index) => (
+        <ItemViewBar
+          key={index}
+          track={track}
+          interaction={interaction}
+        />
+      ))}
     </div>
   )
 }

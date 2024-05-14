@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useRef,
   useEffect,
@@ -7,19 +7,31 @@ import React, {
 import { IoNotifications } from 'react-icons/io5'
 import style from '~/styles/Navbar.module.css'
 import { IoMdSunny } from 'react-icons/io'
+import { MdDarkMode } from 'react-icons/md'
 import { MdManageAccounts } from 'react-icons/md'
 import { RiLogoutBoxFill } from 'react-icons/ri'
-import { Link } from 'react-router-dom'
-import Notify from './Notify'
-import { useAppSelector } from '~/hooks'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '~/hooks'
+import Notify from '~/layouts/DefaultLayout/Navbar/Notify'
+import { DNotifiction } from '~/types/data'
+import { setThemeMode } from '~/reduxStore/settingsSlice'
+import { setProfile } from '~/reduxStore/profileSlice'
 
-const Auth: React.FC = () => {
+interface Props {
+  notifications: DNotifiction[]
+}
+const Auth = ({ notifications }: Props) => {
   const [openMore, setOpenMore] = useState<boolean>(false)
   const [openNotify, setOpenNotify] =
     useState<boolean>(false)
   const { idRole } = useAppSelector(
     (state) => state.profile
   )
+  const { theme } = useAppSelector(
+    (state) => state.settings
+  )
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const notifyRef = useRef<HTMLDivElement | null>(null)
   const moreRef = useRef<HTMLDivElement | null>(null)
@@ -31,6 +43,10 @@ const Auth: React.FC = () => {
   const notifyHandler = useCallback(() => {
     setOpenNotify((p) => !p)
   }, [])
+  const handleLogOut = () => {
+    dispatch(setProfile({}))
+    navigate('/login')
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -84,11 +100,22 @@ const Auth: React.FC = () => {
                 Tải khoản
               </button>
             </Link>
-            <button>
-              <IoMdSunny />
-              Sáng
+            <button
+              onClick={() => dispatch(setThemeMode())}
+            >
+              {theme ? (
+                <>
+                  <MdDarkMode />
+                  Tối
+                </>
+              ) : (
+                <>
+                  <IoMdSunny />
+                  Sáng
+                </>
+              )}
             </button>
-            <button>
+            <button onClick={handleLogOut}>
               <RiLogoutBoxFill />
               Đăng xuất
             </button>
@@ -98,6 +125,7 @@ const Auth: React.FC = () => {
           <Notify
             refItem={notifyRef}
             setExit={() => setOpenNotify(false)}
+            notifications={notifications}
           />
         )}
       </div>

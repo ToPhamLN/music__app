@@ -7,7 +7,10 @@ import {
 import { v2 as cloudinary } from 'cloudinary'
 import { convertSlug } from '~/utils/helper'
 import { createMonthlyListens } from './monthlyListens.controller'
-import { EListens } from '~/types'
+import { EListens, ERole } from '~/types'
+import { SortOrder } from 'mongoose'
+import { getUserFollowByArtist } from './followings.controllers'
+import { createNotification } from './notifications.controller'
 
 const destroyFile = async (fileName?: string) => {
   if (fileName) await cloudinary.uploader.destroy(fileName)
@@ -37,10 +40,11 @@ export const createTrack = async (
     const { album, title, lyrics, duration, artist } =
       req.body as IReqBody
     const { photo, source } = req.files as unknown as IReqFiles
-
     const { idRole, role } = req.auth
     const convertArtist = artist ? JSON.parse(artist) : []
     const convertAlbum = album ? JSON.parse(album) : undefined
+
+    const artistObj = await ArtistModel.findById(idRole)
 
     const newTrack = new TrackModel({
       album: convertAlbum?._id,
@@ -70,11 +74,31 @@ export const createTrack = async (
     newTrack.source = setSource
 
     const track = await newTrack.save()
-    await ListTrackModel.findByIdAndUpdate(convertAlbum?._id, {
-      $push: {
-        list: track._id
+    const listTrack = await ListTrackModel.findByIdAndUpdate(
+      convertAlbum?._id,
+      {
+        $push: {
+          list: track._id
+        }
       }
-    })
+    )
+    const users = (await getUserFollowByArtist(
+      idRole
+    )) as unknown as IUser[]
+    for (const user of users) {
+      if (!user) continue
+
+      const notification: Partial<INotification> = {
+        receiver: user?._id,
+        receiverCategory: ERole.USER,
+        photo: listTrack?.photo,
+        message: `${artistObj?.username} vừa cập nhập ${listTrack?.category} ${listTrack?.title} `,
+        path: `/${convertSlug(listTrack?.category || '')}/${listTrack?.slug}${listTrack?._id}.html`
+      }
+
+      await createNotification(notification)
+    }
+
     res
       .status(201)
       .json({ message: 'Đã thêm bài hát thành công' })
@@ -344,5 +368,41 @@ async function increaseListens(
       year,
       1
     )
+  }
+}
+
+export const getRank = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { type } = req.query
+    let sortQuery: {
+      [key: string]: SortOrder
+    } = {}
+
+    switch (type) {
+      case 'likes':
+        sortQuery = { likes: -1 }
+        break
+      case 'listens':
+        sortQuery = { listens: -1 }
+        break
+      case 'lasted':
+      default:
+        sortQuery = { createdAt: -1 }
+        break
+    }
+    let tracks = await TrackModel.find({})
+      .sort(sortQuery)
+      .limit(100)
+
+    if (type === 'lasted') {
+      tracks = tracks.sort((a, b) => b.listens - a.listens)
+    }
+    res.status(200).json(tracks)
+  } catch (error) {
+    next(error)
   }
 }

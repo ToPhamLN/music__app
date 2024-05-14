@@ -7,6 +7,7 @@ import {
 import { useAppDispatch } from '~/hooks'
 import { removeNotify } from '~/reduxStore/globalSlice'
 import style from '~/styles/Notification.module.css'
+import { SNotification } from '~/types/slice'
 
 interface Props {
   notification: SNotification

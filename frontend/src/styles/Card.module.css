@@ -89,6 +89,7 @@
 .card__playlist .playlist__artist {
     height: 4rem;
     flex: 0 0 auto;
+    color: var(--text)
 }
 
 .card__playlist .playlist__artist a:not(:last-child)::after {
@@ -112,7 +113,7 @@
 
     .image {
         height: 100%;
-
+        aspect-ratio: 1 / 1;
         position: relative;
     }
 
@@ -239,7 +240,7 @@
 
 @media only screen and (max-width:801px) {
 
-    .card__playlist,
+    /* .card__playlist,
     .card__people {
         width: 15rem;
         min-width: 25%;
@@ -249,7 +250,7 @@
     .flex__hidden .card__playlist {
         width: unset;
         min-width: 30%;
-    }
+    } */
 
     .grid {
         grid-template-columns: repeat(3, 1fr);
@@ -265,7 +266,7 @@
         }
     }
 
-    .card__playlist,
+    /* .card__playlist,
     .card__people {
         width: 18rem;
         min-width: unset;
@@ -275,7 +276,7 @@
     .flex__hidden .card__playlist {
         width: unset;
         min-width: 18rem;
-    }
+    } */
 
 
 }

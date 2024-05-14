@@ -3,7 +3,6 @@ import Home from '~/pages/Home'
 import Login from '~/pages/Auth/LoginPage'
 import Signup from '~/pages/Auth/SignupPage'
 import Search from '~/pages/Search'
-import Rank from '~/pages/Rank'
 import UserMylist from '~/pages/UserMyList'
 import UserDetails from '~/pages/UserDetails'
 import Account from '~/pages/Account'
@@ -20,6 +19,10 @@ import ArtistTrack from '~/pages/ArtistTrack'
 import UserMyListCreate from '~/pages/UserMyListCreate'
 import WishTrack from '~/pages/WishTrack'
 import GenrePage from '~/pages/Genre'
+import Lyrics from '~/pages/Lyrics'
+import TrackDetails from '~/pages/TrackDetails'
+import GenreDetails from '~/pages/GenreDetails'
+import RankDetails from '~/pages/RankDetails'
 
 export const routes = {
   home: '/',
@@ -38,8 +41,8 @@ export const routes = {
   singleDetails: '/single/:albumParam',
   singleUpdate: '/single/:albumParam/edit',
   createlist: '/mylist/create',
-  rank: '/rank',
   genre: '/genre',
+  genreDetails: '/genre/:genreParam',
   userDetails: '/user/:userParam',
   mylist: '/mylist',
   wishTrack: '/wishTrack',
@@ -49,7 +52,10 @@ export const routes = {
   artistBioCreate: '/mybio',
   artistPin: '/mypin',
   artistAlbum: '/myproject',
-  artistTrack: '/mytrack'
+  artistTrack: '/mytrack',
+  lyrics: '/lyrics',
+  trackDetails: '/track/:trackParam',
+  rankDetails: '/rank/:rankParam'
 } as const
 
 export const authRoutes: {
@@ -70,7 +76,6 @@ export const publicRoutes: {
 
   { path: routes.genre, component: GenrePage },
   { path: routes.artistDetails, component: ArtistHome },
-  { path: routes.rank, component: Rank },
   { path: routes.userDetails, component: UserDetails },
   {
     path: routes.albumDetails,
@@ -87,6 +92,22 @@ export const publicRoutes: {
   {
     path: routes.singleDetails,
     component: AlbumDetails
+  },
+  {
+    path: routes.lyrics,
+    component: Lyrics
+  },
+  {
+    path: routes.trackDetails,
+    component: TrackDetails
+  },
+  {
+    path: routes.genreDetails,
+    component: GenreDetails
+  },
+  {
+    path: routes.rankDetails,
+    component: RankDetails
   }
 ]
 

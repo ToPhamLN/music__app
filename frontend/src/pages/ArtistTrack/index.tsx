@@ -1,14 +1,20 @@
 import React from 'react'
 import useSWR from 'swr'
 import { Playlist } from '~/components/features'
-import { useFetcher } from '~/hooks'
+import { useAppSelector, useFetcher } from '~/hooks'
 import style from '~/styles/ArtistTrack.module.css'
 
 const ArtistTrack = () => {
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
   const fetcher = useFetcher()
-  const { data: list } = useSWR(
-    'api/v1/tracks/all',
-    fetcher
+  const { data: list } = useSWR('api/v1/tracks/all', () =>
+    fetcher('api/v1/tracks/all', {
+      params: {
+        author: idRole?._id
+      }
+    })
   )
 
   return (

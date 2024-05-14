@@ -55,6 +55,7 @@ declare global {
     lyrics: string
     slug?: string
     listens: number
+    likes: number
   }
 
   interface IListTrack extends Document {
@@ -96,6 +97,16 @@ declare global {
     month: number
     year: number
     count: number
+  }
+
+  interface INotification extends Document {
+    receiver: Types.ObjectId
+    receiverCategory: ERole
+    title?: string
+    path?: string
+    message: string
+    photo: IImage
+    isReaded: boolean
   }
 }
 

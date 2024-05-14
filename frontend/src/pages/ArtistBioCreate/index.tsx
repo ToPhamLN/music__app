@@ -106,9 +106,7 @@ export const ArtistBioCreate = () => {
             onSubmit={methods.handleSubmit(onSubmit)}
             style={{ opacity: loading ? '0.8' : 'unset' }}
           >
-            <div className={style.title}>
-              Tiểu sử của tôi
-            </div>
+            <h1 className={style.title}>Tiểu sử của tôi</h1>
             <InputFileMultiple />
             <InputBox
               label='Sinh nhật'

@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { FollowingModel } from '~/models'
+import { FollowingModel, UserModel } from '~/models'
+import { ERole } from '~/types'
+import { createNotification } from './notifications.controller'
 
 export const followingAction = async (
   req: Request,
@@ -9,6 +11,7 @@ export const followingAction = async (
   try {
     const { idRole: userId } = req.auth as { idRole: string }
     const { artistId } = req.body
+    const user = await UserModel.findById(userId)
     let following = await FollowingModel.findOne({
       user: userId
     })
@@ -17,7 +20,7 @@ export const followingAction = async (
         user: userId,
         followedArtists: [artistId]
       })
-      await following.save()
+
       return res
         .status(200)
         .json({ message: 'Đã theo dõi nghệ sĩ thành công.' })
@@ -37,6 +40,15 @@ export const followingAction = async (
         { user: userId },
         { $push: { followedArtists: artistId } }
       )
+      const notification: Partial<INotification> = {
+        receiver: artistId,
+        receiverCategory: ERole.ARTIST,
+        photo: user?.avatar || {},
+        message: `${user?.username} đã theo dõi bạn`,
+        path: `/user/${user?.slug}${user?._id}.html`
+      }
+      await createNotification(notification)
+      await following.save()
       return res
         .status(200)
         .json({ message: 'Đã theo dõi nghệ sĩ thành công.' })
@@ -72,14 +84,26 @@ export const getArtistFollowers = async (
 ) => {
   try {
     const artistId = req.params.artistId
+    const users = await getUserFollowByArtist(artistId)
+    res.status(200).json(users)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getUserFollowByArtist = async (
+  artistId: string
+) => {
+  try {
     const followers = await FollowingModel.find({
       followedArtists: { $in: [artistId] }
     }).populate('user')
     const users = followers
       .map((follower) => follower.user)
       .filter((user) => user)
-    res.status(200).json(users)
+
+    return users
   } catch (error) {
-    next(error)
+    return null
   }
 }

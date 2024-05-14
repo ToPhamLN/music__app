@@ -14,6 +14,8 @@ interface DAuthor {
   _id: string
   username: string
   avatar: DImage
+  role: string
+  slug: string
 }
 
 interface DPerson extends DAuthor {
@@ -33,6 +35,7 @@ interface DArtist extends DAuthor {
   auth: string | DAuth
   slug: string
   background: DImage
+  listens: number
 }
 interface DUser extends DAuthor {
   auth: string | DAuth
@@ -57,7 +60,7 @@ interface DListTrack {
   author?: DAuthor
   authorRole?: ERole
   slug?: string
-  likes?: []
+  likes?: number
   list: DTrack[]
   listens?: number
   pin?: boolean
@@ -77,8 +80,12 @@ interface DTrack {
   lyrics?: string
   slug?: string
   listens?: number
-  likes?: []
+  likes?: number
   updatedAt?: string
+}
+
+interface DMonthlyListens {
+  count: number
 }
 
 interface DBios {
@@ -86,4 +93,14 @@ interface DBios {
   birthday?: string
   content?: string
   links?: DLink[]
+}
+
+interface DNotifiction {
+  _id?: string
+  receiver: string
+  receiverCategory: string
+  photo: DImage
+  title?: string
+  message?: string
+  path?: string
 }

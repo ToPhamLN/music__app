@@ -19,16 +19,19 @@ import {
   useClickOutside,
   useFetcher
 } from '~/hooks'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
+  DImage,
   DInteraction,
   DListTrack,
+  DMonthlyListens,
   DTrack
 } from '~/types/data'
 import { Playlist } from '~/components/features'
 import useSWR, { mutate } from 'swr'
-import { formatTime } from '~/utils/format'
+import { formatNumber, formatTime } from '~/utils/format'
 import { ERole } from '~/constants/enum'
+import { downloadMusic } from '~/utils/helpers'
 
 const ArtistAlbumDetails: React.FC = () => {
   const [isMoreVisible, setIsMoreVisible] =
@@ -69,15 +72,30 @@ const ArtistAlbumDetails: React.FC = () => {
 
   //Handle Get Album
   const apiEndPoint = `api/v1/listtracks/${idAlbum}`
+  const apiMonthlyListen = `api/v1/monthlylistens/thismonth`
+
   const fetcher = useFetcher()
   const { data: listTrack } = useSWR(
     apiEndPoint,
     fetcher
   ) as { data: DListTrack }
   const { data: interaction } = useSWR(
-    `api/v1/interactions/${idRole?._id}`,
+    idRole?._id
+      ? `api/v1/interactions/${idRole?._id}`
+      : null,
     fetcher
   ) as { data: DInteraction }
+
+  const { data: monthlyListens } = useSWR(
+    apiMonthlyListen,
+    () =>
+      fetcher(apiMonthlyListen, {
+        params: {
+          item: idAlbum,
+          itemCategory: 'ListTrack'
+        }
+      })
+  ) as { data: DMonthlyListens }
 
   const likedListTrack = listTrack?._id
     ? interaction?.wishList?.includes(listTrack?._id)
@@ -88,6 +106,7 @@ const ArtistAlbumDetails: React.FC = () => {
         `api/v1/interactions/wish/listTrack/${listTrack?._id}`
       )
       mutate(`api/v1/interactions/${idRole?._id}`)
+      mutate(`api/v1/listtracks/${idAlbum}`)
     } catch (error) {
       console.log(error)
     }
@@ -105,8 +124,18 @@ const ArtistAlbumDetails: React.FC = () => {
   }, [listTrack])
 
   const { list, ...listInfo } = listTrack || {}
-  const fileMp3 = list?.map((track) => track?.source?.path)
-  console.log(fileMp3)
+  const categoryAuthor =
+    listTrack?.author?.role === 'Artist' ? 'artist' : 'user'
+
+  const handleDownload = () => {
+    const fileMp3 = list?.map((track) => ({
+      path: track?.source?.path,
+      fileName: track?.slug
+    })) as unknown as DImage[]
+    for (const file of fileMp3) {
+      downloadMusic(file)
+    }
+  }
 
   return (
     <div className={style.artist__album__details}>
@@ -126,8 +155,14 @@ const ArtistAlbumDetails: React.FC = () => {
                 alt={listTrack?.photo?.fileName}
               />
             </div>
-            <div className={style.category}>
-              {listTrack?.category}
+            <div className={`${style.statistical}  `}>
+              <span> {listTrack?.category}</span>
+              {monthlyListens?.count && (
+                <span>
+                  {formatNumber(monthlyListens?.count)} Lượt
+                  nghe tháng này
+                </span>
+              )}
             </div>
           </div>
           <h1 className={style.listtrack__title}>
@@ -143,24 +178,28 @@ const ArtistAlbumDetails: React.FC = () => {
           ))}
       </div>
       <div className={style.more__information}>
-        <div className={style.info__user}>
-          <div className={style.img__user}>
-            <img
-              src={
-                listTrack?.author?.avatar?.path
-                  ? listTrack?.author?.avatar?.path
-                  : '/src/assets/account-default.png'
-              }
-              alt={listTrack?.author?.avatar?.fileName}
-            />
+        <Link
+          to={`/${categoryAuthor}/${listTrack?.author?.slug}${listTrack?.author?._id}.html`}
+        >
+          <div className={style.info__user}>
+            <div className={style.img__user}>
+              <img
+                src={
+                  listTrack?.author?.avatar?.path
+                    ? listTrack?.author?.avatar?.path
+                    : '/src/assets/account-default.png'
+                }
+                alt={listTrack?.author?.avatar?.fileName}
+              />
+            </div>
+            <span className={style.user__name}>
+              {listTrack?.author?.username}
+            </span>
           </div>
-          <span className={style.user__name}>
-            {listTrack?.author?.username}
-          </span>
-        </div>
+        </Link>
         <ul className={style.statistics}>
           <li>
-            {listTrack?.likes?.length.toString()}
+            {listTrack?.likes}
             <IoHeartOutline />
           </li>
           <li>
@@ -187,7 +226,10 @@ const ArtistAlbumDetails: React.FC = () => {
                 )}
               </button>
             )}
-            <button className={style.download}>
+            <button
+              className={style.download}
+              onClick={handleDownload}
+            >
               <IoMdDownload />
             </button>
           </>

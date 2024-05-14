@@ -85,12 +85,15 @@ const ArtistCreateTrack: React.FC = () => {
           }
         }
       )
-      dispatch(
-        setNotify({
-          type: 'success',
-          message: res.data.message
-        })
-      )
+      if (res.data) {
+        dispatch(
+          setNotify({
+            type: 'success',
+            message: res.data.message
+          })
+        )
+        methods.reset({})
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -125,7 +128,7 @@ const ArtistCreateTrack: React.FC = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           style={{ opacity: loading ? '0.8' : 'unset' }}
         >
-          <div className={style.title}>Tạo Bài Hát Mới</div>
+          <h1 className={style.title}>Tạo Bài Hát Mới</h1>
           <Selector />
           <InputBox
             label='Tên bài hát'

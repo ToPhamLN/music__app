@@ -40,20 +40,20 @@ const App: React.FC = () => {
               ></Route>
             )
           })}
+          <Route path='*' element={<NotFound />} />
         </Route>
       )}
       <Route path='/' element={<DefaultLayout />}>
-        {userInfo === undefined &&
-          authRoutes.map((route) => {
-            const Page = route.component
-            return (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={<Page />}
-              ></Route>
-            )
-          })}
+        {authRoutes.map((route) => {
+          const Page = route.component
+          return (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<Page />}
+            ></Route>
+          )
+        })}
         {publicRoutes.map((route) => {
           const Page = route.component
           return (
@@ -74,9 +74,8 @@ const App: React.FC = () => {
             ></Route>
           )
         })}
+        <Route path='*' element={<NotFound />} />
       </Route>
-
-      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }

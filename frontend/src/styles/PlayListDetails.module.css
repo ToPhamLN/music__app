@@ -20,6 +20,8 @@
     padding: 2rem 0 0 0;
     height: auto;
 
+    color: var(--text-color);
+
     h1,
     h2,
     h3,
@@ -223,6 +225,10 @@
     border-bottom: 1px solid var(--stripe-color);
 }
 
+.column__name {
+    color: var(--text-color)
+}
+
 
 .column__index,
 .song__index {
@@ -234,6 +240,10 @@
     flex: 0 0 auto;
     align-items: center;
     font-weight: 600;
+}
+
+.song__index {
+    color: var(--text-color)
 }
 
 .column__title,
@@ -363,18 +373,32 @@
 
     & a {
         text-decoration: none;
-        color: var(--text-color);
+        color: var(--text);
         transition: text-decoration 1s ease-in;
 
         &:hover {
             text-decoration: underline;
         }
     }
+
 }
+
+
+
 
 .song__name {
     font-size: 1.4rem;
     font-weight: 700;
+
+    & a {
+        color: var(--text-color);
+
+    }
+}
+
+.song__day,
+.song__control {
+    color: var(--text)
 }
 
 .btn {
@@ -403,15 +427,16 @@
 
 .hover__content {
     position: fixed;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     white-space: nowrap;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: var(--hover-btn);
+    padding: 0.25em 0.25rem;
+    border: var(--text-color);
+    border-radius: 0.2rem;
+    background-color: var(--navbar);
     color: var(--text-color);
     z-index: 9999;
     transform: translate(0, -100%);
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .song__artist .hover__content {

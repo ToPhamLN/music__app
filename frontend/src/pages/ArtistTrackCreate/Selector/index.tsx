@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import style from '~/styles/InputBox.module.css'
 import { DListTrack } from '~/types/data'
-import { useAxiosPrivate } from '~/hooks'
+import { useAppSelector, useAxiosPrivate } from '~/hooks'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useFormContext } from 'react-hook-form'
+
 const Selector = () => {
   const [albums, setAlbums] = useState<DListTrack[]>([])
   const [expend, setExpend] = useState<boolean>(false)
@@ -17,10 +18,17 @@ const Selector = () => {
     setValue,
     clearErrors
   } = useFormContext()
+  const { idRole } = useAppSelector(
+    (state) => state.profile
+  )
 
   const handleGetAlbums = async () => {
     try {
-      const res = await axios.get('api/v1/listtracks/all')
+      const res = await axios.get('api/v1/listtracks/all', {
+        params: {
+          author: idRole?._id
+        }
+      })
       setAlbums(res.data)
     } catch (error) {
       console.log(error)

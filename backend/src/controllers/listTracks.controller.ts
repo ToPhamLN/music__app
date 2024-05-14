@@ -266,7 +266,7 @@ export const getListTracks = async (
     let listTracks = await ListTrackModel.find(query)
       .populate({
         path: 'author',
-        select: 'username _id avatar slug'
+        select: 'username _id avatar slug role'
       })
       .lean()
 
@@ -291,13 +291,13 @@ export const getAlbum = async (
     const listTrack = await ListTrackModel.findById(idListTrack)
       .populate({
         path: 'author',
-        select: 'username _id avatar slug'
+        select: 'username _id avatar slug role'
       })
       .populate({
         path: 'list',
         populate: {
           path: 'artist album author',
-          select: '_id username title slug avatar'
+          select: '_id username title slug avatar role'
         }
       })
 

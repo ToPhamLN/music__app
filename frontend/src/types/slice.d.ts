@@ -1,4 +1,4 @@
-import { DImage, DTrack } from './data'
+import { DImage, DListTrack, DTrack } from './data'
 interface IProfile {
   _id?: string
   email?: string
@@ -10,6 +10,7 @@ interface IProfile {
     avatar: DImage
     background: DImage
     slug: string
+    role: string
   }
 }
 
@@ -33,6 +34,7 @@ interface ModeTrackPlay {
 }
 
 interface TrackPlaySliceType {
+  listInfo?: DListTrack
   waitingList: DTrack[]
   list: DTrack[]
   track: DTrack

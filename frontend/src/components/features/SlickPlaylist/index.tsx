@@ -28,7 +28,6 @@ const SlickPlaylist = ({
       )
     }
   }
-
   useEffect(() => {
     updateWidthInner()
     const handleResize = () => {

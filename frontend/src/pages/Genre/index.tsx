@@ -1,11 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import useSWR from 'swr'
 import { EGenre } from '~/constants/enum'
+import { useFetcher } from '~/hooks'
 import style from '~/styles/Topic.module.css'
+import { DListTrack } from '~/types/data'
+import { enumToSlug } from '~/utils/helpers'
 
 const GenrePage = () => {
   return (
     <div className={style.topic}>
-      <div className={style.map}>
+      <div className={style.topic__ctn}>
         <h1>Tất cả chủ đề</h1>
         <div className={style.parent}>
           {Object.keys(EGenre).map((genre, index) => (
@@ -23,17 +28,37 @@ const GenrePage = () => {
 export default GenrePage
 
 const Child = ({ genre }: { genre: string }) => {
+  const fetcher = useFetcher()
+  const apiListTracks = 'api/v1/listtracks/all'
+
+  const { data: listTracks } = useSWR(
+    genre ? apiListTracks + genre : null,
+    () => {
+      if (genre) {
+        return fetcher(apiListTracks, {
+          params: {
+            genre: genre,
+            ramdom: 1
+          }
+        })
+      }
+      return null
+    }
+  ) as { data: DListTrack[] }
+  const imagePath =
+    listTracks && listTracks.length > 0
+      ? listTracks[0]?.photo?.path
+      : ''
   return (
-    <div className={style.child}>
-      <div className={style.image}>
-        <img
-          src='https://res.cloudinary.com/dohywtebw/image/upload/v1694691530/blog-app/tehprwmyyyiukuoojo7k.jpg'
-          alt=''
-        />
+    <Link to={enumToSlug(genre)} state={{ genre: genre }}>
+      <div className={style.child}>
+        <div className={style.image}>
+          {imagePath && <img src={imagePath} alt='' />}
+        </div>
+        <div className={style.title}>
+          <h1>{genre}</h1>
+        </div>
       </div>
-      <div className={style.title}>
-        <h1>{genre}</h1>
-      </div>
-    </div>
+    </Link>
   )
 }

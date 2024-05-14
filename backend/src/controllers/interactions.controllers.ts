@@ -1,4 +1,8 @@
-import { InteractionModel } from '~/models'
+import {
+  InteractionModel,
+  TrackModel,
+  UserModel
+} from '~/models'
 import { Request, Response, NextFunction } from 'express'
 
 export const getInteraction = async (
@@ -8,6 +12,8 @@ export const getInteraction = async (
 ) => {
   try {
     const { idUser } = req.params
+    const user = UserModel.findById(idUser)
+    if (!user) return res.status(200).json(null)
     let interaction = await InteractionModel.findOne({
       user: idUser
     })
@@ -41,6 +47,12 @@ export const addWishTrack = async (
         },
         { new: true }
       )
+      await TrackModel.findOneAndUpdate(
+        { _id: idTrack },
+        { $inc: { likes: -1 } },
+        { new: true }
+      )
+
       return res.status(200).json({
         message: 'Bỏ thích bài hát thành công!'
       })
@@ -50,6 +62,11 @@ export const addWishTrack = async (
         {
           $push: { wishTrack: idTrack }
         },
+        { new: true }
+      )
+      await TrackModel.findOneAndUpdate(
+        { _id: idTrack },
+        { $inc: { likes: 1 } },
         { new: true }
       )
       return res.status(200).json({

@@ -7,6 +7,7 @@ import interactionRoutes from './interactions.routes'
 import userRoutes from './users.routes'
 import followingRoutes from './followings.routes'
 import monthlyListensRoutes from './monthlyListens.routes'
+import notificationsRoutes from './notifications.routes'
 
 export {
   authRoutes,
@@ -17,5 +18,6 @@ export {
   interactionRoutes,
   userRoutes,
   followingRoutes,
-  monthlyListensRoutes
+  monthlyListensRoutes,
+  notificationsRoutes
 }
